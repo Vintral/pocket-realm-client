@@ -8,7 +8,7 @@ class NewsItem extends StatelessWidget {
 
   final _theme = ThemeProvider();
 
-  final NewsItemData item;  
+  final NewsItemData item;
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +16,20 @@ class NewsItem extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text( item.title, style: _theme.styleNewsTitle, ),
-        SizedBox( height: _theme.gap / 2 ),
-        Text( item.posted.toString(), style: _theme.styleNewsPosted, ),
-        SizedBox( height: _theme.gap / 2 ),
-        Text( item.body, style: _theme.styleNewsBody, ),        
+        Text(
+          item.title,
+          style: _theme.textMediumBold,
+        ),
+        SizedBox(height: _theme.gap / 2),
+        Text(
+          item.posted.toString(),
+          style: _theme.textMedium.copyWith(fontStyle: FontStyle.italic),
+        ),
+        SizedBox(height: _theme.gap / 2),
+        Text(
+          item.body,
+          style: _theme.textSmall,
+        ),
       ],
     );
   }

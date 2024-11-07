@@ -24,8 +24,6 @@ class Panel extends StatelessWidget {
   final bool loaded;
   final bool closable;
   final void Function(BuildContext)? callback;
-  final TextStyle _style = const TextStyle(
-      fontSize: 20, color: Colors.white, decoration: TextDecoration.none);
 
   Widget showLoading() {
     _logger.d("showLoading");
@@ -69,7 +67,7 @@ class Panel extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(10, 7, 0, 5),
                     child: Text(
                       label?.capitalize() ?? Dictionary.missing,
-                      style: _style,
+                      style: _theme.textExtraLargeBold,
                     ),
                   ),
                   closable

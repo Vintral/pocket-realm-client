@@ -1,5 +1,5 @@
 import 'package:client/components/panel.dart';
-import 'package:client/components/realm_display_object.dart';
+import 'package:client/components/round.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/application.dart';
 import 'package:client/providers/theme.dart';
@@ -18,7 +18,7 @@ class RoundsPanel extends StatefulWidget {
 }
 
 class _RoundsPanelState extends ListPanelState<RoundsPanel> {
-  final Logger _logger = Logger(level: Logger.level);
+  final Logger _logger = Logger(level: Level.trace);
 
   final ThemeProvider _theme = ThemeProvider();
   final _provider = ApplicationProvider();
@@ -32,7 +32,7 @@ class _RoundsPanelState extends ListPanelState<RoundsPanel> {
 
     _logger.t("initState");
 
-    _onRoundsListener = _provider.on("RULES", null, onRounds);
+    _onRoundsListener = _provider.on("ROUNDS", null, onRounds);
     if (_provider.rounds.isEmpty) {
       _provider.getRounds();
     }
@@ -53,16 +53,11 @@ class _RoundsPanelState extends ListPanelState<RoundsPanel> {
 
   Widget buildResults() {
     List<Widget> widgets = <Widget>[];
-    // for (int i = 0; i < _provider.rules.length; i++) {
-    //   widgets.add(
-    //       RealmDisplayObject(message: Dictionary.get(_provider.rules[i].text)));
-    //   widgets.add(SizedBox(
-    //     height: _theme.gap,
-    //   ));
-    // }
 
     for (int i = 0; i < _provider.rounds.length; i++) {
-      widgets.add(Text("Round"));
+      widgets.add(Round(
+        data: _provider.rounds[i],
+      ));
       widgets.add(SizedBox(
         height: _theme.gap,
       ));
@@ -79,10 +74,10 @@ class _RoundsPanelState extends ListPanelState<RoundsPanel> {
 
     widget.callback(context);
 
-    _logger.d("Loaded: ${_provider.rules.isNotEmpty}");
+    _logger.d("Loaded: ${_provider.rounds.isNotEmpty}");
 
     return Panel(
-      loaded: _provider.rules.isNotEmpty,
+      loaded: _provider.rounds.isNotEmpty,
       label: Dictionary.get("ROUNDS"),
       child: buildResults(),
     );

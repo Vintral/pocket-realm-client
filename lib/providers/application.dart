@@ -59,9 +59,8 @@ class ApplicationProvider extends EventEmitter {
     _logger.d(e.eventData["current"]);
     _logger.d(e.eventData["past"]);
 
-    // _news.addAll(((e.eventData as dynamic)["news"] as List<dynamic>)
-    //     .map((data) => NewsItemData(data)));
-    // emit("NEWS");
+    _rounds.addAll(((e.eventData as dynamic)["past"] as List<dynamic>)
+        .map((data) => RoundData(data)));
 
     emit("ROUNDS");
   }

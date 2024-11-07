@@ -1,7 +1,8 @@
 import 'package:logger/logger.dart';
 
 class RankingData {
-  final Logger _logger = Logger(level: Logger.level);
+  // final Logger _logger = Logger(level: Logger.level);
+  final Logger _logger = Logger(level: Level.trace);
 
   late int place;
   late String username;

@@ -250,112 +250,118 @@ class _GameScreenState extends State<GameScreen> {
 
     return SafeArea(
       bottom: false,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                _theme.colorBackground,
-                _theme.blendMode,
+      child: Theme(
+        data: _theme.activeTheme,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ColorFiltered(
+                colorFilter: const ColorFilter.mode(
+                  Color.fromARGB(50, 33, 100, 150),
+                  BlendMode.color,
+                ),
+                child: Image.asset("assets/ui/app-background.png",
+                    fit: BoxFit.cover),
               ),
-              child: Image.asset("assets/ui/app-background.png",
-                  fit: BoxFit.cover),
             ),
-          ),
-          Column(
-            children: <Widget>[
-              const Header(),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: size.width / 5),
-                  child: Navigator(
-                    initialRoute: "rankings",
-                    onGenerateRoute: (RouteSettings settings) {
-                      _logger.t("onGenerateRoute: ${settings.name}");
+            Column(
+              children: <Widget>[
+                const Header(),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: size.width / 5),
+                    child: Navigator(
+                      initialRoute: "rounds",
+                      onGenerateRoute: (RouteSettings settings) {
+                        _logger.t("onGenerateRoute: ${settings.name}");
 
-                      var content = capitalize(settings.name ?? "");
-                      var style = const TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          decoration: TextDecoration.none);
+                        var content = capitalize(settings.name ?? "");
+                        var style = const TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            decoration: TextDecoration.none);
 
-                      WidgetBuilder builder;
-                      switch (settings.name) {
-                        case "recruit":
-                          builder =
-                              (context) => RecruitPanel(callback: onLoaded);
-                        case "recruit-details":
-                          builder = (context) => const RecruitDetailsPanel();
-                        case "build":
-                          builder = (context) => BuildPanel(callback: onLoaded);
-                        case "build-details":
-                          builder = (context) => const BuildDetailsPanel();
-                        case "explore":
-                          builder =
-                              (context) => ExplorePanel(callback: onLoaded);
-                        case "gather":
-                          builder =
-                              (context) => GatherPanel(callback: onLoaded);
-                        case "rules":
-                          builder = (context) => RulesPanel(callback: onLoaded);
-                        case "news":
-                          builder = (context) => NewsPanel(callback: onLoaded);
-                        case "shoutbox":
-                          builder =
-                              (context) => ShoutboxPanel(callback: onLoaded);
-                        case "messages":
-                          builder =
-                              (context) => MessagesPanel(callback: onLoaded);
-                        case "conversation":
-                          builder = (context) =>
-                              ConversationPanel(callback: onLoaded);
-                        case "events":
-                          builder =
-                              (context) => EventsPanel(callback: onLoaded);
-                        case "rounds":
-                          builder =
-                              (context) => RoundsPanel(callback: onLoaded);
-                        case "rankings":
-                          builder =
-                              (context) => RankingsPanel(callback: onLoaded);
-                        default:
-                          builder = (context) => Panel(
-                              label: content,
-                              callback: onLoaded,
-                              child: Center(
-                                child: Text(
-                                  "$content Content",
-                                  style: style,
-                                ),
-                              ));
-                      }
+                        WidgetBuilder builder;
+                        switch (settings.name) {
+                          case "recruit":
+                            builder =
+                                (context) => RecruitPanel(callback: onLoaded);
+                          case "recruit-details":
+                            builder = (context) => const RecruitDetailsPanel();
+                          case "build":
+                            builder =
+                                (context) => BuildPanel(callback: onLoaded);
+                          case "build-details":
+                            builder = (context) => const BuildDetailsPanel();
+                          case "explore":
+                            builder =
+                                (context) => ExplorePanel(callback: onLoaded);
+                          case "gather":
+                            builder =
+                                (context) => GatherPanel(callback: onLoaded);
+                          case "rules":
+                            builder =
+                                (context) => RulesPanel(callback: onLoaded);
+                          case "news":
+                            builder =
+                                (context) => NewsPanel(callback: onLoaded);
+                          case "shoutbox":
+                            builder =
+                                (context) => ShoutboxPanel(callback: onLoaded);
+                          case "messages":
+                            builder =
+                                (context) => MessagesPanel(callback: onLoaded);
+                          case "conversation":
+                            builder = (context) =>
+                                ConversationPanel(callback: onLoaded);
+                          case "events":
+                            builder =
+                                (context) => EventsPanel(callback: onLoaded);
+                          case "rounds":
+                            builder =
+                                (context) => RoundsPanel(callback: onLoaded);
+                          case "rankings":
+                            builder =
+                                (context) => RankingsPanel(callback: onLoaded);
+                          default:
+                            builder = (context) => Panel(
+                                label: content,
+                                callback: onLoaded,
+                                child: Center(
+                                  child: Text(
+                                    "$content Content",
+                                    style: style,
+                                  ),
+                                ));
+                        }
 
-                      //return MaterialPageRoute( builder: builder, settings: settings );
-                      return PanelPageRoute(
-                          builder: builder, settings: settings);
-                    },
+                        //return MaterialPageRoute( builder: builder, settings: settings );
+                        return PanelPageRoute(
+                            builder: builder, settings: settings);
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          getUserMenu(0),
-          getActionsMenu(1),
-          getTownMenu(2),
-          getSocialMenu(3),
-          getInfoMenu(4),
-          ..._notification.notifications,
-          Positioned(
-            bottom: 0,
-            width: size.width,
-            child: Row(
-              children: _buttons,
+              ],
             ),
-          ),
-        ],
+            getUserMenu(0),
+            getActionsMenu(1),
+            getTownMenu(2),
+            getSocialMenu(3),
+            getInfoMenu(4),
+            ..._notification.notifications,
+            Positioned(
+              bottom: 0,
+              width: size.width,
+              child: Row(
+                children: _buttons,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

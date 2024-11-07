@@ -31,38 +31,38 @@ class _ExplorePanelState extends ListPanelState<ExplorePanel> {
   void initState() {
     super.initState();
 
-    _logger.t( "initState" );
-    _onResultsListener = _provider.on( "EXPLORE_RESULTS", null, onResults );
+    _logger.t("initState");
+    _onResultsListener = _provider.on("EXPLORE_RESULTS", null, onResults);
   }
 
   @override
-  void dispose() {    
-    _logger.t( "dispose" );
+  void dispose() {
+    _logger.t("dispose");
     _onResultsListener.cancel();
 
     super.dispose();
-  }  
-
-  void onTap( { required int energy }) {
-    _logger.d( "onTap" );
-    _provider.explore( energy: energy);
   }
 
-  void onResults( e, o ) {
-    _logger.d( "onResults" );
+  void onTap({required int energy}) {
+    _logger.d("onTap");
+    _provider.explore(energy: energy);
+  }
+
+  void onResults(e, o) {
+    _logger.d("onResults");
     setState(() {});
   }
 
-  Widget buildHeader( BuildContext context ) {    
-    var width = MediaQuery.of( context ).size.width;
-    var paddingSize = 15.0;    
+  Widget buildHeader(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var paddingSize = 15.0;
 
     return SizedBox(
       width: width,
-        child: Container(
+      child: Container(
         decoration: BoxDecoration(
           color: _theme.colorBackground,
-          borderRadius: BorderRadius.circular( 5 ),
+          borderRadius: BorderRadius.circular(5),
           boxShadow: [
             BoxShadow(
               color: _theme.colorBackground,
@@ -72,21 +72,43 @@ class _ExplorePanelState extends ListPanelState<ExplorePanel> {
           ],
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric( horizontal: paddingSize, vertical: paddingSize / 2 ),
+          padding: EdgeInsets.symmetric(
+              horizontal: paddingSize, vertical: paddingSize / 2),
           child: Row(
             children: [
-              Text( "SPEND:", style: _theme.styleHeader, ),
-              SizedBox(width: paddingSize,),
-              Expanded(
-                child: Button(text: "1", handler: () => onTap( energy: 1 ), image: "assets/icons/energy.png", ),
+              Text(
+                "SPEND:",
+                style: _theme.textLargeBold,
               ),
-              SizedBox(width: paddingSize,),
-              Expanded(
-                child: Button(text: "5", handler: () => onTap( energy: 5 ), image: "assets/icons/energy.png", ),
+              SizedBox(
+                width: paddingSize,
               ),
-              SizedBox(width: paddingSize,),
               Expanded(
-                child: Button(text: "25", handler: () => onTap( energy: 25 ), image: "assets/icons/energy.png", ),
+                child: Button(
+                  text: "1",
+                  handler: () => onTap(energy: 1),
+                  image: "assets/icons/energy.png",
+                ),
+              ),
+              SizedBox(
+                width: paddingSize,
+              ),
+              Expanded(
+                child: Button(
+                  text: "5",
+                  handler: () => onTap(energy: 5),
+                  image: "assets/icons/energy.png",
+                ),
+              ),
+              SizedBox(
+                width: paddingSize,
+              ),
+              Expanded(
+                child: Button(
+                  text: "25",
+                  handler: () => onTap(energy: 25),
+                  image: "assets/icons/energy.png",
+                ),
               ),
             ],
           ),
@@ -96,32 +118,31 @@ class _ExplorePanelState extends ListPanelState<ExplorePanel> {
   }
 
   Widget buildResults() {
-    if( _provider.exploreResults.isEmpty ) {
+    if (_provider.exploreResults.isEmpty) {
       return const SizedBox();
     }
 
     List<Widget> widgets = <Widget>[];
-    for( int i = 0; i < _provider.exploreResults.length; i++ ) {
-      widgets.add( RealmDisplayObject(message: _provider.exploreResults[ i ].message ) );
-      widgets.add( SizedBox( height: Settings.verticalSpacer ) );
+    for (int i = 0; i < _provider.exploreResults.length; i++) {
+      widgets.add(
+          RealmDisplayObject(message: _provider.exploreResults[i].message));
+      widgets.add(SizedBox(height: Settings.verticalSpacer));
     }
 
     return ListView(
-      children: [
-        ...widgets
-      ],
+      children: [...widgets],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    _logger.t( "build" );
-    
-    widget.callback( context );
+    _logger.t("build");
+
+    widget.callback(context);
 
     return Panel(
       label: "Explore",
-      form: buildHeader( context ),
+      form: buildHeader(context),
       child: buildResults(),
     );
   }

@@ -1,8 +1,12 @@
 import 'package:client/capitalize.dart';
+import 'package:client/components/item_with_border.dart';
+import 'package:client/components/list_item.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/ranking.dart';
 import 'package:client/components/tab_bar.dart';
+import 'package:client/data/ranking.dart';
 import 'package:client/dictionary.dart';
+import 'package:client/providers/player.dart';
 import 'package:client/providers/rankings.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/states/list_panel.dart';
@@ -20,7 +24,7 @@ class RankingsPanel extends StatefulWidget {
 }
 
 class _RankingsPanelState extends ListPanelState<RankingsPanel> {
-  final Logger _logger = Logger(level: Level.info);
+  final Logger _logger = Logger(level: Level.trace);
 
   final ThemeProvider _theme = ThemeProvider();
   final _provider = RankingsProvider();
@@ -50,35 +54,149 @@ class _RankingsPanelState extends ListPanelState<RankingsPanel> {
   }
 
   void onRankings(e, o) {
-    _logger.d("onRounds");
+    _logger.d("onRankings");
     setState(() {});
   }
 
   void onTab(String tab) {
-    _logger.i("onTab: " + tab);
+    _logger.i("onTab: $tab");
 
     setState(() {
       _activeTab = tab;
     });
   }
 
-  Widget buildResults() {
+  Widget buildRankLabel(int rank, double size) {
+    _logger.t("buildRankLabel");
+
+    return SizedBox(
+      height: size,
+      child: Text(
+        "#$rank",
+        style: _theme.textLargeBold,
+      ),
+    );
+  }
+
+  Widget buildStat(String value, TextStyle style, double size,
+      {String? label}) {
+    _logger.t("buildLabel");
+
+    Widget ret = Text(
+      value,
+      style: style,
+    );
+
+    if (label?.isNotEmpty ?? false) {
+      return SizedBox(
+        height: size,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(label?.capitalize() ?? "---", style: style),
+            SizedBox(width: _theme.gap / 3),
+            Text(value, style: style),
+          ],
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: size,
+      child: ret,
+    );
+  }
+
+  Widget buildListItem(BuildContext context, RankingData data) {
+    _logger.t("buildListItem");
+
+    var size = MediaQuery.of(context).size.width / 5;
+
+    return ListItem(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ItemWithBorder(
+            image: "assets/avatars/${data.avatar}.png",
+            height: size,
+            backgroundColor: _theme.colorBackground,
+          ),
+          SizedBox(width: _theme.gap),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(_theme.gap / 2),
+              child: SizedBox(
+                height: size,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: buildRankLabel(data.place, size / 2),
+                        ),
+                        SizedBox(
+                          width: _theme.gap / 2,
+                        ),
+                        Expanded(
+                          child: buildStat(
+                              data.username, _theme.textSmallBold, size / 2),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: buildStat(
+                              data.power.toString(), _theme.textSmall, size / 2,
+                              label: Dictionary.get("POWER").capitalize()),
+                        ),
+                        Expanded(
+                          child: buildStat(
+                              data.land.toString(), _theme.textSmall, size / 2,
+                              label: Dictionary.get("LAND").capitalize()),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                // GridView.count(
+                //   crossAxisCount: 2,
+                //   children: [
+                //     buildRankLabel(data.place),
+                //     buildStat(data.power.toString(), _theme.styleRankingStat,
+                //         label: Dictionary.get("POWER").capitalize()),
+                //     buildStat(data.username, _theme.styleRankingStat),
+                //     buildStat(data.land.toString(), _theme.styleRankingStat,
+                //         label: Dictionary.get("LAND").capitalize()),
+                //   ],
+                // ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildResults(BuildContext context) {
+    _logger.t("buildResults : ${_provider.top.length}");
+
     List<Widget> widgets = <Widget>[];
-    for (int i = 0; i < _provider.top.length; i++) {
-      widgets.add(Ranking(data: _provider.top[i]));
+
+    var rankings = _activeTab == Dictionary.get("NEAR").capitalize()
+        ? _provider.near
+        : _provider.top;
+    for (int i = 0; i < rankings.length; i++) {
+      widgets.add(buildListItem(context, rankings[i]));
       widgets.add(SizedBox(
         height: _theme.gap,
       ));
     }
 
-    // for (int i = 0; i < _provider.rounds.length; i++) {
-    //   widgets.add(Text("Round"));
-    //   widgets.add(SizedBox(
-    //     height: _theme.gap,
-    //   ));
-    // }
-
-    return ListView(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         RealmTabBar(
           tabs: [
@@ -88,7 +206,11 @@ class _RankingsPanelState extends ListPanelState<RankingsPanel> {
           active: _activeTab,
           handler: onTab,
         ),
-        ...widgets
+        Expanded(
+          child: ListView(
+            children: [...widgets],
+          ),
+        ),
       ],
     );
   }
@@ -102,7 +224,7 @@ class _RankingsPanelState extends ListPanelState<RankingsPanel> {
     return Panel(
       loaded: _provider.top.isNotEmpty,
       label: Dictionary.get("RANKINGS"),
-      child: buildResults(),
+      child: buildResults(context),
     );
   }
 }

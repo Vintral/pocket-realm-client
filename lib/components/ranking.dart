@@ -15,19 +15,23 @@ class Ranking extends StatelessWidget {
   Widget build(BuildContext context) {
     _logger.w("build");
 
+    var size = (MediaQuery.of(context).size.width - _theme.gap * 2) / 4;
+
+    data.dump();
+
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
       children: [
         Container(
-          height: 100,
+          height: size,
+          width: size,
           color: Colors.blue,
         ),
-        Container(
-          color: Colors.red,
-        ),
-        Container(
-          color: Colors.yellow,
+        Expanded(
+          child: Container(
+            height: size,
+            color: Colors.green,
+          ),
         ),
       ],
     );

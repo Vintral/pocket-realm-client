@@ -1,26 +1,31 @@
 import 'package:logger/logger.dart';
 
 class RoundData {
-  final Logger _logger = Logger(level: Logger.level);
+  final Logger _logger = Logger(level: Level.trace);
 
+  late String title;
   late String guid;
   late int energyMax;
   late int energyRegen;
   late int energyTick;
   late DateTime nextTick;
+  late DateTime starts;
   late DateTime ends;
+  late bool finished;
 
   RoundData(dynamic data) {
     guid = data["guid"] ?? "";
 
-    energyMax = int.parse(data["energy_max"] ?? "0");
-    energyRegen = int.parse(data["energy_regen"] ?? "0");
-    energyTick = int.parse(data["tick"] ?? "0");
+    title = data["title"] ?? "Standard";
 
-    nextTick = DateTime.parse(data["posted"] ?? "");
-    ends = DateTime.parse(data["posted"] ?? "");
+    energyMax = int.tryParse(data["energy_max"].toString()) ?? 0;
+    energyRegen = int.tryParse(data["energy_regen"].toString()) ?? 0;
+    energyTick = int.tryParse(data["tick"].toString()) ?? 0;
 
-    dump();
+    starts = DateTime.tryParse(data["starts"] ?? "") ?? DateTime.now();
+    ends = DateTime.tryParse(data["ends"]) ?? DateTime.now();
+    nextTick = ends;
+    finished = DateTime.now().compareTo(ends) < 0;
   }
 
   void dump() {
@@ -31,6 +36,7 @@ class RoundData {
     _logger.t("Energy Tick: $energyTick");
     _logger.t("Next Tick: $nextTick");
     _logger.t("Ends: $ends");
+    _logger.t("Finished: $finished");
     _logger.t("====================================");
   }
 }

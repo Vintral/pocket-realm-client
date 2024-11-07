@@ -1,8 +1,11 @@
-import 'package:client/settings.dart';
 import 'package:flutter/material.dart';
 
+import 'package:client/providers/theme.dart';
+
 class HeaderStat extends StatelessWidget {
-  const HeaderStat({super.key, required this.icon, required this.value});
+  HeaderStat({super.key, required this.icon, required this.value});
+
+  final _theme = ThemeProvider();
 
   final String icon;
   final dynamic value;
@@ -11,18 +14,20 @@ class HeaderStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [        
+      children: [
         Text(
           value.toString(),
-          style: Settings.headerStatStyle,
-        ), 
-        SizedBox(
-          width: MediaQuery.of( context ).size.width / 64,
+          style: _theme.textMediumBold,
         ),
         SizedBox(
-          width: MediaQuery.of( context ).size.width / 32,
-          child: Image.asset( "assets/icons/$icon.png", fit: BoxFit.fitWidth, )
-        ), 
+          width: MediaQuery.of(context).size.width / 64,
+        ),
+        SizedBox(
+            width: MediaQuery.of(context).size.width / 32,
+            child: Image.asset(
+              "assets/icons/$icon.png",
+              fit: BoxFit.fitWidth,
+            )),
       ],
     );
   }
