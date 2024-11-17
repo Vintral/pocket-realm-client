@@ -9,7 +9,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});  
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -21,12 +21,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-      ),      
-      routes: <String, WidgetBuilder> {
+      ),
+      routes: <String, WidgetBuilder>{
         "splash": (context) => const SplashScreen(),
-        "login":(context) => const LoginScreen(),
-        "game":(context) => const GameScreen(),
-      },      
+        "login": (context) => const LoginScreen(),
+        "game": (context) => const GameScreen(),
+      },
       initialRoute: "splash",
     );
   }

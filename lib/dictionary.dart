@@ -9,24 +9,34 @@ class Dictionary {
   };
 
   static Map<String, String> strings = {
+    "ACTIVE": "active",
     "AGO": "ago",
     "BUILD": "build",
     "BUILDINGS": "buildings",
     "CHAT-WITH": "chat with",
+    "CURRENT": "current",
     "DAY": "day",
     "DAYS": "days",
+    "ENDED": "ended",
+    "ENDS": "ends",
     "EVENTS": "events",
+    "EVERY": "every",
+    "FINISHED": "finished",
     "HOUR": "hour",
     "HOURS": "hours",
     "ITEMS": "items",
     "LAND": "land",
+    "MAX": "max",
     "MESSAGES": "messages",
     "MINUTE": "minute",
     "MINUTES": "minutes",
     "NEAR": "near",
     "NEWS": "news",
     "NOW": "now",
+    "OF": "of",
     "POWER": "power",
+    "PLAY": "play",
+    "PLAYERS": "players",
     "SHOUT": "shout",
     "SHOUTBOX": "shoutbox",
     "RANKINGS": "rankings",
@@ -36,6 +46,7 @@ class Dictionary {
     "ROUNDS": "rounds",
     "RULES": "rules",
     "SEND": "send",
+    "STARTS": "starts",
     "TOP": "top",
     "UNITS": "units",
     "WEEK": "week",
@@ -50,6 +61,6 @@ class Dictionary {
   };
 
   static String get(String key) {
-    return strings[key] ?? missing;
+    return strings[key] ?? "$missing($key)";
   }
 }

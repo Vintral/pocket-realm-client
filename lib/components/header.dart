@@ -325,7 +325,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
         children: [
           ColorFiltered(
             colorFilter: ColorFilter.mode(
-              _theme.colorAccent,
+              _theme.color,
               _theme.blendMode,
             ),
             child: Image.asset("assets/ui/drawer-background.png",
@@ -514,7 +514,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                             angle: _rotateAnimation.value,
                             child: ColorFiltered(
                               colorFilter: ColorFilter.mode(
-                                _theme.colorAccent,
+                                _theme.color,
                                 _theme.blendMode,
                               ),
                               child: Image.asset("assets/ui/drawer-arrow.png"),

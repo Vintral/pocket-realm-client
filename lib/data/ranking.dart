@@ -13,7 +13,7 @@ class RankingData {
   RankingData(dynamic data) {
     place = 1;
     username = data["username"] ?? "";
-    avatar = data["avatar"] ?? "";
+    avatar = int.tryParse(data["avatar"] ?? "0") ?? 0;
     power = data["power"] ?? 0;
     land = data["land"] ?? 0;
 

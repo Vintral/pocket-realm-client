@@ -31,7 +31,7 @@ class ThemeProvider extends EventEmitter {
 
   double quantityPadding = 2.0;
 
-  int gradientOpacity = 100;
+  int gradientOpacity = 200;
 
   Color color = const Color.fromARGB(200, 0, 0, 0);
   Color colorAccent = const Color.fromARGB(200, 0, 0, 0);
@@ -101,7 +101,7 @@ class ThemeProvider extends EventEmitter {
 
     _classColorsMap["druid"] = ClassColors(base: Colors.green);
     _classColorsMap["merchant"] = ClassColors(base: Colors.yellow);
-    _classColorsMap["mage"] = ClassColors(base: Colors.blue);
+    _classColorsMap["mage"] = ClassColors.forClass("mage");
     _classColorsMap["priest"] = ClassColors(base: Colors.white);
     _classColorsMap["warlord"] = ClassColors(base: Colors.red);
     _classColorsMap["necromancer"] = ClassColors(base: Colors.blueGrey);
