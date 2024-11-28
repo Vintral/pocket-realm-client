@@ -11,6 +11,7 @@ import 'package:client/panels/conversation.dart';
 import 'package:client/panels/events.dart';
 import 'package:client/panels/explore.dart';
 import 'package:client/panels/gather.dart';
+import 'package:client/panels/market.dart';
 import 'package:client/panels/messages.dart';
 import 'package:client/panels/news.dart';
 import 'package:client/panels/rankings.dart';
@@ -36,7 +37,7 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  final Logger _logger = Logger(level: Logger.level);
+  final Logger _logger = Logger();
   final ThemeProvider _theme = ThemeProvider();
   final Connection _connection = Connection();
 
@@ -255,10 +256,13 @@ class _GameScreenState extends State<GameScreen> {
         child: Stack(
           children: [
             Positioned.fill(
+              // child: Image.asset("assets/ui/app-background.png",
+              //     fit: BoxFit.cover),
               child: ColorFiltered(
-                colorFilter: const ColorFilter.mode(
-                  Color.fromARGB(50, 33, 100, 150),
-                  BlendMode.color,
+                colorFilter: ColorFilter.mode(
+                  // _theme.colorBackground,
+                  _theme.colorBackground,
+                  _theme.blendMode,
                 ),
                 child: Image.asset("assets/ui/app-background.png",
                     fit: BoxFit.cover),
@@ -274,7 +278,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "rounds",
+                      initialRoute: "market",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -317,6 +321,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "conversation":
                             builder = (context) =>
                                 ConversationPanel(callback: onLoaded);
+                          case "market":
+                            builder =
+                                (context) => MarketPanel(callback: onLoaded);
                           case "events":
                             builder =
                                 (context) => EventsPanel(callback: onLoaded);

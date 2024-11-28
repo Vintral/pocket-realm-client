@@ -52,8 +52,8 @@ class RealmTab extends StatelessWidget {
           Center(
               child: Text(label,
                   style: enabled
-                      ? (active ? _theme.textMediumBold : _theme.textMedium)
-                      : _theme.textMedium
+                      ? (active ? _theme.textLargeBold : _theme.textLarge)
+                      : _theme.textLarge
                           .copyWith(color: _theme.colorDisabled))),
         ]),
       ),

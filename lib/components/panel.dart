@@ -11,16 +11,17 @@ class Panel extends StatelessWidget {
       required this.child,
       this.callback,
       this.form,
+      this.header,
       this.closable = false,
       this.loaded = true});
 
-  // final Logger _logger = Logger( level: Logger.level );
-  final Logger _logger = Logger(level: Level.off);
+  final Logger _logger = Logger();
   final ThemeProvider _theme = ThemeProvider();
 
   final String? label;
   final Widget child;
   final Widget? form;
+  final Widget? header;
   final bool loaded;
   final bool closable;
   final void Function(BuildContext)? callback;
@@ -77,9 +78,6 @@ class Panel extends StatelessWidget {
                             onTap: () => Navigator.of(context).pop(),
                             child: ColorFiltered(
                               colorFilter: ColorFilter.mode(
-                                // _theme.color,
-                                // _theme.blendMode,
-                                // _theme.color,
                                 _theme.colorAccent,
                                 _theme.blendMode,
                               ),
@@ -88,12 +86,14 @@ class Panel extends StatelessWidget {
                                 fit: BoxFit.fitHeight,
                               ),
                             ),
-                            // Image.asset( "assets/ui/close.png", fit: BoxFit.fitHeight, height: 50, ),
                           ),
                         )
                       : Container(),
                 ]),
           ]),
+          if (header != null) ...[
+            header as Widget,
+          ],
           if (form != null) ...[
             const SizedBox(height: 10),
             Padding(

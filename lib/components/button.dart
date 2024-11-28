@@ -31,7 +31,6 @@ class _ButtonState extends State<Button> {
 
   List<Widget> buildContent(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print(size);
 
     if (widget.busy) {
       return [

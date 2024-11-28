@@ -21,8 +21,11 @@ class ApplicationProvider extends EventEmitter {
   final List<NewsItemData> _news = <NewsItemData>[];
   List<NewsItemData> get news => _news;
 
-  final List<RoundData> _rounds = <RoundData>[];
-  List<RoundData> get rounds => _rounds;
+  final List<RoundData> _activeRounds = <RoundData>[];
+  List<RoundData> get activeRounds => _activeRounds;
+
+  final List<RoundData> _finishedRounds = <RoundData>[];
+  List<RoundData> get finishedRounds => _finishedRounds;
 
   ApplicationProvider._internal() {
     _logger.d('Created');
@@ -59,7 +62,9 @@ class ApplicationProvider extends EventEmitter {
     _logger.d(e.eventData["current"]);
     _logger.d(e.eventData["past"]);
 
-    _rounds.addAll(((e.eventData as dynamic)["past"] as List<dynamic>)
+    _activeRounds.addAll(((e.eventData as dynamic)["active"] as List<dynamic>)
+        .map((data) => RoundData(data)));
+    _finishedRounds.addAll(((e.eventData as dynamic)["past"] as List<dynamic>)
         .map((data) => RoundData(data)));
 
     emit("ROUNDS");

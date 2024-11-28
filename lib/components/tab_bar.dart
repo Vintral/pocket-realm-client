@@ -4,7 +4,12 @@ import 'package:client/components/tab.dart';
 import 'package:client/providers/theme.dart';
 
 class RealmTabBar extends StatelessWidget {
-  RealmTabBar({super.key, required this.tabs, this.active = "", this.handler});
+  RealmTabBar({
+    super.key,
+    required this.tabs,
+    this.active = "",
+    this.handler,
+  });
 
   final ThemeProvider _theme = ThemeProvider();
 

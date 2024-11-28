@@ -79,6 +79,10 @@ class Connection extends eventify.EventEmitter {
             }
         }
       }
+
+      if (data["user"] != null) {
+        emit("PLAYER_UPDATE", null, data);
+      }
     }, onError: (err) {
       _logger.e("DISCONNECTED");
       _logger.w('Error: ${err.toString()}');
@@ -250,6 +254,16 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "MARK_EVENT_SEEN", "event": event});
   }
 
+  void playRound(String round) {
+    _logger.i("playRound");
+    _send({"type": "PLAY_ROUND", "round": round});
+  }
+
+  void getMarketInfo() {
+    _logger.i("getMarketInfo");
+    _send({"type": "GET_MARKET_INFO"});
+  }
+
   // void sendLogin( { String username, String password } ) {
   //   debug( "sendLogin" );
   //   _send( { 'command': 'login', 'username': username, 'password': password } );
@@ -371,8 +385,8 @@ class Connection extends eventify.EventEmitter {
   void onTick(timer) {
     _logger.t("onTick");
 
-    if (_connected) {
-      _send({'type': 'PING'});
-    }
+    // if (_connected) {
+    //   _send({'type': 'PING'});
+    // }
   }
 }
