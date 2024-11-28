@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:client/capitalize.dart';
 import 'package:client/dictionary.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 Logger _logger = Logger(level: Level.off);
@@ -38,4 +41,32 @@ String timeSince(DateTime val, {bool suffixFlag = true}) {
   }
 
   return Dictionary.get("NOW");
+}
+
+LinearGradient buildBackgroundGradiant(int stripes,
+    {Color? dark, Color? light}) {
+  _logger.t("buildGradiant");
+
+  dark = dark ?? Color.fromARGB(150, 0, 0, 0);
+  light = light ?? Color.fromARGB(75, 0, 0, 0);
+
+  var colors = <Color>[];
+  var stops = <double>[];
+  var step = 1 / stripes;
+  for (int i = 0; i < stripes; i++) {
+    var base = step * i;
+    colors.addAll(i % 2 == 0 ? [dark, dark] : [light, light]);
+    stops.addAll([base, base + step]);
+  }
+
+  _logger.w(stops);
+
+  return LinearGradient(
+    begin: Alignment(0, 0),
+    end: Alignment(.3, 0),
+    tileMode: TileMode.repeated,
+    colors: colors,
+    stops: stops,
+    transform: const GradientRotation(pi / 4),
+  );
 }

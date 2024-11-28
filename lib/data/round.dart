@@ -4,7 +4,7 @@ import 'package:client/data/ranking.dart';
 import 'package:logger/logger.dart';
 
 class RoundData {
-  final Logger _logger = Logger(level: Level.trace);
+  final Logger _logger = Logger();
 
   late String title;
   late String guid;
@@ -35,7 +35,7 @@ class RoundData {
     starts = DateTime.tryParse(data["starts"] ?? "") ?? DateTime.now();
     ends = DateTime.tryParse(data["ends"]) ?? DateTime.now();
     nextTick = ends;
-    finished = DateTime.now().compareTo(ends) < 0;
+    finished = DateTime.now().compareTo(ends) > 0;
 
     ranks = data["top"] != null
         ? (data["top"] as List<dynamic>).map((r) => RankingData(r)).toList()

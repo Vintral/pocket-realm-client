@@ -2,7 +2,7 @@ import 'package:logger/logger.dart';
 
 class RankingData {
   // final Logger _logger = Logger(level: Logger.level);
-  final Logger _logger = Logger(level: Level.trace);
+  final Logger _logger = Logger();
 
   late int place;
   late String username;
@@ -12,8 +12,10 @@ class RankingData {
 
   RankingData(dynamic data) {
     place = 1;
-    username = data["username"] ?? "";
-    avatar = int.tryParse(data["avatar"] ?? "0") ?? 0;
+    username = data["username"] ?? data["name"] ?? "";
+    avatar = data["avatar"] is int
+        ? data["avatar"]
+        : int.tryParse(data["avatar"] ?? "0");
     power = data["power"] ?? 0;
     land = data["land"] ?? 0;
 

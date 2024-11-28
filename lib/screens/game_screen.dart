@@ -11,6 +11,7 @@ import 'package:client/panels/conversation.dart';
 import 'package:client/panels/events.dart';
 import 'package:client/panels/explore.dart';
 import 'package:client/panels/gather.dart';
+import 'package:client/panels/market.dart';
 import 'package:client/panels/messages.dart';
 import 'package:client/panels/news.dart';
 import 'package:client/panels/rankings.dart';
@@ -277,7 +278,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "rounds",
+                      initialRoute: "market",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -320,6 +321,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "conversation":
                             builder = (context) =>
                                 ConversationPanel(callback: onLoaded);
+                          case "market":
+                            builder =
+                                (context) => MarketPanel(callback: onLoaded);
                           case "events":
                             builder =
                                 (context) => EventsPanel(callback: onLoaded);

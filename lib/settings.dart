@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Settings {
   static String version = "0.0.1";
   static String server =
-      "2b06-2600-8800-7319-3a00-680f-6f1-33c1-4bd7.ngrok-free.app";
+      "5d8f-2600-8800-7319-3a00-850f-8f30-5fbc-8e8f.ngrok-free.app";
 
   //static String Round = "747352df-2da5-4b42-ada7-8f74f2090ae6";
 

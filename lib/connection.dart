@@ -259,6 +259,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "PLAY_ROUND", "round": round});
   }
 
+  void getMarketInfo() {
+    _logger.i("getMarketInfo");
+    _send({"type": "GET_MARKET_INFO"});
+  }
+
   // void sendLogin( { String username, String password } ) {
   //   debug( "sendLogin" );
   //   _send( { 'command': 'login', 'username': username, 'password': password } );
