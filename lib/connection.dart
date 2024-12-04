@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class Connection extends eventify.EventEmitter {
-  final Logger _logger = Logger(level: Level.warning);
+  final Logger _logger = Logger();
 
   late WebSocketChannel _channel;
 
@@ -261,7 +261,7 @@ class Connection extends eventify.EventEmitter {
 
   void getMarketInfo() {
     _logger.i("getMarketInfo");
-    _send({"type": "GET_MARKET_INFO"});
+    _send({"type": "MARKET_INFO"});
   }
 
   // void sendLogin( { String username, String password } ) {

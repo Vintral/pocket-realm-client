@@ -37,6 +37,8 @@ class ThemeProvider extends EventEmitter {
   Color colorAccent = const Color.fromARGB(200, 0, 0, 0);
   Color colorBackground = const Color.fromARGB(200, 0, 0, 0);
   Color colorDisabled = const Color.fromARGB(200, 0, 0, 0);
+  Color colorBackgroundGradiantDark = const Color.fromARGB(200, 0, 0, 0);
+  Color colorBackgroundGradiantLight = const Color.fromARGB(200, 0, 0, 0);
   Color colorText = Colors.white;
   BlendMode blendMode = BlendMode.darken;
 
@@ -284,6 +286,10 @@ class ThemeProvider extends EventEmitter {
     colorBackground = classColors?.colorBackground ?? Colors.transparent;
     colorText = classColors?.colorText ?? Colors.white;
     colorDisabled = classColors?.colorDisabled ?? Colors.transparent;
+    colorBackgroundGradiantDark =
+        classColors?.colorBackgroundGradiantDark ?? Colors.transparent;
+    colorBackgroundGradiantLight =
+        classColors?.colorBackgroundGradiantLight ?? Colors.transparent;
 
     setTextStyles(colorText);
 

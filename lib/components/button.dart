@@ -1,3 +1,4 @@
+import 'package:client/components/base_button.dart';
 import 'package:client/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -5,14 +6,16 @@ import 'package:logger/logger.dart';
 class Button extends StatefulWidget {
   const Button(
       {super.key,
-      required this.text,
+      this.text,
       required this.handler,
       this.image,
       this.enabled = true,
       this.largeFont = false,
+      this.content,
       this.busy = false});
 
-  final String text;
+  final Widget? content;
+  final String? text;
   final void Function() handler;
   final String? image;
   final bool largeFont;
@@ -45,8 +48,12 @@ class _ButtonState extends State<Button> {
       ];
     }
 
+    if (widget.content != null) {
+      return [widget.content ?? Container()];
+    }
+
     return [
-      Text(widget.text,
+      Text(widget.text ?? "",
           style:
               widget.largeFont ? _theme.textLargeBold : _theme.textMediumBold),
       if (widget.image != null) ...[
@@ -62,66 +69,35 @@ class _ButtonState extends State<Button> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: onTapDown,
-      onTapUp: onTapUp,
-      onTapCancel: onTapCancel,
-      child: Stack(children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              widget.busy || !widget.enabled
-                  ? _theme.colorDisabled
-                  : _theme.color,
-              _theme.blendMode,
-            ),
-            child: Image.asset(
-              "assets/ui/button-${_pressed ? "down" : "up"}.png",
+    return BaseButton(
+      handler: widget.handler,
+      children: [
+        Stack(children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(_theme.gap),
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                widget.busy || !widget.enabled
+                    ? _theme.colorDisabled
+                    : _theme.color,
+                _theme.blendMode,
+              ),
+              child: Image.asset(
+                "assets/ui/button-${_pressed ? "down" : "up"}.png",
+              ),
             ),
           ),
-        ),
-        Positioned.fill(
-          top: _pressed ? 5 : 0,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: buildContent(context),
+          Positioned.fill(
+            top: _pressed ? 5 : 0,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: buildContent(context),
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ],
     );
-  }
-
-  void onTapDown(TapDownDetails details) {
-    if (!widget.enabled || widget.busy) return;
-
-    _logger.d("onTapDown");
-
-    setState(() {
-      _pressed = true;
-    });
-  }
-
-  void onTapUp(TapUpDetails details) {
-    if (!widget.enabled || widget.busy) return;
-
-    _logger.d("onTapUp");
-
-    setState(() {
-      _pressed = false;
-      widget.handler();
-    });
-  }
-
-  void onTapCancel() {
-    if (!widget.enabled || widget.busy) return;
-
-    _logger.d("onTapCancel");
-
-    setState(() {
-      _pressed = false;
-    });
   }
 }

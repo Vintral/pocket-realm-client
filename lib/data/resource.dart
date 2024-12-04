@@ -3,25 +3,29 @@ import 'package:logger/logger.dart';
 
 class Resource extends RealmObject {
   final Logger _logger = Logger();
-  
+
   late bool canGather;
   late bool canMarket;
 
-  Resource( dynamic data ) : super( data ) {
+  double _value = 0.00;
+  double get value => _value;
+  set value(val) => _value = val;
+
+  Resource(dynamic data) : super(data) {
     folder = "resources";
 
-    canGather = data[ "can_gather" ];        
-    canMarket = data[ "can_market" ];
+    canGather = data["can_gather"];
+    canMarket = data["can_market"];
 
     dump();
   }
 
   @override
-  void dump() {    
+  void dump() {
     super.dump();
 
-    _logger.t( "Gatherable: ${canGather ? "Yes" : "No"}" );
-    _logger.t( "Marketable: ${canMarket ? "Yes" : "No"}" );
+    _logger.t("Gatherable: ${canGather ? "Yes" : "No"}");
+    _logger.t("Marketable: ${canMarket ? "Yes" : "No"}");
 
     dumpBorder();
   }
