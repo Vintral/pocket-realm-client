@@ -73,7 +73,9 @@ class _RoundState extends State<Round> {
           clipBehavior: Clip.hardEdge,
           height: _max,
           child: Column(
-            children: [...data.map((item) => Ranking(item as dynamic))],
+            children: [
+              ...data.map((item) => Ranking.fromData(item as dynamic))
+            ],
           ),
         ),
         onEnd: () {
@@ -150,7 +152,7 @@ class _RoundState extends State<Round> {
                       key: _key,
                       children: [
                         ...widget.data.ranks!
-                            .map((item) => Ranking(item as dynamic))
+                            .map((item) => Ranking.fromData(item as dynamic))
                       ],
                     ))
                 : SizedBox(

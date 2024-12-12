@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:client/components/base_button.dart';
 import 'package:client/providers/theme.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class Button extends StatefulWidget {
   const Button(
@@ -27,10 +27,9 @@ class Button extends StatefulWidget {
 }
 
 class _ButtonState extends State<Button> {
-  final Logger _logger = Logger();
   final ThemeProvider _theme = ThemeProvider();
 
-  bool _pressed = false;
+  final bool _pressed = false;
 
   List<Widget> buildContent(BuildContext context) {
     var size = MediaQuery.of(context).size;

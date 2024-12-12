@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:client/capitalize.dart';
 import 'package:client/dictionary.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';

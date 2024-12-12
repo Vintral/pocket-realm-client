@@ -1,8 +1,5 @@
-import 'package:client/capitalize.dart';
 import 'package:client/components/base_button.dart';
 import 'package:client/components/base_display.dart';
-import 'package:client/components/button.dart';
-import 'package:client/components/quantity_row.dart';
 import 'package:client/data/resource.dart';
 import 'package:flutter/material.dart';
 
@@ -28,8 +25,8 @@ class MarketPanel extends StatefulWidget {
 }
 
 class _MarketPanelState extends ListPanelState<MarketPanel>
-    with SingleTickerProviderStateMixin {
-  final Logger _logger = Logger();
+    with TickerProviderStateMixin {
+  final Logger _logger = Logger(level: Level.trace);
 
   final ThemeProvider _theme = ThemeProvider();
   final _provider = MarketProvider();
@@ -38,10 +35,15 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
   late eventify.Listener _onMarketError;
   late eventify.Listener _onMarketInfo;
   late TabController _tabController;
+  late TabController _subTabController;
 
   String _activeResource = "";
   String _activeTab = Dictionary.get("RESOURCE");
-  int _quantity = 1;
+  String _activeSubTab = Dictionary.get("BUY");
+
+  final _wrapKeys = <GlobalKey>[GlobalKey(), GlobalKey()];
+  double _wrapSize = 0;
+  double _wrapWidth = 0;
 
   @override
   void initState() {
@@ -50,6 +52,7 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     _logger.t("initState");
 
     _tabController = TabController(length: 3, vsync: this);
+    _subTabController = TabController(length: 2, vsync: this);
 
     // _onPlayRoundError =
     //     _connection.on("PLAY_ROUND_ERROR", null, onPlayRoundError);
@@ -98,6 +101,23 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     });
   }
 
+  void onSubTab(String tab) {
+    _logger.f("onSubTab: $tab");
+    setState(() {
+      _activeSubTab = tab.toLowerCase();
+
+      _logger.i("Active: $_activeSubTab");
+      switch (_activeSubTab) {
+        case "buy":
+          _subTabController.index = 0;
+        case "sell":
+          _subTabController.index = 1;
+      }
+
+      _logger.i("Tab Controller Index: ${_subTabController.index}");
+    });
+  }
+
   void onMarketError(eventify.Event ev, Object? context) {
     _logger.w("onMarketError");
 
@@ -115,8 +135,6 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
     var sellable =
         _library.resources.where((resource) => resource.canMarket).toList();
-
-    sellable.forEach((resource) => resource.dump());
 
     if (_activeResource == "") {
       setState(() {
@@ -145,17 +163,71 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     _logger.w("buy: $quantity");
   }
 
+  void sell(int quantity) {
+    _logger.w("sell: $quantity");
+  }
+
   Widget buildResourceDetail() {
-    _logger.t("buildResourceDetail");
+    _logger.t("buildResourceDetail: $_wrapSize");
 
     Resource? resource = _library.getResource(_activeResource);
-    double buyFor = (resource?.value ?? 0) * _quantity;
-    double sellFor =
-        (resource?.value ?? 0) != 0 ? (1 / resource!.value) * _quantity : 0;
 
-    var style = _theme.textLargeBold;
+    // double buyFor = (resource?.value ?? 0) * _quantity;
+    // double sellFor =
+    //     (resource?.value ?? 0) != 0 ? (1 / resource!.value) * _quantity : 0;
 
-    return Column(
+    var style = _theme.textMediumBold;
+
+    const vals = [1, 10, 100, 1000, 10000];
+
+    // return LayoutBuilder(builder: (context, constraints) {
+    //   _logger.w(constraints);
+
+    //   var size = constraints.maxHeight - constraints.maxWidth - _theme.gap * 5;
+    //   _logger.w(size);
+
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   _logger.w(context.size);
+    //   if ((context.size?.width ?? 0) != _wrapWidth) {
+    //     setState(() {
+    //       _wrapWidth = context.size?.width ?? 0;
+    //       _logger.w("Set Width to $_wrapWidth");
+    //     });
+    //   }
+    //   if ((context.size?.height ?? 0) != _wrapSize) {
+    //     setState(() {
+    //       _wrapSize = context.size?.height ?? 0;
+    //       _logger.w("Set Height to $_wrapSize");
+    //     });
+    //   }
+    // _logger.w(
+    //     (_wrapKeys[0].currentContext!.findRenderObject() as RenderBox).size);
+    // _logger.w(
+    //     (_wrapKeys[1].currentContext!.findRenderObject() as RenderBox).size);
+
+    // var size = ((_wrapKeys[0].currentContext?.findRenderObject() ??
+    //     _wrapKeys[1].currentContext?.findRenderObject()) as RenderBox);
+    // _logger.w(size.size);
+
+    // _wrapSize = size.size.width;
+
+    // if (size.height != _wrapSize) {
+    //   _logger.w("We need to set size |${size.height}|$_wrapSize|");
+    //   setState(() {
+    //     _wrapSize = size.height;
+    //   });
+    // } else {
+    //   _logger.w("We don't need to set size |${size.height}|$_wrapSize|");
+    // }
+    // });
+
+    var buttonHeight = MediaQuery.of(context).size.height / 15;
+    _logger.w(buttonHeight);
+
+    var iconSize = buttonHeight / 3;
+
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
         spacing: _theme.gap,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -165,32 +237,161 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
               item: resource,
             ),
           ),
-          Flexible(
-              child: BaseDisplay(
-                  child: Padding(
-                      padding: EdgeInsets.all(_theme.gap),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(Dictionary.get("BUY").capitalize(),
-                              style: _theme.textExtraLargeBold),
-                          Row(
-                            spacing: _theme.gap,
-                            children: [
-                              ...[1, 10, 100].map(
-                                (val) => Flexible(
-                                  child: BaseButton(children: [
-                                    Text(val.toString(), style: style),
-                                    Text(Dictionary.get("FOR"), style: style),
-                                    Image.asset("assets/resources/gold.png")
-                                  ], handler: () => buy(1)),
+          BaseDisplay(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: _theme.gap,
+              children: [
+                RealmTabBar(
+                    tabs: [
+                      Dictionary.get("BUY").toUpperCase(),
+                      Dictionary.get("SELL").toUpperCase(),
+                    ],
+                    active: _activeSubTab,
+                    enabled: _provider.loaded,
+                    handler: onSubTab),
+                SizedBox(
+                  width: constraints.maxWidth,
+                  height: buttonHeight * 2 + _theme.gap * 2,
+                  child: TabBarView(
+                    controller: _subTabController,
+                    children: [
+                      GridView.count(
+                        crossAxisCount: 3,
+                        primary: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        // spacing: _theme.gap,
+                        // runSpacing: _theme.gap,
+                        childAspectRatio: 1.5,
+                        children: vals
+                            .map(
+                              (val) => Padding(
+                                padding: EdgeInsets.all(_theme.gap / 2),
+                                child: BaseButton(
+                                  borderRadius:
+                                      BorderRadius.circular(_theme.gap),
+                                  children: [
+                                    Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                              spacing: _theme.gap / 2,
+                                              children: [
+                                                Text(val.toString(),
+                                                    style: style),
+                                                Image.asset(
+                                                  "assets/${resource!.folder}/${resource!.name}.png",
+                                                  width: iconSize,
+                                                  height: iconSize,
+                                                ),
+                                              ]),
+
+                                          // Image.asset("assets/resources/gold.png")
+                                        ]),
+                                  ],
+                                  handler: () => buy(1),
                                 ),
                               ),
-                            ],
-                          )
-                        ],
-                      )))),
-        ]);
+                            )
+                            .toList(),
+                      ),
+                      GridView.count(
+                        crossAxisCount: 3,
+                        // spacing: _theme.gap,
+                        // runSpacing: _theme.gap,
+                        children: vals
+                            .map(
+                              (val) => SizedBox(
+                                height: 40,
+                                child: BaseButton(
+                                  children: [
+                                    Text(val.toString(), style: style),
+                                    Text(Dictionary.get("FOR"), style: style),
+                                    // Image.asset("assets/resources/gold.png")
+                                  ],
+                                  handler: () => sell(1),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                    // GridView.count(
+                    //   crossAxisCount: 3,
+                    //   primary: true,
+                    //   crossAxisSpacing: _theme.gap,
+                    //   mainAxisSpacing: _theme.gap,
+                    //   children: vals
+                    //       .map(
+                    //         (val) => SizedBox(
+                    //           height: 40,
+                    //           child: BaseButton(
+                    //             children: [
+                    //               Text(val.toString(), style: style),
+                    //               Text(Dictionary.get("FOR"), style: style),
+                    //               // Image.asset("assets/resources/gold.png")
+                    //             ],
+                    //             handler: () => buy(1),
+                    //           ),
+                    //         ),
+                    //       )
+                    //       .toList(),
+                    // ),
+                    // GridView.count(
+                    //   crossAxisCount: 3,
+                    //   primary: true,
+                    //   crossAxisSpacing: _theme.gap,
+                    //   mainAxisSpacing: _theme.gap,
+                    //   children: vals
+                    //       .map(
+                    //         (val) => SizedBox(
+                    //           height: 40,
+                    //           child: BaseButton(
+                    //             children: [
+                    //               Text(val.toString(), style: style),
+                    //               Text(Dictionary.get("FOR"), style: style),
+                    //               // Image.asset("assets/resources/gold.png")
+                    //             ],
+                    //             handler: () => sell(1),
+                    //           ),
+                    //         ),
+                    //       )
+                    //       .toList(),
+                    // )
+
+                    // Wrap(
+                    //   key: _wrapKeys[1],
+                    //   spacing: _theme.gap,
+                    //   runSpacing: _theme.gap,
+                    //   children: vals
+                    //       .map(
+                    //         (val) => SizedBox(
+                    //           height: 40,
+                    //           child: BaseButton(
+                    //             children: [
+                    //               Text(val.toString(), style: style),
+                    //               Text(Dictionary.get("FOR"),
+                    //                   style: style),
+                    //               Image.asset(
+                    //                   "assets/resources/gold.png")
+                    //             ],
+                    //             handler: () => sell(1),
+                    //           ),
+                    //         ),
+                    //       )
+                    //       .toList(),
+                    // ),
+                    // ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+    // });
   }
 
   Widget buildResourceMarket() {

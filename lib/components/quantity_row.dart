@@ -1,5 +1,4 @@
 import 'package:client/components/base_button.dart';
-import 'package:client/components/button.dart';
 import 'package:client/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -15,7 +14,7 @@ class _QuantityRowState extends State<QuantityRow> {
   final _theme = ThemeProvider();
   final _logger = Logger(level: Level.debug);
 
-  int _quantity = 0;
+  // int _quantity = 0;
 
   @override
   void initState() {

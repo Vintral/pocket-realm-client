@@ -71,10 +71,11 @@ class _GatherPanelState extends ListPanelState<GatherPanel> {
         _library.resources.where((resource) => resource.canGather).toList();
     List<Widget> ret = <Widget>[];
     for (var i = 0; i < resources.length; i++) {
-      if (i != 0)
+      if (i != 0) {
         ret.add(SizedBox(
           width: Settings.horizontalGap,
         ));
+      }
       _logger.e("${resources[i].name} == ${_provider.resource}");
       ret.add(ItemWithBorder(
         item: resources[i],

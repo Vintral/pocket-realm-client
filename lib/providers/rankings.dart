@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:client/data/ranking.dart';
 import 'package:eventify/eventify.dart';
 import 'package:logger/logger.dart';
@@ -36,9 +34,6 @@ class RankingsProvider extends EventEmitter {
     _logger.d("onRankings");
 
     var data = e.eventData;
-
-    print(data["top"]);
-    print(data["near"]);
 
     _top.addAll((data["top"] as List<dynamic>)
         .map<RankingData>((data) => RankingData(data)));

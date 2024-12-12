@@ -120,20 +120,27 @@ class _BuildDetailsPanelState extends State<BuildDetailsPanel> {
     List<Widget> ret = <Widget>[];
 
     List<Widget> children = <Widget>[];
-    if (_building.upkeepGold > 0)
+    if (_building.upkeepGold > 0) {
       children.add(buildStat(_building.upkeepGold.toString(), "gold"));
-    if (_building.upkeepFood > 0)
+    }
+    if (_building.upkeepFood > 0) {
       children.add(buildStat(_building.upkeepFood.toString(), "food"));
-    if (_building.upkeepWood > 0)
+    }
+    if (_building.upkeepWood > 0) {
       children.add(buildStat(_building.upkeepWood.toString(), "wood"));
-    if (_building.upkeepStone > 0)
+    }
+    if (_building.upkeepStone > 0) {
       children.add(buildStat(_building.upkeepStone.toString(), "stone"));
-    if (_building.upkeepMetal > 0)
+    }
+    if (_building.upkeepMetal > 0) {
       children.add(buildStat(_building.upkeepMetal.toString(), "metal"));
-    if (_building.upkeepFaith > 0)
+    }
+    if (_building.upkeepFaith > 0) {
       children.add(buildStat(_building.upkeepFaith.toString(), "faith"));
-    if (_building.upkeepMana > 0)
+    }
+    if (_building.upkeepMana > 0) {
       children.add(buildStat(_building.upkeepMana.toString(), "mana"));
+    }
 
     if (children.isEmpty) {
       //children.add( Text( "---", style: _theme.resultStyle ) );

@@ -197,15 +197,15 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
 
     widget.callback(context);
 
-    _logger
-        .d(_provider.conversationMap[_provider.conversation]?.username ?? "--");
+    // _logger
+    //     .d(_provider.conversationMap[_provider.conversation]?.username ?? "--");
 
     return Panel(
       loaded: _provider.conversations.isNotEmpty,
       closable: true,
       form: buildForm(),
       label:
-          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversationMap[_provider.conversation]?.username ?? "--"}",
+          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversationMap[_provider.conversation?.username]?.username ?? "--"}",
       child: buildResults(),
     );
   }

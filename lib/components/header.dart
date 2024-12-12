@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:client/capitalize.dart';
 import 'package:client/components/header_stat.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/tab_bar.dart';
@@ -27,8 +26,10 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> with TickerProviderStateMixin {
-  final Logger _logger =
-      Logger(level: Level.warning, printer: PrettyPrinter(printTime: true));
+  final Logger _logger = Logger(
+      level: Level.warning,
+      printer:
+          PrettyPrinter(dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart));
   final _player = PlayerProvider();
   final _library = LibraryProvider();
   final _theme = ThemeProvider();
@@ -386,8 +387,9 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.neverShow) return;
 
-      if (_getSize(_key).height > 0)
+      if (_getSize(_key).height > 0) {
         _theme.headerDrawerBackground = _getSize(_key).height;
+      }
 
       if (_open && _controllerOffset.status == AnimationStatus.completed) {
         var distance = getOffsetForWrap();

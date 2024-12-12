@@ -5,8 +5,10 @@ import 'package:logger/logger.dart';
 class BaseButton extends StatefulWidget {
   const BaseButton(
       {super.key,
+      this.padding = EdgeInsets.zero,
       this.enabled = true,
       this.busy = false,
+      this.borderRadius = BorderRadius.zero,
       required this.handler,
       this.children = const <Widget>[]});
 
@@ -15,7 +17,9 @@ class BaseButton extends StatefulWidget {
 
   final bool enabled;
   final bool busy;
+  final EdgeInsets padding;
   final List<Widget> children;
+  final BorderRadius borderRadius;
 
   @override
   State<BaseButton> createState() => _BaseButtonState();
@@ -58,37 +62,56 @@ class _BaseButtonState extends State<BaseButton> {
     });
   }
 
+  Widget handleBorderRadius() {
+    Widget background = ColorFiltered(
+      colorFilter: ColorFilter.mode(
+        widget.busy || !widget.enabled ? _theme.colorDisabled : _theme.color,
+        _theme.blendMode,
+      ),
+      child: Image.asset(
+        "assets/ui/button-${_pressed ? "down" : "up"}.png",
+        fit: BoxFit.fill,
+      ),
+    );
+
+    if (widget.borderRadius != BorderRadius.zero) {
+      background = ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: background,
+      );
+    }
+
+    return Positioned.fill(
+      child: background,
+    );
+  }
+
+  List<Widget> handleChildren() {
+    return [
+      Positioned.fill(
+        top: _pressed ? _theme.gap / 2 : 0,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widget.children,
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: onTapDown,
-      onTapUp: onTapUp,
-      onTapCancel: onTapCancel,
-      child: Stack(children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              widget.busy || !widget.enabled
-                  ? _theme.colorDisabled
-                  : _theme.color,
-              _theme.blendMode,
-            ),
-            child: Image.asset(
-              "assets/ui/button-${_pressed ? "down" : "up"}.png",
-            ),
-          ),
-        ),
-        Positioned.fill(
-          top: _pressed ? _theme.gap / 2 : 0,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.children,
-          ),
-        ),
-      ]),
-    );
+    var children = [handleBorderRadius(), ...handleChildren()];
+
+    return Container(
+        // color: Colors.yellow,
+        child: GestureDetector(
+            onTapDown: onTapDown,
+            onTapUp: onTapUp,
+            onTapCancel: onTapCancel,
+            child: Stack(
+              children: children,
+            )));
   }
 }
