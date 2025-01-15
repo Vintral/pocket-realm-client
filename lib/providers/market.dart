@@ -27,12 +27,24 @@ class MarketProvider extends EventEmitter {
 
     _connection.on("ERROR", null, onError);
     _connection.on("MARKET_INFO", null, onMarketInfo);
+    _connection.on("MARKET_SOLD", null, onMarketSold);
+    _connection.on("MARKET_BOUGHT", null, onMarketBought);
   }
 
   void onError(Event ev, Object? context) {
     _logger.d("onError");
 
     emit("ERROR");
+  }
+
+  void onMarketSold(e, o) {
+    _logger.t("onMarketSold");
+    emit("SUCCESS");
+  }
+
+  void onMarketBought(e, o) {
+    _logger.t("onMarketBought");
+    emit("SUCCESS");
   }
 
   void onMarketInfo(Event ev, Object? context) {
@@ -50,6 +62,16 @@ class MarketProvider extends EventEmitter {
 
     _logger.d(_library.resources);
     emit("INFO");
+  }
+
+  void buyResource(int amount, String resource) {
+    _logger.t("buyResource: $amount $resource");
+    _connection.sendBuyResource(amount, resource);
+  }
+
+  void sellResource(int amount, String resource) {
+    _logger.t("sellResource: $amount $resource");
+    _connection.sendSellResource(amount, resource);
   }
 
   void load() {

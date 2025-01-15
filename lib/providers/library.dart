@@ -13,113 +13,116 @@ class LibraryProvider extends eventify.EventEmitter {
     return _instance;
   }
 
-  final Logger _logger = Logger( level: Logger.level );
-  final Connection _connection = Connection();  
+  final Logger _logger = Logger(level: Logger.level);
+  final Connection _connection = Connection();
 
   bool _loading = false;
   bool _loaded = false;
-  bool get loaded => _loaded;  
+  bool get loaded => _loaded;
 
-  final Map<String,Resource> _mapResources = <String,Resource>{};
-  final List<Resource> _resources = [];  
+  final Map<String, Resource> _mapResources = <String, Resource>{};
+  final List<Resource> _resources = [];
   List<Resource> get resources => _resources;
 
-  final Map<String,Unit> _mapUnits = <String,Unit>{};
+  Resource? get resourceGold =>
+      _resources.firstWhere((resource) => resource.name == "gold");
+
+  final Map<String, Unit> _mapUnits = <String, Unit>{};
   final List<Unit> _units = [];
   List<Unit> get units => _units;
 
-  final Map<String,Building> _mapBuildings = <String,Building>{};
+  final Map<String, Building> _mapBuildings = <String, Building>{};
   final List<Building> _buildings = [];
   List<Building> get buildings => _buildings;
 
   LibraryProvider._internal() {
-    _logger.d( 'Created' );
-    _connection.on( "ROUND", null, onRound );
+    _logger.d('Created');
+    _connection.on("ROUND", null, onRound);
   }
 
-  void load( String round ) {
-    if( _loading ) return;
+  void load(String round) {
+    if (_loading) return;
     _loading = true;
     _loaded = false;
 
-    _logger.d( "load" );    
-    
-    emit( "LOADING" );    
+    _logger.d("load");
 
-    _connection.sendRetrieveLibrary( round: round);
+    emit("LOADING");
+
+    _connection.sendRetrieveLibrary(round: round);
   }
 
-  void onRound( ev, obj ) {
-    _logger.d( "onRound" );
+  void onRound(ev, obj) {
+    _logger.d("onRound");
 
-    _logger.e( ev.eventData );
+    _logger.e(ev.eventData);
 
-    var data = ( ev.eventData as dynamic )["round"];
-    parseResources( data[ "resources" ] );
-    parseBuildings( data[ "buildings" ] );
-    parseUnits( data[ "units" ] );
-    
+    var data = (ev.eventData as dynamic)["round"];
+    parseResources(data["resources"]);
+    parseBuildings(data["buildings"]);
+    parseUnits(data["units"]);
+
     _loading = false;
     _loaded = true;
-    emit( "LOADED" );
+    emit("LOADED");
   }
 
-  Resource? getResource( String guid ) {
-    _logger.d( "getResource: $guid" );
-    return _mapResources[ guid ];
+  Resource? getResource(String guid) {
+    _logger.d("getResource: $guid");
+    return _mapResources[guid];
   }
 
-  Unit? getUnit( String guid ) {
-    _logger.d( "getUnit: $guid" );
-    return _mapUnits[ guid ];
+  Unit? getUnit(String guid) {
+    _logger.d("getUnit: $guid");
+    return _mapUnits[guid];
   }
 
-  Building? getBuilding( String guid ) {
-    _logger.d( "getBuilding: $guid" );
-    return _mapBuildings[ guid ];
+  Building? getBuilding(String guid) {
+    _logger.d("getBuilding: $guid");
+    return _mapBuildings[guid];
   }
 
-  void sort( List<RealmObject> objects ) {
-    objects.sort( ( r1, r2 ) => r1.order.compareTo( r2.order ) );
+  void sort(List<RealmObject> objects) {
+    objects.sort((r1, r2) => r1.order.compareTo(r2.order));
   }
 
-  void parseResources( dynamic resources ) {
+  void parseResources(dynamic resources) {
     _resources.clear();
 
-    for( final r in resources ) {
-      var resource = Resource( r );
-      _resources.add( resource );      
-      _mapResources[ resource.guid ] = resource;
+    for (final r in resources) {
+      var resource = Resource(r);
+      _resources.add(resource);
+      _mapResources[resource.guid] = resource;
     }
 
-    sort( _resources );    
+    sort(_resources);
   }
 
-  void parseBuildings( dynamic buildings ) {
+  void parseBuildings(dynamic buildings) {
     _buildings.clear();
 
-    if( buildings != null && buildings.length > 0 ) {
-      for( final b in buildings ) {
-        var building = Building( b );
-        _buildings.add( building );
-        _mapBuildings[ building.guid ] = building;
+    if (buildings != null && buildings.length > 0) {
+      for (final b in buildings) {
+        var building = Building(b);
+        _buildings.add(building);
+        _mapBuildings[building.guid] = building;
       }
     }
 
-    sort( _buildings );    
+    sort(_buildings);
   }
 
-  void parseUnits( dynamic units ) {
+  void parseUnits(dynamic units) {
     _units.clear();
 
-    if( units != null && units.length > 0 ) {
-      for( final u in units ) {
-        var unit = Unit( u );
-        _units.add( unit );
-        _mapUnits[ unit.guid ] = unit;
+    if (units != null && units.length > 0) {
+      for (final u in units) {
+        var unit = Unit(u);
+        _units.add(unit);
+        _mapUnits[unit.guid] = unit;
       }
     }
 
-    sort( _units );    
+    sort(_units);
   }
 }

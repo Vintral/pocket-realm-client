@@ -1,14 +1,15 @@
-import 'package:client/components/base_button.dart';
-import 'package:client/components/base_display.dart';
-import 'package:client/data/resource.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
+import 'package:client/components/base_display.dart';
+import 'package:client/components/market_button.dart';
+import 'package:client/connection.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/tab_bar.dart';
+import 'package:client/data/resource.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/library.dart';
 import 'package:client/providers/market.dart';
@@ -31,15 +32,20 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
   final ThemeProvider _theme = ThemeProvider();
   final _provider = MarketProvider();
   final _library = LibraryProvider();
+  final _connection = Connection();
 
   late eventify.Listener _onMarketError;
   late eventify.Listener _onMarketInfo;
+  late eventify.Listener _onMarketSuccess;
+
   late TabController _tabController;
   late TabController _subTabController;
 
   String _activeResource = "";
   String _activeTab = Dictionary.get("RESOURCE");
   String _activeSubTab = Dictionary.get("BUY");
+
+  bool _busy = false;
 
   final _wrapKeys = <GlobalKey>[GlobalKey(), GlobalKey()];
   double _wrapSize = 0;
@@ -61,6 +67,7 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
     _onMarketError = _provider.on("ERROR", null, onMarketError);
     _onMarketInfo = _provider.on("INFO", null, onMarketInfo);
+    _onMarketSuccess = _provider.on("SUCCESS", null, onMarketSuccess);
 
     // _onRoundsListener = _provider.on("ROUNDS", null, onRounds);
     // if (_provider.activeRounds.isEmpty) {
@@ -78,6 +85,7 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
     _onMarketError.cancel();
     _onMarketInfo.cancel();
+    _onMarketSuccess.cancel();
 
     super.dispose();
   }
@@ -120,14 +128,19 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
   void onMarketError(eventify.Event ev, Object? context) {
     _logger.w("onMarketError");
-
     setState(() {});
   }
 
   void onMarketInfo(eventify.Event ev, Object? context) {
     _logger.i("onMarketInfo");
-
     setState(() {});
+  }
+
+  void onMarketSuccess(e, o) {
+    _logger.i("onMarketSuccess");
+    setState(() {
+      _busy = false;
+    });
   }
 
   Widget buildResourceList() {
@@ -161,10 +174,20 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
   void buy(int quantity) {
     _logger.w("buy: $quantity");
+
+    _provider.buyResource(quantity, _activeResource);
+    setState(() {
+      _busy = true;
+    });
   }
 
   void sell(int quantity) {
     _logger.w("sell: $quantity");
+
+    _connection.sendSellResource(quantity, _activeResource);
+    setState(() {
+      _busy = true;
+    });
   }
 
   Widget buildResourceDetail() {
@@ -260,37 +283,20 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
                         crossAxisCount: 3,
                         primary: true,
                         physics: NeverScrollableScrollPhysics(),
-                        // spacing: _theme.gap,
-                        // runSpacing: _theme.gap,
                         childAspectRatio: 1.5,
                         children: vals
                             .map(
                               (val) => Padding(
                                 padding: EdgeInsets.all(_theme.gap / 2),
-                                child: BaseButton(
+                                child: MarketButton(
+                                  topAmount: val,
+                                  busy: _busy,
+                                  topResource: resource,
+                                  bottomAmount: (val * resource!.value).ceil(),
+                                  bottomResource: _library.resourceGold,
                                   borderRadius:
                                       BorderRadius.circular(_theme.gap),
-                                  children: [
-                                    Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                              spacing: _theme.gap / 2,
-                                              children: [
-                                                Text(val.toString(),
-                                                    style: style),
-                                                Image.asset(
-                                                  "assets/${resource!.folder}/${resource!.name}.png",
-                                                  width: iconSize,
-                                                  height: iconSize,
-                                                ),
-                                              ]),
-
-                                          // Image.asset("assets/resources/gold.png")
-                                        ]),
-                                  ],
-                                  handler: () => buy(1),
+                                  handler: () => buy(val),
                                 ),
                               ),
                             )
@@ -302,15 +308,18 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
                         // runSpacing: _theme.gap,
                         children: vals
                             .map(
-                              (val) => SizedBox(
-                                height: 40,
-                                child: BaseButton(
-                                  children: [
-                                    Text(val.toString(), style: style),
-                                    Text(Dictionary.get("FOR"), style: style),
-                                    // Image.asset("assets/resources/gold.png")
-                                  ],
-                                  handler: () => sell(1),
+                              (val) => Padding(
+                                padding: EdgeInsets.all(_theme.gap / 2),
+                                child: MarketButton(
+                                  busy: _busy,
+                                  topAmount: val,
+                                  topResource: _library.resourceGold,
+                                  bottomAmount:
+                                      (val / (1 / resource!.value)).ceil(),
+                                  bottomResource: resource,
+                                  borderRadius:
+                                      BorderRadius.circular(_theme.gap),
+                                  handler: () => sell(val),
                                 ),
                               ),
                             )

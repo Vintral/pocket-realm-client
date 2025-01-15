@@ -3,30 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class BaseButton extends StatefulWidget {
-  const BaseButton(
-      {super.key,
-      this.padding = EdgeInsets.zero,
-      this.enabled = true,
-      this.busy = false,
-      this.borderRadius = BorderRadius.zero,
-      required this.handler,
-      this.children = const <Widget>[]});
+  const BaseButton({
+    super.key,
+    this.padding = EdgeInsets.zero,
+    this.enabled = true,
+    this.busy = false,
+    this.borderRadius = BorderRadius.zero,
+    required this.handler,
+    this.children = const <Widget>[],
+    this.child,
+  });
 
-  @protected
   final void Function() handler;
 
   final bool enabled;
   final bool busy;
   final EdgeInsets padding;
+  final Widget? child;
   final List<Widget> children;
   final BorderRadius borderRadius;
 
   @override
-  State<BaseButton> createState() => _BaseButtonState();
+  State<BaseButton> createState() => BaseButtonState();
 }
 
-class _BaseButtonState extends State<BaseButton> {
+class BaseButtonState extends State<BaseButton> {
+  @protected
   final _logger = Logger();
+
   final _theme = ThemeProvider();
 
   bool _pressed = false;
@@ -86,23 +90,40 @@ class _BaseButtonState extends State<BaseButton> {
     );
   }
 
-  List<Widget> handleChildren() {
+  List<Widget> handleChild() {
+    Widget? child = widget.busy
+        ? Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width / 20,
+              height: MediaQuery.of(context).size.width / 20,
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.errorContainer,
+                strokeWidth: MediaQuery.of(context).size.width / 200,
+              ),
+            ),
+          )
+        : null;
+
+    child ??= widget.child;
+    child ??= Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: widget.children,
+    );
+
     return [
       Positioned.fill(
         top: _pressed ? _theme.gap / 2 : 0,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: widget.children,
-        ),
+        bottom: _pressed ? -_theme.gap / 2 : 0,
+        child: child,
       ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    var children = [handleBorderRadius(), ...handleChildren()];
+    var children = [handleBorderRadius(), ...handleChild()];
 
     return Container(
         // color: Colors.yellow,
