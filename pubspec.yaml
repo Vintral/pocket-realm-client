@@ -38,8 +38,8 @@ dependencies:
   web_socket_channel: ^3.0.1
   uuid: ^4.3.3
   eventify: ^1.0.1
-  shared_preferences: ^2.2.2
-  logger: ^2.2.0
+  shared_preferences: ^2.3.3
+  logger: ^2.5.0
   auto_size_text: ^3.0.0
 
 dev_dependencies:
