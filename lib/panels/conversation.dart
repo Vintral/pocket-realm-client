@@ -1,5 +1,6 @@
 import 'package:client/capitalize.dart';
-import 'package:client/components/button.dart';
+import 'package:client/components/base_button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/message.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/dictionary.dart';
@@ -175,12 +176,12 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
                 padding: EdgeInsets.only(top: _theme.gap / 2),
                 child: SizedBox(
                   width: _theme.width / 5,
-                  child: Button(
-                    text: Dictionary.get("SEND").toUpperCase(),
+                  child: BaseButton(
                     handler: onTap,
-                    largeFont: true,
                     enabled: _messageController.text.isNotEmpty,
                     busy: _busy,
+                    child: Text(Dictionary.get("SEND").toUpperCase(),
+                        style: _theme.textMediumBold),
                   ),
                 ),
               ),

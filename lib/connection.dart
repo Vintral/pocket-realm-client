@@ -44,7 +44,7 @@ class Connection extends eventify.EventEmitter {
     );
 
     _channel.stream.listen((message) {
-      _logger.i("Message: ${message.toString()}");
+      _logger.t("Message: ${message.toString()}");
 
       var data = json.decode(message);
       if (data is String) {
@@ -264,14 +264,14 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "MARKET_INFO"});
   }
 
-  void sendBuyResource(int amount, String resource) {
-    _logger.i("sendBuy: $amount $resource");
-    _send({"type": "BUY_RESOURCE", "amount": amount, "resource": resource});
+  void sendBuyResource(int quantity, String resource) {
+    _logger.i("sendBuy: $quantity $resource");
+    _send({"type": "BUY_RESOURCE", "quantity": quantity, "item": resource});
   }
 
-  void sendSellResource(int amount, String resource) {
-    _logger.i("sendSell: $amount $resource");
-    _send({"type": "SELL_RESOURCE", "amount": amount, "resource": resource});
+  void sendSellResource(int quantity, String resource) {
+    _logger.i("sendSell: $quantity $resource");
+    _send({"type": "SELL_RESOURCE", "quantity": quantity, "item": resource});
   }
 
   // void sendLogin( { String username, String password } ) {

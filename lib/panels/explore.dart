@@ -1,4 +1,4 @@
-import 'package:client/components/button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/realm_display_object.dart';
 import 'package:client/providers/actions.dart';
@@ -57,6 +57,8 @@ class _ExplorePanelState extends ListPanelState<ExplorePanel> {
     var width = MediaQuery.of(context).size.width;
     var paddingSize = 15.0;
 
+    _logger.w("buildHeader");
+
     return SizedBox(
       width: width,
       child: Container(
@@ -84,7 +86,8 @@ class _ExplorePanelState extends ListPanelState<ExplorePanel> {
                 width: paddingSize,
               ),
               Expanded(
-                child: Button(
+                child: CostButton(
+                  borderRadius: BorderRadius.all(Radius.circular(Settings.gap)),
                   text: "1",
                   handler: () => onTap(energy: 1),
                   image: "assets/icons/energy.png",
@@ -94,7 +97,8 @@ class _ExplorePanelState extends ListPanelState<ExplorePanel> {
                 width: paddingSize,
               ),
               Expanded(
-                child: Button(
+                child: CostButton(
+                  borderRadius: BorderRadius.all(Radius.circular(Settings.gap)),
                   text: "5",
                   handler: () => onTap(energy: 5),
                   image: "assets/icons/energy.png",
@@ -104,7 +108,8 @@ class _ExplorePanelState extends ListPanelState<ExplorePanel> {
                 width: paddingSize,
               ),
               Expanded(
-                child: Button(
+                child: CostButton(
+                  borderRadius: BorderRadius.all(Radius.circular(Settings.gap)),
                   text: "25",
                   handler: () => onTap(energy: 25),
                   image: "assets/icons/energy.png",

@@ -1,4 +1,5 @@
-import 'package:client/components/button.dart';
+import 'package:client/components/base_button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/list_item.dart';
 import 'package:client/components/ranking.dart';
 import 'package:client/data/ranking.dart';
@@ -263,17 +264,18 @@ class _RoundState extends State<Round> {
               children: [
                 SizedBox(
                   width: size * (widget.data.finished ? 3.25 : 2.5),
-                  child: Button(
-                    text: Dictionary.get((widget.data.finished
-                            ? (_open ? "HIDE_RANKS" : "SHOW_RANKS")
-                            : (_player.round == widget.data.guid
-                                ? "CURRENT"
-                                : "PLAY")))
-                        .toUpperCase(),
+                  child: BaseButton(
                     handler: () => handleTap(),
-                    largeFont: true,
                     busy: widget.busy,
                     enabled: _player.round != widget.data.guid,
+                    child: Text(
+                        Dictionary.get((widget.data.finished
+                                ? (_open ? "HIDE_RANKS" : "SHOW_RANKS")
+                                : (_player.round == widget.data.guid
+                                    ? "CURRENT"
+                                    : "PLAY")))
+                            .toUpperCase(),
+                        style: _theme.textExtraLarge),
                   ),
                 ),
               ],

@@ -1,9 +1,10 @@
+import 'package:client/components/base_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
-import 'package:client/components/button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/shout.dart';
 import 'package:client/dictionary.dart';
@@ -178,11 +179,11 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
                 padding: EdgeInsets.only(top: _theme.gap / 2),
                 child: SizedBox(
                   width: _theme.width / 5,
-                  child: Button(
-                    text: Dictionary.get("SHOUT"),
+                  child: BaseButton(
                     handler: onTap,
-                    largeFont: true,
                     enabled: _enabled,
+                    child: Text(Dictionary.get("SHOUT"),
+                        style: _theme.textExtraLargeBold),
                   ),
                 ),
               ),

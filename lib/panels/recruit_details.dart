@@ -1,4 +1,4 @@
-import 'package:client/components/button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/connection.dart';
 import 'package:client/data/unit.dart';
@@ -259,7 +259,7 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Button(
+                              child: CostButton(
                                 text: "1",
                                 handler: () => onTap(energy: 1),
                                 image: "assets/icons/energy.png",
@@ -269,7 +269,7 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
                               width: Settings.gap,
                             ),
                             Expanded(
-                              child: Button(
+                              child: CostButton(
                                 text: "5",
                                 handler: () => onTap(energy: 5),
                                 image: "assets/icons/energy.png",
@@ -279,7 +279,7 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
                               width: Settings.gap,
                             ),
                             Expanded(
-                              child: Button(
+                              child: CostButton(
                                 text: "25",
                                 handler: () => onTap(energy: 25),
                                 image: "assets/icons/energy.png",

@@ -1,4 +1,4 @@
-import 'package:client/components/button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/realm_display_object.dart';
@@ -92,88 +92,92 @@ class _GatherPanelState extends ListPanelState<GatherPanel> {
     var width = MediaQuery.of(context).size.width;
     var paddingSize = 15.0;
 
-    return SizedBox(
-      width: width,
-      child: Container(
-        decoration: BoxDecoration(
-          color: _theme.colorBackground,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              color: _theme.colorBackground,
-              spreadRadius: -5.0,
-              blurRadius: 10.0,
+    return Container(
+      decoration: BoxDecoration(
+        color: _theme.colorBackground,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: _theme.colorBackground,
+            spreadRadius: -5.0,
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: paddingSize, vertical: paddingSize / 2),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Text(
+                  "SPEND:",
+                  style: _theme.textLargeBold,
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: CostButton(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(Settings.gap)),
+                    text: "1",
+                    handler: () => onTap(energy: 1),
+                    image: "assets/icons/energy.png",
+                  ),
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: CostButton(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(Settings.gap)),
+                    text: "5",
+                    handler: () => onTap(energy: 5),
+                    image: "assets/icons/energy.png",
+                  ),
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: CostButton(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(Settings.gap)),
+                    text: "25",
+                    handler: () => onTap(energy: 25),
+                    image: "assets/icons/energy.png",
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: Settings.gap),
+            Row(
+              children: [
+                Text(
+                  "Gather:",
+                  style: _theme.textLargeBold,
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.width / 9,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ...buildTypes(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: paddingSize, vertical: paddingSize / 2),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "SPEND:",
-                    style: _theme.textLargeBold,
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: Button(
-                      text: "1",
-                      handler: () => onTap(energy: 1),
-                      image: "assets/icons/energy.png",
-                    ),
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: Button(
-                      text: "5",
-                      handler: () => onTap(energy: 5),
-                      image: "assets/icons/energy.png",
-                    ),
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: Button(
-                      text: "25",
-                      handler: () => onTap(energy: 25),
-                      image: "assets/icons/energy.png",
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: Settings.gap),
-              Row(
-                children: [
-                  Text(
-                    "Gather:",
-                    style: _theme.textLargeBold,
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 9,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ...buildTypes(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );
