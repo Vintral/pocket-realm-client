@@ -28,7 +28,6 @@ class Connection extends eventify.EventEmitter {
 
   decodePayload(dynamic data) {
     _logger.t("decodePayload");
-    _logger.f(data);
 
     if (data != null && data is String) {
       data = json.decode(utf8.decode(base64.decode(data)));
@@ -53,7 +52,7 @@ class Connection extends eventify.EventEmitter {
       } else {
         _logger.d("IS NOT STRING");
       }
-      _logger.w(data);
+      _logger.d(data);
 
       if (data["type"] != null) {
         _logger.t("Type: ${data["type"]}");
@@ -264,6 +263,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "MARKET_INFO"});
   }
 
+  void getUndergroundMarket() {
+    _logger.i("getUndergroundMarket");
+    _send({"type": "GET_UNDERGROUND_MARKET"});
+  }
+
   void sendBuyResource(int quantity, String resource) {
     _logger.i("sendBuy: $quantity $resource");
     _send({"type": "BUY_RESOURCE", "quantity": quantity, "item": resource});
@@ -272,6 +276,11 @@ class Connection extends eventify.EventEmitter {
   void sendSellResource(int quantity, String resource) {
     _logger.i("sendSell: $quantity $resource");
     _send({"type": "SELL_RESOURCE", "quantity": quantity, "item": resource});
+  }
+
+  void buyAuction(String auction) {
+    _logger.i("buyAuction: $auction");
+    _send({"type": "BUY_AUCTION", "auction": auction});
   }
 
   // void sendLogin( { String username, String password } ) {
@@ -395,8 +404,8 @@ class Connection extends eventify.EventEmitter {
   void onTick(timer) {
     _logger.t("onTick");
 
-    // if (_connected) {
-    //   _send({'type': 'PING'});
-    // }
+    if (_connected) {
+      _send({'type': 'PING'});
+    }
   }
 }

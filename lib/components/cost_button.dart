@@ -12,6 +12,7 @@ class CostButton extends StatefulWidget {
       this.image,
       this.enabled = true,
       this.height,
+      this.width,
       this.borderRadius = BorderRadius.zero,
       this.busy = false});
 
@@ -20,6 +21,7 @@ class CostButton extends StatefulWidget {
   final String? text;
   final String? image;
   final double? height;
+  final double? width;
   final bool enabled;
   final bool busy;
 
@@ -50,16 +52,25 @@ class _CostButtonState extends State<CostButton> {
 
   @override
   Widget build(BuildContext context) {
-    _logger.w("build");
+    _logger.t("build");
 
-    return SizedBox(
-      height: widget.height ?? MediaQuery.of(context).size.height / 20,
-      child: BaseButton(
-        handler: widget.handler,
-        borderRadius: widget.borderRadius,
-        busy: widget.busy,
-        child: buildContent(context),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _logger.w(constraints.hasInfiniteWidth);
+
+        return SizedBox(
+          height: widget.height ?? MediaQuery.of(context).size.height / 20,
+          width: !constraints.hasBoundedWidth
+              ? MediaQuery.of(context).size.width / 5
+              : null,
+          child: BaseButton(
+            handler: widget.handler,
+            borderRadius: widget.borderRadius,
+            busy: widget.busy,
+            child: buildContent(context),
+          ),
+        );
+      },
     );
   }
 }

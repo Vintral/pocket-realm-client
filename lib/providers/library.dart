@@ -13,7 +13,7 @@ class LibraryProvider extends eventify.EventEmitter {
     return _instance;
   }
 
-  final Logger _logger = Logger(level: Logger.level);
+  final Logger _logger = Logger();
   final Connection _connection = Connection();
 
   bool _loading = false;
@@ -35,6 +35,10 @@ class LibraryProvider extends eventify.EventEmitter {
   final List<Building> _buildings = [];
   List<Building> get buildings => _buildings;
 
+  final Map<String, dynamic> _mapItems = <String, dynamic>{};
+  final List<dynamic> _items = [];
+  List<dynamic> get items => _items;
+
   LibraryProvider._internal() {
     _logger.d('Created');
     _connection.on("ROUND", null, onRound);
@@ -55,12 +59,11 @@ class LibraryProvider extends eventify.EventEmitter {
   void onRound(ev, obj) {
     _logger.d("onRound");
 
-    _logger.e(ev.eventData);
-
     var data = (ev.eventData as dynamic)["round"];
     parseResources(data["resources"]);
     parseBuildings(data["buildings"]);
     parseUnits(data["units"]);
+    parseItems((ev.eventData as dynamic)["items"]);
 
     _loading = false;
     _loaded = true;
@@ -80,6 +83,11 @@ class LibraryProvider extends eventify.EventEmitter {
   Building? getBuilding(String guid) {
     _logger.d("getBuilding: $guid");
     return _mapBuildings[guid];
+  }
+
+  dynamic? getItem(String guid) {
+    _logger.d("getItem: $guid");
+    return _mapItems[guid];
   }
 
   void sort(List<RealmObject> objects) {
@@ -124,5 +132,20 @@ class LibraryProvider extends eventify.EventEmitter {
     }
 
     sort(_units);
+  }
+
+  void parseItems(dynamic items) {
+    _logger.w("parseItems");
+
+    _items.clear();
+
+    if (items != null && items.length > 0) {
+      for (final i in items) {
+        _items.add(i);
+        _mapItems[i["guid"]] = i;
+      }
+    }
+
+    _logger.w("Item Count: ${_items.length}");
   }
 }
