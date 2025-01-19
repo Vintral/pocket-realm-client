@@ -13,7 +13,9 @@ import 'package:client/data/resource.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/library.dart';
 import 'package:client/providers/market.dart';
+import 'package:client/providers/player.dart';
 import 'package:client/providers/theme.dart';
+import 'package:client/settings.dart';
 import 'package:client/states/list_panel.dart';
 
 class MarketPanel extends StatefulWidget {
@@ -29,10 +31,11 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     with TickerProviderStateMixin {
   final Logger _logger = Logger(level: Level.trace);
 
-  final ThemeProvider _theme = ThemeProvider();
+  final _theme = ThemeProvider();
   final _provider = MarketProvider();
   final _library = LibraryProvider();
   final _connection = Connection();
+  final _player = PlayerProvider();
 
   late eventify.Listener _onMarketError;
   late eventify.Listener _onMarketInfo;
@@ -46,10 +49,6 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
   String _activeSubTab = Dictionary.get("BUY");
 
   bool _busy = false;
-
-  final _wrapKeys = <GlobalKey>[GlobalKey(), GlobalKey()];
-  double _wrapSize = 0;
-  double _wrapWidth = 0;
 
   @override
   void initState() {
@@ -191,15 +190,13 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
   }
 
   Widget buildResourceDetail() {
-    _logger.t("buildResourceDetail: $_wrapSize");
+    _logger.t("buildResourceDetail");
 
     Resource? resource = _library.getResource(_activeResource);
 
     // double buyFor = (resource?.value ?? 0) * _quantity;
     // double sellFor =
     //     (resource?.value ?? 0) != 0 ? (1 / resource!.value) * _quantity : 0;
-
-    var style = _theme.textMediumBold;
 
     const vals = [1, 10, 100, 1000, 10000];
 
@@ -449,6 +446,17 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     return Panel(
       loaded: _provider.loaded,
       label: Dictionary.get("MARKET"),
+      rightChild: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(_player.gold.toString(), style: _theme.textLarge),
+          Image.asset(
+            "assets/icons/gold.png",
+            width: Settings.gap * 3,
+            height: Settings.gap * 3,
+          ),
+        ],
+      ),
       header: RealmTabBar(tabs: [
         Dictionary.get("RESOURCE").toUpperCase(),
         Dictionary.get("BLACK_MARKET").toUpperCase(),
