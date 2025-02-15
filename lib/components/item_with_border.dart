@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:client/components/base_display.dart';
 import 'package:client/data/realm_object.dart';
 import 'package:client/providers/theme.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class ItemWithBorder extends StatelessWidget {
       this.reflect = false});
 
   final _theme = ThemeProvider();
-  final _logger = Logger(level: Logger.level);
+  final _logger = Logger();
 
   final RealmObject? item;
   final String? image;
@@ -38,7 +39,10 @@ class ItemWithBorder extends StatelessWidget {
   Widget buildImage(ImageProvider img) {
     _logger.t("buildImage");
 
-    Image image = Image(image: img);
+    Image image = Image(
+      image: img,
+      fit: BoxFit.fill,
+    );
     return reflect ? flipImage(image) : image;
   }
 
@@ -60,48 +64,49 @@ class ItemWithBorder extends StatelessWidget {
       img = AssetImage(image as String);
     }
 
-    _logger.d("$active ::: ${color != null}");
-
-    return SizedBox(
-      width: width,
-      height: height,
-      child: GestureDetector(
-        onTap: handler != null ? () => handler!(item?.guid ?? "") : null,
-        child: Stack(
-          children: [
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                backgroundColor ?? _theme.color,
-                _theme.blendMode,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: GestureDetector(
+          onTap: handler != null ? () => handler!(item?.guid ?? "") : null,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: BaseDisplay(
+                  child: Padding(
+                    padding: padding ?? EdgeInsets.zero,
+                    child: img != null ? buildImage(img) : const Placeholder(),
+                  ),
+                ), //
               ),
-              child: Image.asset("assets/item-background.png"),
-            ),
-            Padding(
-              padding: padding ?? EdgeInsets.zero,
-              child: img != null ? buildImage(img) : const Placeholder(),
-            ),
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                  active
-                      ? _theme.activeBorderColor
-                      : (color != null
-                          ? color as Color
-                          : _theme.inactiveBorderColor),
-                  BlendMode.modulate),
-              child: Image.asset(
-                "assets/ui/frame.png",
+              Positioned.fill(
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                      active
+                          ? _theme.activeBorderColor
+                          : (color != null
+                              ? color as Color
+                              : _theme.inactiveBorderColor),
+                      BlendMode.modulate),
+                  child: Image.asset(
+                    "assets/ui/frame.png",
+                    centerSlice: Rect.fromLTRB(5, 5, 6, 6),
+                  ),
+                ),
               ),
-            ),
-            quantity != null
-                ? Container(
-                    color: active
-                        ? _theme.activeBorderColor
-                        : _theme.inactiveBorderColor,
-                    padding: EdgeInsets.all(_theme.quantityPadding),
-                    child: Text(quantity as String, style: _theme.textSmall),
-                  )
-                : Container()
-          ],
+              quantity != null
+                  ? Container(
+                      color: active
+                          ? _theme.activeBorderColor
+                          : _theme.inactiveBorderColor,
+                      padding: EdgeInsets.all(_theme.quantityPadding),
+                      child: Text(quantity as String, style: _theme.textSmall),
+                    )
+                  : Container()
+            ],
+          ),
         ),
       ),
     );

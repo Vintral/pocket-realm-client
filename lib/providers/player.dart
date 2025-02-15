@@ -20,7 +20,7 @@ class PlayerProvider extends eventify.EventEmitter {
 
   final LibraryProvider _library = LibraryProvider();
 
-  List<EventData> Events = <EventData>[];
+  List<EventData> events = <EventData>[];
   bool _eventsRetrieved = false;
 
   bool loaded = false;
@@ -98,11 +98,9 @@ class PlayerProvider extends eventify.EventEmitter {
     _logger.d("onUpdated");
 
     var data = ev.eventData as dynamic;
-
     if (data["user"] != null) {
       updateUser(data["user"]);
-    } else {
-      _logger.w("onUpdated: User data missing");
+      emit("UPDATED");
     }
   }
 
@@ -111,8 +109,8 @@ class PlayerProvider extends eventify.EventEmitter {
 
     if (!_eventsRetrieved || ev["eventData"]["event"]["round"] != round) return;
 
-    Events.insert(0, EventData(ev["eventData"]["event"]));
-    _logger.w("PLAYER ROUND: " + round);
+    events.insert(0, EventData(ev["eventData"]["event"]));
+    _logger.w("PLAYER ROUND: $round");
 
     emit("EVENT");
   }
@@ -122,7 +120,7 @@ class PlayerProvider extends eventify.EventEmitter {
 
     _logger.w((ev.eventData as dynamic)["events"]);
 
-    Events.addAll(((ev.eventData as dynamic)["events"] as List<dynamic>)
+    events.addAll(((ev.eventData as dynamic)["events"] as List<dynamic>)
         .map((data) => EventData(data)));
 
     _eventsRetrieved = true;
@@ -131,7 +129,7 @@ class PlayerProvider extends eventify.EventEmitter {
   }
 
   void onUserData(ev, obj) {
-    _logger.i("onGetUser");
+    _logger.t("onUserData");
 
     onUpdated(ev, obj);
 
@@ -261,7 +259,7 @@ class PlayerProvider extends eventify.EventEmitter {
   void markEventsSeen() {
     _logger.w("markEventsSeen");
 
-    for (var event in Events) {
+    for (var event in events) {
       event.seen = true;
     }
   }

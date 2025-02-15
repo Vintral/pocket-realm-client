@@ -19,9 +19,9 @@ class EventsPanel extends StatefulWidget {
 }
 
 class _EventsPanelState extends ListPanelState<EventsPanel> {
-  final Logger _logger = Logger( level: Level.off );
+  final Logger _logger = Logger(level: Level.off);
 
-  final ThemeProvider _theme = ThemeProvider();  
+  final ThemeProvider _theme = ThemeProvider();
   final _provider = PlayerProvider();
   late eventify.Listener _onEventsListener;
   late eventify.Listener _onEventListener;
@@ -30,67 +30,67 @@ class _EventsPanelState extends ListPanelState<EventsPanel> {
   void initState() {
     super.initState();
 
-    _logger.t( "initState" );
+    _logger.t("initState");
 
-    _onEventsListener = _provider.on( "EVENTS", null, onEvents );
-    _onEventListener = _provider.on( "EVENT", null, onEvent );
+    _onEventsListener = _provider.on("EVENTS", null, onEvents);
+    _onEventListener = _provider.on("EVENT", null, onEvent);
 
     _provider.markEventsSeen();
-    if( _provider.Events.isEmpty ) {
+    if (_provider.events.isEmpty) {
       _provider.getEvents(1);
     }
   }
 
   @override
-  void dispose() {    
-    _logger.t( "dispose" );
-    
+  void dispose() {
+    _logger.t("dispose");
+
     _onEventsListener.cancel();
     _onEventListener.cancel();
 
     super.dispose();
   }
 
-  void onEvent( e, o ) {
-    _logger.d( "onEvent" );
+  void onEvent(e, o) {
+    _logger.d("onEvent");
 
-    _logger.d( e.eventData );
+    _logger.d(e.eventData);
 
     onEvents(e, o);
   }
 
-  void onEvents( e, o ) {
-    _logger.d( "onEvents" );
+  void onEvents(e, o) {
+    _logger.d("onEvents");
     setState(() {});
   }
 
   Widget buildResults() {
-    _logger.d( "buildResults" );
+    _logger.d("buildResults");
 
-    List<Widget> widgets = <Widget>[];    
-    for( var event in _provider.Events ) {
-      widgets.add( Event( data: event ) );
-      widgets.add( SizedBox( height: _theme.gap, ) );
+    List<Widget> widgets = <Widget>[];
+    for (var event in _provider.events) {
+      widgets.add(Event(data: event));
+      widgets.add(SizedBox(
+        height: _theme.gap,
+      ));
     }
 
     return ListView(
-      children: [
-        ...widgets
-      ],
+      children: [...widgets],
     );
   }
 
   @override
-  Widget build( BuildContext context ) {
-    _logger.t( "build" );
-    
-    widget.callback( context );
+  Widget build(BuildContext context) {
+    _logger.t("build");
 
-    _logger.d( "Loaded: ${_provider.Events.isNotEmpty}" );
+    widget.callback(context);
+
+    _logger.d("Loaded: ${_provider.events.isNotEmpty}");
 
     return Panel(
-      loaded: _provider.Events.isNotEmpty,      
-      label: Dictionary.get( "EVENTS" ),
+      loaded: _provider.events.isNotEmpty,
+      label: Dictionary.get("EVENTS"),
       child: buildResults(),
     );
   }

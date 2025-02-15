@@ -1,14 +1,16 @@
+import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
+
 import 'package:client/capitalize.dart';
-import 'package:client/components/button.dart';
+import 'package:client/components/base_button.dart';
 import 'package:client/components/message.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/social.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/states/list_panel.dart';
-import 'package:eventify/eventify.dart' as eventify;
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class ConversationPanel extends StatefulWidget {
   const ConversationPanel({super.key, required this.callback});
@@ -175,12 +177,12 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
                 padding: EdgeInsets.only(top: _theme.gap / 2),
                 child: SizedBox(
                   width: _theme.width / 5,
-                  child: Button(
-                    text: Dictionary.get("SEND").toUpperCase(),
+                  child: BaseButton(
                     handler: onTap,
-                    largeFont: true,
                     enabled: _messageController.text.isNotEmpty,
                     busy: _busy,
+                    child: Text(Dictionary.get("SEND").toUpperCase(),
+                        style: _theme.textMediumBold),
                   ),
                 ),
               ),
@@ -197,15 +199,15 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
 
     widget.callback(context);
 
-    _logger
-        .d(_provider.conversationMap[_provider.conversation]?.username ?? "--");
+    // _logger
+    //     .d(_provider.conversationMap[_provider.conversation]?.username ?? "--");
 
     return Panel(
       loaded: _provider.conversations.isNotEmpty,
       closable: true,
       form: buildForm(),
       label:
-          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversationMap[_provider.conversation]?.username ?? "--"}",
+          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversationMap[_provider.conversation?.username]?.username ?? "--"}",
       child: buildResults(),
     );
   }

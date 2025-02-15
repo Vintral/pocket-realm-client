@@ -1,4 +1,4 @@
-import 'package:client/components/button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/connection.dart';
 import 'package:client/data/unit.dart';
@@ -120,20 +120,27 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
     List<Widget> ret = <Widget>[];
 
     List<Widget> children = <Widget>[];
-    if (_unit.upkeepGold > 0)
+    if (_unit.upkeepGold > 0) {
       children.add(buildStat(_unit.upkeepGold.toString(), "gold"));
-    if (_unit.upkeepFood > 0)
+    }
+    if (_unit.upkeepFood > 0) {
       children.add(buildStat(_unit.upkeepFood.toString(), "food"));
-    if (_unit.upkeepWood > 0)
+    }
+    if (_unit.upkeepWood > 0) {
       children.add(buildStat(_unit.upkeepWood.toString(), "wood"));
-    if (_unit.upkeepStone > 0)
+    }
+    if (_unit.upkeepStone > 0) {
       children.add(buildStat(_unit.upkeepStone.toString(), "stone"));
-    if (_unit.upkeepMetal > 0)
+    }
+    if (_unit.upkeepMetal > 0) {
       children.add(buildStat(_unit.upkeepMetal.toString(), "metal"));
-    if (_unit.upkeepFaith > 0)
+    }
+    if (_unit.upkeepFaith > 0) {
       children.add(buildStat(_unit.upkeepFaith.toString(), "faith"));
-    if (_unit.upkeepMana > 0)
+    }
+    if (_unit.upkeepMana > 0) {
       children.add(buildStat(_unit.upkeepMana.toString(), "mana"));
+    }
 
     ret.add(buildHeader("Upkeep"));
     ret.add(Wrap(
@@ -252,7 +259,7 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Button(
+                              child: CostButton(
                                 text: "1",
                                 handler: () => onTap(energy: 1),
                                 image: "assets/icons/energy.png",
@@ -262,7 +269,7 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
                               width: Settings.gap,
                             ),
                             Expanded(
-                              child: Button(
+                              child: CostButton(
                                 text: "5",
                                 handler: () => onTap(energy: 5),
                                 image: "assets/icons/energy.png",
@@ -272,7 +279,7 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
                               width: Settings.gap,
                             ),
                             Expanded(
-                              child: Button(
+                              child: CostButton(
                                 text: "25",
                                 handler: () => onTap(energy: 25),
                                 image: "assets/icons/energy.png",

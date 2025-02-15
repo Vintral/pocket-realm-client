@@ -44,10 +44,10 @@ class Event extends StatelessWidget {
                 : _theme.activeBorderColor),
         gradient: RadialGradient(radius: size / 10, colors: [
           Color.fromARGB(
-            _theme.color.alpha,
-            (_theme.color.red * scale).toInt(),
-            (_theme.color.green * scale).toInt(),
-            (_theme.color.blue * scale).toInt(),
+            _theme.color.a as int,
+            (_theme.color.r * scale).toInt(),
+            (_theme.color.g * scale).toInt(),
+            (_theme.color.b * scale).toInt(),
           ),
           _theme.color,
         ]),

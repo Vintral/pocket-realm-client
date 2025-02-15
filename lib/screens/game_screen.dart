@@ -74,7 +74,7 @@ class _GameScreenState extends State<GameScreen> {
     _onNotificationListener =
         _notification.on("NOTIFICATIONS_UPDATED", null, onNotificationsUpdated);
     _player.on("UPDATED", null, (e, o) {
-      _logger.e("Player Updated");
+      _logger.t("Player Updated");
     });
 
     _onLibraryLoadedListener = _library.on("LOADED", null, onLibraryLoaded);

@@ -1,5 +1,4 @@
 import 'package:client/data/class_colors.dart';
-import 'package:client/providers/player.dart';
 import 'package:flutter/material.dart';
 
 import 'package:client/providers/theme.dart';
@@ -12,15 +11,15 @@ class ListItem extends StatelessWidget {
   });
 
   final _theme = ThemeProvider();
-  final _player = PlayerProvider();
+  // final _player = PlayerProvider();
   final Widget child;
   final ClassColors? classColors;
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size.width / 6;
+    // var size = MediaQuery.of(context).size.width / 6;
 
-    var colors = _theme.classColorsMap[classColors ?? _player.characterClass];
+    // var colors = _theme.classColorsMap[classColors ?? _player.characterClass];
 
     // return Container(
     //     decoration: BoxDecoration(

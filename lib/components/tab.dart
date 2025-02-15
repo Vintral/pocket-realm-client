@@ -17,7 +17,8 @@ class RealmTab extends StatelessWidget {
   final bool enabled;
 
   Widget buildTab() {
-    return Expanded(
+    return Flexible(
+      flex: 1,
       child: Center(child: Text(label, style: _theme.textMediumBold)),
     );
   }

@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class Connection extends eventify.EventEmitter {
-  final Logger _logger = Logger(level: Level.warning);
+  final Logger _logger = Logger();
 
   late WebSocketChannel _channel;
 
@@ -27,9 +27,15 @@ class Connection extends eventify.EventEmitter {
   }
 
   decodePayload(dynamic data) {
-    _logger.t("decodePayload");
-    _logger.f(data);
+    _logger.w("decodePayload");
 
+    if (data is List<String>) {
+      return data;
+    }
+
+    _logger.w(data);
+    _logger.w(base64.decode(data));
+    _logger.w(utf8.decode(base64.decode(data)));
     if (data != null && data is String) {
       data = json.decode(utf8.decode(base64.decode(data)));
     }
@@ -44,7 +50,7 @@ class Connection extends eventify.EventEmitter {
     );
 
     _channel.stream.listen((message) {
-      _logger.i("Message: ${message.toString()}");
+      _logger.d("Message: ${message.toString()}");
 
       var data = json.decode(message);
       if (data is String) {
@@ -53,7 +59,7 @@ class Connection extends eventify.EventEmitter {
       } else {
         _logger.d("IS NOT STRING");
       }
-      _logger.w(data);
+      _logger.d(data);
 
       if (data["type"] != null) {
         _logger.t("Type: ${data["type"]}");
@@ -72,9 +78,12 @@ class Connection extends eventify.EventEmitter {
 
             emit("ERROR", null, data["data"]["message"]);
             break;
+          case "USER_DATA":
+            emit(data["type"], null, data["user"]);
+            break;
           default:
             {
-              _logger.w("EMITTING: ${data["type"]}");
+              _logger.d("EMITTING: ${data["type"]}");
               emit(data["type"], null, data);
             }
         }
@@ -261,7 +270,37 @@ class Connection extends eventify.EventEmitter {
 
   void getMarketInfo() {
     _logger.i("getMarketInfo");
-    _send({"type": "GET_MARKET_INFO"});
+    _send({"type": "MARKET_INFO"});
+  }
+
+  void getUndergroundMarket() {
+    _logger.i("getUndergroundMarket");
+    _send({"type": "GET_UNDERGROUND_MARKET"});
+  }
+
+  void getMercanaryMarket() {
+    _logger.i("getMercenaryMarket");
+    _send({"type": "GET_MERCENARY_MARKET"});
+  }
+
+  void sendBuyResource(int quantity, String resource) {
+    _logger.i("sendBuy: $quantity $resource");
+    _send({"type": "BUY_RESOURCE", "quantity": quantity, "item": resource});
+  }
+
+  void sendSellResource(int quantity, String resource) {
+    _logger.i("sendSell: $quantity $resource");
+    _send({"type": "SELL_RESOURCE", "quantity": quantity, "item": resource});
+  }
+
+  void buyAuction(String auction) {
+    _logger.i("buyAuction: $auction");
+    _send({"type": "BUY_AUCTION", "auction": auction});
+  }
+
+  void buyMercenary(int quantity) {
+    _logger.i("buyMercenary: $quantity");
+    _send({"type": "BUY_MERCENARY", "quantity": quantity});
   }
 
   // void sendLogin( { String username, String password } ) {
@@ -385,8 +424,8 @@ class Connection extends eventify.EventEmitter {
   void onTick(timer) {
     _logger.t("onTick");
 
-    // if (_connected) {
-    //   _send({'type': 'PING'});
-    // }
+    if (_connected) {
+      _send({'type': 'PING'});
+    }
   }
 }

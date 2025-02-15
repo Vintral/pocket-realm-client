@@ -1,4 +1,8 @@
-import 'package:client/components/button.dart';
+import 'package:flutter/material.dart';
+
+import 'package:logger/logger.dart';
+
+import 'package:client/components/base_button.dart';
 import 'package:client/components/list_item.dart';
 import 'package:client/components/ranking.dart';
 import 'package:client/data/ranking.dart';
@@ -7,8 +11,6 @@ import 'package:client/dictionary.dart';
 import 'package:client/providers/player.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/utilities.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class Round extends StatefulWidget {
   const Round(
@@ -73,7 +75,9 @@ class _RoundState extends State<Round> {
           clipBehavior: Clip.hardEdge,
           height: _max,
           child: Column(
-            children: [...data.map((item) => Ranking(item as dynamic))],
+            children: [
+              ...data.map((item) => Ranking.fromData(item as dynamic))
+            ],
           ),
         ),
         onEnd: () {
@@ -150,7 +154,7 @@ class _RoundState extends State<Round> {
                       key: _key,
                       children: [
                         ...widget.data.ranks!
-                            .map((item) => Ranking(item as dynamic))
+                            .map((item) => Ranking.fromData(item as dynamic))
                       ],
                     ))
                 : SizedBox(
@@ -261,17 +265,18 @@ class _RoundState extends State<Round> {
               children: [
                 SizedBox(
                   width: size * (widget.data.finished ? 3.25 : 2.5),
-                  child: Button(
-                    text: Dictionary.get((widget.data.finished
-                            ? (_open ? "HIDE_RANKS" : "SHOW_RANKS")
-                            : (_player.round == widget.data.guid
-                                ? "CURRENT"
-                                : "PLAY")))
-                        .toUpperCase(),
+                  child: BaseButton(
                     handler: () => handleTap(),
-                    largeFont: true,
                     busy: widget.busy,
                     enabled: _player.round != widget.data.guid,
+                    child: Text(
+                        Dictionary.get((widget.data.finished
+                                ? (_open ? "HIDE_RANKS" : "SHOW_RANKS")
+                                : (_player.round == widget.data.guid
+                                    ? "CURRENT"
+                                    : "PLAY")))
+                            .toUpperCase(),
+                        style: _theme.textExtraLarge),
                   ),
                 ),
               ],

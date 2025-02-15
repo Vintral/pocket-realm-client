@@ -32,11 +32,11 @@ class Conversation extends StatelessWidget {
             colors: [
               Color.fromARGB(
                   (_theme.gradientOpacity / 60).floor(),
-                  _theme.colorAccent.red,
-                  _theme.colorAccent.green,
-                  _theme.colorAccent.blue),
-              Color.fromARGB(_theme.gradientOpacity, _theme.color.red,
-                  _theme.color.green, _theme.color.blue),
+                  _theme.colorAccent.r as int,
+                  _theme.colorAccent.g as int,
+                  _theme.colorAccent.b as int),
+              Color.fromARGB(_theme.gradientOpacity, _theme.color.r as int,
+                  _theme.color.g as int, _theme.color.b as int),
             ]),
         borderRadius: BorderRadius.all(Radius.circular(_theme.gap)),
       ),

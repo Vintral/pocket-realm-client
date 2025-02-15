@@ -2,46 +2,32 @@ import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:client/components/item_with_border.dart';
-import 'package:client/data/ranking.dart';
 import 'package:client/providers/theme.dart';
-import 'package:client/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class Ranking extends StatelessWidget {
+  static Ranking fromData(dynamic data) {
+    return Ranking(
+        data.place, data.username, data.avatar, data.power, data.land);
+  }
+
   final Logger _logger = Logger(level: Level.trace);
 
   final _theme = ThemeProvider();
-  // final dynamic data;
 
-  late int place;
-  late String username;
-  late int avatar;
-  late int power;
-  late int land;
+  final int place = 0;
+  final String username = "";
+  final int avatar = 0;
+  final int power = 0;
+  final int land = 0;
 
-  Ranking(dynamic data, {super.key}) {
-    parse(data);
-  }
-
-  parse(dynamic data, {bool even = false}) {
-    _logger.t(data);
-
-    if (data is RankingData) {
-      place = data.place;
-      username = data.username;
-      avatar = data.avatar;
-      power = data.power;
-      land = data.land;
-    } else {
-      place = 1;
-      username = data["username"] ?? "";
-      avatar = data["avatar"] is int
-          ? data["avatar"]
-          : int.tryParse(data["avatar"] ?? "0");
-      power = data["power"] ?? 0;
-      land = data["land"] ?? 0;
-    }
+  Ranking(place, username, avatar, power, land, {super.key}) {
+    place = place;
+    username = username;
+    avatar = avatar;
+    power = power;
+    land = land;
 
     dump();
   }

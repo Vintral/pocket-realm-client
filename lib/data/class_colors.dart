@@ -19,6 +19,8 @@ class ClassColors {
   late Color activeBorderColor;
   late Color inactiveBorderColor;
   late Color colorBackground;
+  late Color colorBackgroundGradiantLight;
+  late Color colorBackgroundGradiantDark;
   late Color colorText;
   late Color? gradient1;
   late Color? gradient2;
@@ -40,6 +42,10 @@ class ClassColors {
           colors.blendMode = BlendMode.color;
           colors.color = const Color.fromARGB(255, 30, 136, 229);
           colors.colorBackground = const Color.fromARGB(255, 10, 51, 113);
+          colors.colorBackgroundGradiantLight =
+              const Color.fromARGB(255, 22, 100, 168);
+          colors.colorBackgroundGradiantDark =
+              const Color.fromARGB(255, 12, 62, 106);
         }
         break;
     }

@@ -1,9 +1,12 @@
 import 'dart:collection';
 
-import 'package:client/data/class_colors.dart';
-import 'package:eventify/eventify.dart';
 import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart';
 import 'package:logger/logger.dart';
+
+import 'package:client/data/class_colors.dart';
+import 'package:client/settings.dart';
 
 class ThemeProvider extends EventEmitter {
   static final ThemeProvider _instance = ThemeProvider._internal();
@@ -37,6 +40,8 @@ class ThemeProvider extends EventEmitter {
   Color colorAccent = const Color.fromARGB(200, 0, 0, 0);
   Color colorBackground = const Color.fromARGB(200, 0, 0, 0);
   Color colorDisabled = const Color.fromARGB(200, 0, 0, 0);
+  Color colorBackgroundGradiantDark = const Color.fromARGB(200, 0, 0, 0);
+  Color colorBackgroundGradiantLight = const Color.fromARGB(200, 0, 0, 0);
   Color colorText = Colors.white;
   BlendMode blendMode = BlendMode.darken;
 
@@ -66,6 +71,10 @@ class ThemeProvider extends EventEmitter {
   late TextStyle textLargeBold;
   late TextStyle textExtraLargeBold;
 
+  late BoxShadow boxShadow;
+
+  late RadialGradient gradient;
+
   // late TextStyle styleMissing;
   // late TextStyle resultStyle;
   // late TextStyle styleHeader;
@@ -92,12 +101,12 @@ class ThemeProvider extends EventEmitter {
   ThemeProvider._internal() {
     _logger.d('Created');
 
-    initializeThemes();
+    initialize();
     activeTheme = setTheme("mage");
   }
 
-  initializeThemes() {
-    _logger.d("initializeThemes");
+  initialize() {
+    _logger.d("initialize");
 
     _classColorsMap["druid"] = ClassColors(base: Colors.green);
     _classColorsMap["merchant"] = ClassColors(base: Colors.yellow);
@@ -107,6 +116,13 @@ class ThemeProvider extends EventEmitter {
     _classColorsMap["necromancer"] = ClassColors(base: Colors.blueGrey);
     _classColorsMap[""] =
         ClassColors(base: const Color.fromARGB(255, 75, 75, 75));
+
+    boxShadow = BoxShadow(
+      color: shadowColor.withAlpha(200),
+      blurRadius: Settings.gap * 3,
+      spreadRadius: -Settings.gap * 2,
+      blurStyle: BlurStyle.outer,
+    );
   }
 
   setTextStyles(Color color) {
@@ -284,8 +300,20 @@ class ThemeProvider extends EventEmitter {
     colorBackground = classColors?.colorBackground ?? Colors.transparent;
     colorText = classColors?.colorText ?? Colors.white;
     colorDisabled = classColors?.colorDisabled ?? Colors.transparent;
+    colorBackgroundGradiantDark =
+        classColors?.colorBackgroundGradiantDark ?? Colors.transparent;
+    colorBackgroundGradiantLight =
+        classColors?.colorBackgroundGradiantLight ?? Colors.transparent;
 
     setTextStyles(colorText);
+
+    gradient = RadialGradient(
+      radius: 1.5,
+      colors: [
+        colorBackgroundGradiantLight.withAlpha(220),
+        colorBackgroundGradiantDark.withAlpha(220),
+      ],
+    );
 
     var theme = ThemeData();
     var baseSize = theme.textTheme.bodyMedium?.fontSize ?? 12;

@@ -1,4 +1,9 @@
-import 'package:client/components/button.dart';
+import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
+
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/realm_display_object.dart';
@@ -7,9 +12,6 @@ import 'package:client/providers/library.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/settings.dart';
 import 'package:client/states/list_panel.dart';
-import 'package:eventify/eventify.dart' as eventify;
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class GatherPanel extends StatefulWidget {
   const GatherPanel({super.key, required this.callback});
@@ -71,10 +73,11 @@ class _GatherPanelState extends ListPanelState<GatherPanel> {
         _library.resources.where((resource) => resource.canGather).toList();
     List<Widget> ret = <Widget>[];
     for (var i = 0; i < resources.length; i++) {
-      if (i != 0)
+      if (i != 0) {
         ret.add(SizedBox(
           width: Settings.horizontalGap,
         ));
+      }
       _logger.e("${resources[i].name} == ${_provider.resource}");
       ret.add(ItemWithBorder(
         item: resources[i],
@@ -88,91 +91,94 @@ class _GatherPanelState extends ListPanelState<GatherPanel> {
   }
 
   Widget buildHeader(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var paddingSize = 15.0;
+    var paddingSize = _theme.gap * 1.5;
 
-    return SizedBox(
-      width: width,
-      child: Container(
-        decoration: BoxDecoration(
-          color: _theme.colorBackground,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(
-              color: _theme.colorBackground,
-              spreadRadius: -5.0,
-              blurRadius: 10.0,
+    return Container(
+      decoration: BoxDecoration(
+        color: _theme.colorBackground,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: [
+          BoxShadow(
+            color: _theme.colorBackground,
+            spreadRadius: -5.0,
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: paddingSize, vertical: paddingSize / 2),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Text(
+                  "SPEND:",
+                  style: _theme.textLargeBold,
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: CostButton(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(Settings.gap)),
+                    text: "1",
+                    handler: () => onTap(energy: 1),
+                    image: "assets/icons/energy.png",
+                  ),
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: CostButton(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(Settings.gap)),
+                    text: "5",
+                    handler: () => onTap(energy: 5),
+                    image: "assets/icons/energy.png",
+                  ),
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: CostButton(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(Settings.gap)),
+                    text: "25",
+                    handler: () => onTap(energy: 25),
+                    image: "assets/icons/energy.png",
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: Settings.gap),
+            Row(
+              children: [
+                Text(
+                  "Gather:",
+                  style: _theme.textLargeBold,
+                ),
+                SizedBox(
+                  width: paddingSize,
+                ),
+                Expanded(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.width / 9,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ...buildTypes(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: paddingSize, vertical: paddingSize / 2),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "SPEND:",
-                    style: _theme.textLargeBold,
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: Button(
-                      text: "1",
-                      handler: () => onTap(energy: 1),
-                      image: "assets/icons/energy.png",
-                    ),
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: Button(
-                      text: "5",
-                      handler: () => onTap(energy: 5),
-                      image: "assets/icons/energy.png",
-                    ),
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: Button(
-                      text: "25",
-                      handler: () => onTap(energy: 25),
-                      image: "assets/icons/energy.png",
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: Settings.gap),
-              Row(
-                children: [
-                  Text(
-                    "Gather:",
-                    style: _theme.textLargeBold,
-                  ),
-                  SizedBox(
-                    width: paddingSize,
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 9,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ...buildTypes(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
         ),
       ),
     );

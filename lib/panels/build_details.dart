@@ -1,4 +1,4 @@
-import 'package:client/components/button.dart';
+import 'package:client/components/cost_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/connection.dart';
 import 'package:client/data/building.dart';
@@ -120,20 +120,27 @@ class _BuildDetailsPanelState extends State<BuildDetailsPanel> {
     List<Widget> ret = <Widget>[];
 
     List<Widget> children = <Widget>[];
-    if (_building.upkeepGold > 0)
+    if (_building.upkeepGold > 0) {
       children.add(buildStat(_building.upkeepGold.toString(), "gold"));
-    if (_building.upkeepFood > 0)
+    }
+    if (_building.upkeepFood > 0) {
       children.add(buildStat(_building.upkeepFood.toString(), "food"));
-    if (_building.upkeepWood > 0)
+    }
+    if (_building.upkeepWood > 0) {
       children.add(buildStat(_building.upkeepWood.toString(), "wood"));
-    if (_building.upkeepStone > 0)
+    }
+    if (_building.upkeepStone > 0) {
       children.add(buildStat(_building.upkeepStone.toString(), "stone"));
-    if (_building.upkeepMetal > 0)
+    }
+    if (_building.upkeepMetal > 0) {
       children.add(buildStat(_building.upkeepMetal.toString(), "metal"));
-    if (_building.upkeepFaith > 0)
+    }
+    if (_building.upkeepFaith > 0) {
       children.add(buildStat(_building.upkeepFaith.toString(), "faith"));
-    if (_building.upkeepMana > 0)
+    }
+    if (_building.upkeepMana > 0) {
       children.add(buildStat(_building.upkeepMana.toString(), "mana"));
+    }
 
     if (children.isEmpty) {
       //children.add( Text( "---", style: _theme.resultStyle ) );
@@ -263,7 +270,7 @@ class _BuildDetailsPanelState extends State<BuildDetailsPanel> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Button(
+                          child: CostButton(
                             text: "1",
                             handler: () => onTap(energy: 1),
                             image: "assets/icons/energy.png",
@@ -274,7 +281,7 @@ class _BuildDetailsPanelState extends State<BuildDetailsPanel> {
                           width: Settings.gap,
                         ),
                         Expanded(
-                          child: Button(
+                          child: CostButton(
                             text: "5",
                             handler: () => onTap(energy: 5),
                             image: "assets/icons/energy.png",
@@ -285,7 +292,7 @@ class _BuildDetailsPanelState extends State<BuildDetailsPanel> {
                           width: Settings.gap,
                         ),
                         Expanded(
-                          child: Button(
+                          child: CostButton(
                             text: "25",
                             handler: () => onTap(energy: 25),
                             image: "assets/icons/energy.png",

@@ -8,6 +8,7 @@ class RealmTabBar extends StatelessWidget {
     super.key,
     required this.tabs,
     this.active = "",
+    this.enabled = true,
     this.handler,
   });
 
@@ -16,6 +17,7 @@ class RealmTabBar extends StatelessWidget {
   final void Function(String)? handler;
   final List<String> tabs;
   final String active;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class RealmTabBar extends StatelessWidget {
               .map((tab) => RealmTab(
                     label: tab,
                     active: tab.toLowerCase() == active.toLowerCase(),
-                    handler: handler,
+                    handler: enabled ? handler : (s) {},
                   ))
               .toList()),
     );

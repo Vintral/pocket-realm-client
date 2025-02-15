@@ -12,6 +12,7 @@ class Panel extends StatelessWidget {
       this.callback,
       this.form,
       this.header,
+      this.rightChild,
       this.closable = false,
       this.loaded = true});
 
@@ -19,6 +20,7 @@ class Panel extends StatelessWidget {
   final ThemeProvider _theme = ThemeProvider();
 
   final String? label;
+  final Widget? rightChild;
   final Widget child;
   final Widget? form;
   final Widget? header;
@@ -46,8 +48,6 @@ class Panel extends StatelessWidget {
       callback?.call(context);
     }
 
-    _logger.w(_theme.color);
-
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(
@@ -71,24 +71,26 @@ class Panel extends StatelessWidget {
                       style: _theme.textExtraLargeBold,
                     ),
                   ),
-                  closable
-                      ? SizedBox(
-                          height: 32,
-                          child: GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                _theme.colorAccent,
-                                _theme.blendMode,
+                  rightChild != null
+                      ? rightChild as Widget
+                      : closable
+                          ? SizedBox(
+                              height: 32,
+                              child: GestureDetector(
+                                onTap: () => Navigator.of(context).pop(),
+                                child: ColorFiltered(
+                                  colorFilter: ColorFilter.mode(
+                                    _theme.colorAccent,
+                                    _theme.blendMode,
+                                  ),
+                                  child: Image.asset(
+                                    "assets/ui/close.png",
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ),
                               ),
-                              child: Image.asset(
-                                "assets/ui/close.png",
-                                fit: BoxFit.fitHeight,
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(),
+                            )
+                          : Container(),
                 ]),
           ]),
           if (header != null) ...[
