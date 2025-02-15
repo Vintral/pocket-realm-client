@@ -1,10 +1,9 @@
-import 'package:client/components/base_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
-import 'package:client/components/cost_button.dart';
+import 'package:client/components/base_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/shout.dart';
 import 'package:client/dictionary.dart';

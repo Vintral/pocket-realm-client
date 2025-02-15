@@ -27,8 +27,15 @@ class Connection extends eventify.EventEmitter {
   }
 
   decodePayload(dynamic data) {
-    _logger.t("decodePayload");
+    _logger.w("decodePayload");
 
+    if (data is List<String>) {
+      return data;
+    }
+
+    _logger.w(data);
+    _logger.w(base64.decode(data));
+    _logger.w(utf8.decode(base64.decode(data)));
     if (data != null && data is String) {
       data = json.decode(utf8.decode(base64.decode(data)));
     }
@@ -43,7 +50,7 @@ class Connection extends eventify.EventEmitter {
     );
 
     _channel.stream.listen((message) {
-      _logger.t("Message: ${message.toString()}");
+      _logger.d("Message: ${message.toString()}");
 
       var data = json.decode(message);
       if (data is String) {
@@ -71,9 +78,12 @@ class Connection extends eventify.EventEmitter {
 
             emit("ERROR", null, data["data"]["message"]);
             break;
+          case "USER_DATA":
+            emit(data["type"], null, data["user"]);
+            break;
           default:
             {
-              _logger.w("EMITTING: ${data["type"]}");
+              _logger.d("EMITTING: ${data["type"]}");
               emit(data["type"], null, data);
             }
         }
@@ -268,6 +278,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "GET_UNDERGROUND_MARKET"});
   }
 
+  void getMercanaryMarket() {
+    _logger.i("getMercenaryMarket");
+    _send({"type": "GET_MERCENARY_MARKET"});
+  }
+
   void sendBuyResource(int quantity, String resource) {
     _logger.i("sendBuy: $quantity $resource");
     _send({"type": "BUY_RESOURCE", "quantity": quantity, "item": resource});
@@ -281,6 +296,11 @@ class Connection extends eventify.EventEmitter {
   void buyAuction(String auction) {
     _logger.i("buyAuction: $auction");
     _send({"type": "BUY_AUCTION", "auction": auction});
+  }
+
+  void buyMercenary(int quantity) {
+    _logger.i("buyMercenary: $quantity");
+    _send({"type": "BUY_MERCENARY", "quantity": quantity});
   }
 
   // void sendLogin( { String username, String password } ) {

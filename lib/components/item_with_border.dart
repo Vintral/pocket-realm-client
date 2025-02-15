@@ -22,7 +22,7 @@ class ItemWithBorder extends StatelessWidget {
       this.reflect = false});
 
   final _theme = ThemeProvider();
-  final _logger = Logger(level: Logger.level);
+  final _logger = Logger();
 
   final RealmObject? item;
   final String? image;
@@ -39,7 +39,10 @@ class ItemWithBorder extends StatelessWidget {
   Widget buildImage(ImageProvider img) {
     _logger.t("buildImage");
 
-    Image image = Image(image: img);
+    Image image = Image(
+      image: img,
+      fit: BoxFit.fill,
+    );
     return reflect ? flipImage(image) : image;
   }
 
@@ -61,8 +64,6 @@ class ItemWithBorder extends StatelessWidget {
       img = AssetImage(image as String);
     }
 
-    _logger.d("$active ::: ${color != null}");
-
     return AspectRatio(
       aspectRatio: 1,
       child: SizedBox(
@@ -72,11 +73,13 @@ class ItemWithBorder extends StatelessWidget {
           onTap: handler != null ? () => handler!(item?.guid ?? "") : null,
           child: Stack(
             children: [
-              BaseDisplay(
-                child: Padding(
-                  padding: padding ?? EdgeInsets.zero,
-                  child: img != null ? buildImage(img) : const Placeholder(),
-                ),
+              Positioned.fill(
+                child: BaseDisplay(
+                  child: Padding(
+                    padding: padding ?? EdgeInsets.zero,
+                    child: img != null ? buildImage(img) : const Placeholder(),
+                  ),
+                ), //
               ),
               Positioned.fill(
                 child: ColorFiltered(
@@ -89,7 +92,7 @@ class ItemWithBorder extends StatelessWidget {
                       BlendMode.modulate),
                   child: Image.asset(
                     "assets/ui/frame.png",
-                    fit: BoxFit.fill,
+                    centerSlice: Rect.fromLTRB(5, 5, 6, 6),
                   ),
                 ),
               ),

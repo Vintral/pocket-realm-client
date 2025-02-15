@@ -11,6 +11,7 @@ class MarketButton extends StatefulWidget {
     required this.handler,
     this.borderRadius = BorderRadius.zero,
     this.topAmount = 0,
+    this.enabled = true,
     this.topResource,
     this.bottomAmount = 0,
     this.bottomResource,
@@ -24,6 +25,7 @@ class MarketButton extends StatefulWidget {
   final void Function() handler;
   final BorderRadius borderRadius;
   final bool busy;
+  final bool enabled;
 
   @override
   State<MarketButton> createState() => _MarketButtonState();
@@ -56,6 +58,7 @@ class _MarketButtonState extends State<MarketButton> {
     return BaseButton(
       handler: widget.handler,
       busy: widget.busy,
+      enabled: widget.enabled,
       borderRadius: widget.borderRadius,
       child: Padding(
         padding: EdgeInsets.all(Settings.gap / 2),
@@ -92,42 +95,5 @@ class _MarketButtonState extends State<MarketButton> {
         ),
       ),
     );
-
-    // return BaseButton(
-    //   handler: widget.handler,
-    //   borderRadius: widget.borderRadius,
-    //   child: Stack(
-    //     children: [
-    //       Positioned(
-    //         left: Settings.gap / 2,
-    //         top: Settings.gap / 2,
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.start,
-    //           children: [
-    //             Text(
-    //               widget.topAmount.toString(),
-    //               style: style,
-    //             ),
-    //             getImage(widget.topResource),
-    //           ],
-    //         ),
-    //       ),
-    //       Positioned(
-    //         right: Settings.gap / 2,
-    //         bottom: Settings.gap / 2,
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.end,
-    //           children: [
-    //             Text(
-    //               widget.bottomAmount.toString(),
-    //               style: style,
-    //             ),
-    //             getImage(widget.bottomResource),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

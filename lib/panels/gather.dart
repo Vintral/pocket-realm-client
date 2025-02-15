@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
+
 import 'package:client/components/cost_button.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/panel.dart';
@@ -7,9 +12,6 @@ import 'package:client/providers/library.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/settings.dart';
 import 'package:client/states/list_panel.dart';
-import 'package:eventify/eventify.dart' as eventify;
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class GatherPanel extends StatefulWidget {
   const GatherPanel({super.key, required this.callback});
@@ -89,8 +91,7 @@ class _GatherPanelState extends ListPanelState<GatherPanel> {
   }
 
   Widget buildHeader(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var paddingSize = 15.0;
+    var paddingSize = _theme.gap * 1.5;
 
     return Container(
       decoration: BoxDecoration(

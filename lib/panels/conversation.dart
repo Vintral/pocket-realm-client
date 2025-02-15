@@ -1,15 +1,16 @@
+import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
+
 import 'package:client/capitalize.dart';
 import 'package:client/components/base_button.dart';
-import 'package:client/components/cost_button.dart';
 import 'package:client/components/message.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/social.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/states/list_panel.dart';
-import 'package:eventify/eventify.dart' as eventify;
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class ConversationPanel extends StatefulWidget {
   const ConversationPanel({super.key, required this.callback});

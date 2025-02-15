@@ -1,3 +1,5 @@
+import 'package:client/components/cost_button.dart';
+import 'package:client/components/display_stat.dart';
 import 'package:client/components/underground_auction.dart';
 import 'package:client/settings.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,6 @@ import 'package:client/providers/library.dart';
 import 'package:client/providers/market.dart';
 import 'package:client/providers/player.dart';
 import 'package:client/providers/theme.dart';
-import 'package:client/settings.dart';
 import 'package:client/states/list_panel.dart';
 
 class MarketPanel extends StatefulWidget {
@@ -43,6 +44,8 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
   late eventify.Listener _onMarketInfo;
   late eventify.Listener _onMarketSuccess;
   late eventify.Listener _onMarketBusyChanged;
+  late eventify.Listener _onMarketLoaded;
+  late eventify.Listener _onPlayerUpdated;
 
   late TabController _tabController;
   late TabController _subTabController;
@@ -50,8 +53,6 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
   String _activeResource = "";
   String _activeTab = Dictionary.get("RESOURCE");
   String _activeSubTab = Dictionary.get("BUY");
-
-  bool _busy = false;
 
   @override
   void initState() {
@@ -64,9 +65,12 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
     _tabController.addListener(onTabControllerChange);
 
+    _onPlayerUpdated = _player.on("UPDATED", null, onPlayerUpdated);
+
     _onMarketError = _provider.on("ERROR", null, onMarketError);
     _onMarketInfo = _provider.on("INFO", null, onMarketInfo);
     _onMarketSuccess = _provider.on("SUCCESS", null, onMarketSuccess);
+    _onMarketLoaded = _provider.on("LOADED", null, onMarketLoaded);
     _onMarketBusyChanged =
         _provider.on("BUSY_CHANGED", null, onMarketBusyChanged);
 
@@ -82,13 +86,26 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     _onMarketError.cancel();
     _onMarketInfo.cancel();
     _onMarketSuccess.cancel();
+    _onMarketLoaded.cancel();
     _onMarketBusyChanged.cancel();
+
+    _onPlayerUpdated.cancel();
 
     super.dispose();
   }
 
+  void onPlayerUpdated(ev, o) {
+    _logger.t("onPlayerUpdated");
+    setState(() {});
+  }
+
   void onTabControllerChange() {
     _logger.i("onTabControllerChange: ${_tabController.index}");
+    setState(() {});
+  }
+
+  void onMarketLoaded(ev, o) {
+    _logger.t("onMarketLoaded");
     setState(() {});
   }
 
@@ -139,16 +156,12 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
   void onMarketBusyChanged(ev, o) {
     _logger.d("onMarketBusyChanged");
-    setState(() {
-      _busy = _provider.busy;
-    });
+    setState(() {});
   }
 
   void onMarketSuccess(e, o) {
     _logger.i("onMarketSuccess");
-    setState(() {
-      _busy = false;
-    });
+    setState(() {});
   }
 
   Widget buildResourceList() {
@@ -169,7 +182,7 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
       ),
       itemBuilder: (context, index) => ItemWithBorder(
         item: sellable[index],
-        padding: EdgeInsets.all(_theme.gap * 1.5),
+        padding: EdgeInsets.all(_theme.gap),
         active: _activeResource != sellable[index].guid,
         handler: (resource) => setState(() {
           _activeResource = resource;
@@ -184,28 +197,24 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     _logger.i("buy: $quantity");
 
     _provider.buyResource(quantity, _activeResource);
-    setState(() {
-      _busy = true;
-    });
+    setState(() {});
   }
 
   void sell(int quantity) {
     _logger.i("sell: $quantity");
 
     _connection.sendSellResource(quantity, _activeResource);
-    setState(() {
-      _busy = true;
-    });
+    setState(() {});
   }
 
   Widget buildResourceDetail() {
     _logger.t("buildResourceDetail");
 
     Resource? resource = _library.getResource(_activeResource);
-
-    // double buyFor = (resource?.value ?? 0) * _quantity;
-    // double sellFor =
-    //     (resource?.value ?? 0) != 0 ? (1 / resource!.value) * _quantity : 0;
+    if (resource == null) {
+      _logger.w("Missing resource");
+      return SizedBox();
+    }
 
     const vals = [1, 10, 100, 1000, 10000];
     var buttonHeight = MediaQuery.of(context).size.height / 15;
@@ -217,7 +226,7 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
         children: [
           Flexible(
             child: ItemWithBorder(
-              padding: EdgeInsets.all(_theme.gap * 10),
+              padding: EdgeInsets.all(_theme.gap * 3),
               item: resource,
             ),
           ),
@@ -252,8 +261,9 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
                                 child: MarketButton(
                                   topAmount: val,
                                   busy: _provider.busy,
+                                  enabled: _player.gold >= val * resource.value,
                                   topResource: resource,
-                                  bottomAmount: (val * resource!.value).ceil(),
+                                  bottomAmount: (val * resource.value).ceil(),
                                   bottomResource: _library.resourceGold,
                                   borderRadius:
                                       BorderRadius.circular(_theme.gap),
@@ -276,7 +286,7 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
                                   topAmount: val,
                                   topResource: _library.resourceGold,
                                   bottomAmount:
-                                      (val / (1 / resource!.value)).ceil(),
+                                      (val / (1 / resource.value)).ceil(),
                                   bottomResource: resource,
                                   borderRadius:
                                       BorderRadius.circular(_theme.gap),
@@ -335,11 +345,92 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
     );
   }
 
+  buyMercenary(int quantity) {
+    _logger.i("buyMercenary: $quantity");
+
+    _provider.buyMercenary(quantity);
+    setState(() {});
+  }
+
   Widget buildMercenaryMarket() {
     _logger.t("buildMercenaryMarket");
 
-    return Center(
-      child: Text("Mercenary", style: _theme.textLargeBold),
+    if (_provider.unit == null) {
+      if (_provider.loaded) {
+        _logger.w("Missing unit");
+      }
+      return Container();
+    }
+
+    const vals = [1, 5, 10, 100];
+    var size = MediaQuery.of(context).size.width * .5;
+
+    return Column(
+      children: [
+        SizedBox(
+          height: size,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: size,
+                child: ItemWithBorder(
+                  item: _provider.unit,
+                ),
+              ),
+              SizedBox(
+                width: _theme.gap,
+              ),
+              Expanded(
+                child: Container(
+                  color: _theme.color,
+                  child: Padding(
+                    padding: EdgeInsets.all(_theme.gap),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        DisplayStat(Dictionary.get("ATTACK"),
+                            _provider.unit!.attack, "action"),
+                        SizedBox(height: _theme.gap),
+                        DisplayStat(Dictionary.get("DEFENSE"),
+                            _provider.unit!.defense, "action"),
+                        SizedBox(height: _theme.gap),
+                        DisplayStat(Dictionary.get("HEALTH"),
+                            _provider.unit!.health, "action"),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: GridView.count(
+            crossAxisCount: 2,
+            primary: true,
+            physics: NeverScrollableScrollPhysics(),
+            childAspectRatio: 3,
+            children: vals
+                .map(
+                  (val) => Padding(
+                    padding: EdgeInsets.all(_theme.gap / 2),
+                    child: CostButton(
+                      borderRadius: BorderRadius.circular(_theme.gap),
+                      text:
+                          "$val ${Dictionary.get("FOR")} ${val * _provider.unitCost}",
+                      handler: () => buyMercenary(val),
+                      image: "assets/icons/gold.png",
+                      enabled: _player.gold > val * _provider.unitCost,
+                      busy: _provider.busy,
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      ],
     );
   }
 

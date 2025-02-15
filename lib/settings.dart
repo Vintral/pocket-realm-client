@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Settings {
   static String version = "0.0.1";
-  static String server =
-      "63e0-2600-8800-7319-3a00-5161-54ab-609-c698.ngrok-free.app";
+  static String server = "";
 
   //static String Round = "747352df-2da5-4b42-ada7-8f74f2090ae6";
 
@@ -42,6 +42,9 @@ class Settings {
 
   Future<bool> load() async {
     _logger.d("load");
+
+    await dotenv.load(fileName: ".env");
+    Settings.server = dotenv.get("SERVER_URL");
 
     if (!_loaded) {
       settings = await SharedPreferences.getInstance();

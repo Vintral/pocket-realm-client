@@ -56,8 +56,6 @@ class _CostButtonState extends State<CostButton> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        _logger.w(constraints.hasInfiniteWidth);
-
         return SizedBox(
           height: widget.height ?? MediaQuery.of(context).size.height / 20,
           width: !constraints.hasBoundedWidth
@@ -66,6 +64,7 @@ class _CostButtonState extends State<CostButton> {
           child: BaseButton(
             handler: widget.handler,
             borderRadius: widget.borderRadius,
+            enabled: widget.enabled,
             busy: widget.busy,
             child: buildContent(context),
           ),

@@ -50,13 +50,13 @@ class _UndergroundAuctionState extends State<UndergroundAuction> {
 
     var expiresIn = widget.expires.difference(DateTime.now());
     if (expiresIn.inDays > 0) {
-      _logger.e("DAYS AWAY: ${expiresIn.inDays}");
+      _logger.t("DAYS AWAY: ${expiresIn.inDays}");
     } else if (expiresIn.inHours > 0) {
-      _logger.e("HOURS AWAY: ${expiresIn.inHours}");
+      _logger.t("HOURS AWAY: ${expiresIn.inHours}");
     } else if (expiresIn.inMinutes > 0) {
-      _logger.e("MINUTES AWAY: ${expiresIn.inMinutes}");
+      _logger.t("MINUTES AWAY: ${expiresIn.inMinutes}");
     } else {
-      _logger.e("SECONDS AWAY: ${expiresIn.inSeconds}");
+      _logger.t("SECONDS AWAY: ${expiresIn.inSeconds}");
     }
 
     // _timer = Timer.periodic(Duration(seconds: 1), (_) => _logger.w("TICK"));

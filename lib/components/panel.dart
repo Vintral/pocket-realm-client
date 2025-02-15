@@ -48,8 +48,6 @@ class Panel extends StatelessWidget {
       callback?.call(context);
     }
 
-    _logger.w(_theme.color);
-
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(

@@ -10,6 +10,7 @@ class Dictionary {
 
   static Map<String, String> strings = {
     "ACTIVE": "active",
+    "ATTACK": "attack",
     "AGO": "ago",
     "BUILD": "build",
     "BUILDINGS": "buildings",
@@ -18,6 +19,7 @@ class Dictionary {
     "CURRENT": "current",
     "DAY": "day",
     "DAYS": "days",
+    "DEFENSE": "defense",
     "ENDED": "ended",
     "ENDS": "ends",
     "EXPIRES": "expires",
@@ -26,6 +28,7 @@ class Dictionary {
     "EVERY": "every",
     "FINISHED": "finished",
     "FOR": "for",
+    "HEALTH": "health",
     "HIDE_RANKS": "hide ranks",
     "HOUR": "hour",
     "HOURS": "hours",

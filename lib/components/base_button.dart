@@ -125,14 +125,13 @@ class BaseButtonState extends State<BaseButton> {
   Widget build(BuildContext context) {
     var children = [handleBorderRadius(), ...handleChild()];
 
-    return Container(
-        // color: Colors.yellow,
-        child: GestureDetector(
-            onTapDown: onTapDown,
-            onTapUp: onTapUp,
-            onTapCancel: onTapCancel,
-            child: Stack(
-              children: children,
-            )));
+    return GestureDetector(
+      onTapDown: onTapDown,
+      onTapUp: onTapUp,
+      onTapCancel: onTapCancel,
+      child: Stack(
+        children: children,
+      ),
+    );
   }
 }

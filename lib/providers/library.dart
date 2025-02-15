@@ -85,7 +85,7 @@ class LibraryProvider extends eventify.EventEmitter {
     return _mapBuildings[guid];
   }
 
-  dynamic? getItem(String guid) {
+  dynamic getItem(String guid) {
     _logger.d("getItem: $guid");
     return _mapItems[guid];
   }
@@ -135,7 +135,7 @@ class LibraryProvider extends eventify.EventEmitter {
   }
 
   void parseItems(dynamic items) {
-    _logger.w("parseItems");
+    _logger.t("parseItems");
 
     _items.clear();
 
@@ -145,7 +145,5 @@ class LibraryProvider extends eventify.EventEmitter {
         _mapItems[i["guid"]] = i;
       }
     }
-
-    _logger.w("Item Count: ${_items.length}");
   }
 }

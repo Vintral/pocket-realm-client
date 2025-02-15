@@ -27,7 +27,6 @@ class Header extends StatefulWidget {
 
 class _HeaderState extends State<Header> with TickerProviderStateMixin {
   final Logger _logger = Logger(
-      level: Level.warning,
       printer:
           PrettyPrinter(dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart));
   final _player = PlayerProvider();
@@ -384,6 +383,8 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    _logger.t("build");
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.neverShow) return;
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:client/components/header.dart';
 import 'package:client/connection.dart';
 import 'package:client/providers/theme.dart';
+import 'package:client/settings.dart';
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -29,14 +30,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
     _logger.t("initState");
 
-    _connection = Connection();
-    _onConnectedListener = _connection.on("CONNECTED", null, onConnected);
-    _onConnectionError = _connection.on("ERROR", null, onError);
-    _connection.connect();
+    initialize();
   }
 
   initialize() async {
     _logger.t("initialize");
+
+    var settings = Settings();
+    await settings.load();
+
+    _connection = Connection();
+    _onConnectedListener = _connection.on("CONNECTED", null, onConnected);
+    _onConnectionError = _connection.on("ERROR", null, onError);
+    _connection.connect();
   }
 
   @override

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class TimerText extends StatefulWidget {
-  TimerText({
+  const TimerText({
     super.key,
     this.style,
     this.prefix,
@@ -113,8 +113,6 @@ class _TimerTextState extends State<TimerText> {
     _logger.t("createTimer");
 
     setDifference();
-
-    _logger.w("DIFFERENCE: ${_difference.inMinutes}");
 
     _timer?.cancel();
 

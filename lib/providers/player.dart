@@ -98,11 +98,9 @@ class PlayerProvider extends eventify.EventEmitter {
     _logger.d("onUpdated");
 
     var data = ev.eventData as dynamic;
-
     if (data["user"] != null) {
       updateUser(data["user"]);
-    } else {
-      _logger.w("onUpdated: User data missing");
+      emit("UPDATED");
     }
   }
 
@@ -131,7 +129,7 @@ class PlayerProvider extends eventify.EventEmitter {
   }
 
   void onUserData(ev, obj) {
-    _logger.i("onGetUser");
+    _logger.t("onUserData");
 
     onUpdated(ev, obj);
 
