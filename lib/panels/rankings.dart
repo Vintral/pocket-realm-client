@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
+
 import 'package:client/capitalize.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/list_item.dart';
@@ -8,9 +13,6 @@ import 'package:client/dictionary.dart';
 import 'package:client/providers/rankings.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/states/list_panel.dart';
-import 'package:eventify/eventify.dart' as eventify;
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class RankingsPanel extends StatefulWidget {
   const RankingsPanel({super.key, required this.callback});
@@ -22,7 +24,7 @@ class RankingsPanel extends StatefulWidget {
 }
 
 class _RankingsPanelState extends ListPanelState<RankingsPanel> {
-  final Logger _logger = Logger(level: Level.trace);
+  final Logger _logger = Logger();
 
   final ThemeProvider _theme = ThemeProvider();
   final _provider = RankingsProvider();

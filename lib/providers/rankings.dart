@@ -1,8 +1,8 @@
-import 'package:client/data/ranking.dart';
 import 'package:eventify/eventify.dart';
 import 'package:logger/logger.dart';
 
 import 'package:client/connection.dart';
+import 'package:client/data/ranking.dart';
 
 class RankingsProvider extends EventEmitter {
   static final RankingsProvider _instance = RankingsProvider._internal();
@@ -11,7 +11,7 @@ class RankingsProvider extends EventEmitter {
     return _instance;
   }
 
-  final Logger _logger = Logger(level: Level.warning);
+  final Logger _logger = Logger();
   final Connection _connection = Connection();
 
   bool _busy = false;
