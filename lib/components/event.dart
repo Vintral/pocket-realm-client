@@ -1,10 +1,14 @@
-import 'package:client/connection.dart';
-import 'package:client/data/event.dart';
 import 'package:flutter/material.dart';
 
+import 'package:logger/logger.dart';
+
+import 'package:client/components/base_display.dart';
+import 'package:client/connection.dart';
+import 'package:client/components/item_with_border.dart';
+import 'package:client/data/event.dart';
+import 'package:client/dictionary.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/utilities.dart';
-import 'package:logger/logger.dart';
 
 class Event extends StatelessWidget {
   Event({super.key, required this.data});
@@ -12,59 +16,72 @@ class Event extends StatelessWidget {
   final Logger _logger = Logger(level: Level.warning);
 
   final _theme = ThemeProvider();
+  final Connection _connection = Connection();
 
   final EventData data;
 
-  final Connection _connection = Connection();
+  Widget buildContent(BuildContext context) {
+    _logger.t("buildContent");
 
-  sendRead() {
-    if (!data.seen) {
-      _logger.w("SEND READ: ${data.guid}");
-      _connection.markEventSeen(data.guid);
-    }
+    var size = MediaQuery.of(context).size.width / 5;
+
+    return SizedBox(
+      height: size,
+      child: BaseDisplay(
+        child: Row(
+          spacing: _theme.gap,
+          children: [
+            ItemWithBorder(
+              image: "assets/resources/gold.png",
+              height: size,
+            ),
+            Expanded(
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: _theme.gap / 2,
+                    right: _theme.gap / 2,
+                    child: Text(
+                      timeSince(data.time),
+                      style: _theme.textMediumBold.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      data.message,
+                      style: _theme.textExtraLarge,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size.width / 6;
-    var scale = .65;
-
     _logger.t("Message: ${data.message}");
     _logger.t("Time Since: ${timeSince(data.time)}");
 
-    var currentSeen = data.seen;
-    sendRead();
+    if (!data.seen) {
+      _connection.markEventSeen(data.guid);
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-            width: _theme.gap,
-            color: data.seen
-                ? _theme.inactiveBorderColor
-                : _theme.activeBorderColor),
-        gradient: RadialGradient(radius: size / 10, colors: [
-          Color.fromARGB(
-            _theme.color.a as int,
-            (_theme.color.r * scale).toInt(),
-            (_theme.color.g * scale).toInt(),
-            (_theme.color.b * scale).toInt(),
-          ),
-          _theme.color,
-        ]),
-        borderRadius: BorderRadius.all(Radius.circular(_theme.gap)),
-      ),
-      child: Stack(children: [
-        Text(
-          data.message,
-          style: _theme.textMedium,
+      return ClipRect(
+        child: Banner(
+          color: Colors.purple,
+          message: Dictionary.get("NEW").toUpperCase(),
+          location: BannerLocation.topStart,
+          child: buildContent(context),
         ),
-        Positioned(
-            child: Container(
-          color:
-              currentSeen ? _theme.activeBorderColor : _theme.colorBackground,
-          child: Text(timeSince(data.time), style: _theme.textMedium),
-        ))
-      ]),
-    );
+      );
+    }
+
+    return buildContent(context);
   }
 }
