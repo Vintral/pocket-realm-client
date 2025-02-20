@@ -43,6 +43,7 @@ class Dictionary {
     "MINUTES": "minutes",
     "NEAR": "near",
     "NEWS": "news",
+    "NEW": "new",
     "NOW": "now",
     "OF": "of",
     "POWER": "power",
