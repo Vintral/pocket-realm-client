@@ -104,12 +104,8 @@ class BaseButtonState extends State<BaseButton> {
           )
         : null;
 
-    child ??= widget.child;
-    child ??= Row(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: widget.children,
+    child ??= Center(
+      child: widget.child,
     );
 
     return [
