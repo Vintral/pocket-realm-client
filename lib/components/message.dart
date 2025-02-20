@@ -1,3 +1,4 @@
+import 'package:client/components/base_display.dart';
 import 'package:client/providers/player.dart';
 import 'package:client/providers/social.dart';
 import 'package:flutter/material.dart';
@@ -36,22 +37,7 @@ class Message extends StatelessWidget {
     var size = _theme.width / 5;
     var incoming = data.username != _player.username;
 
-    Widget ret = Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: incoming ? Alignment.topLeft : Alignment.topRight,
-            end: incoming ? Alignment.bottomRight : Alignment.bottomLeft,
-            colors: [
-              Color.fromARGB(
-                  (_theme.gradientOpacity / 60).floor(),
-                  _theme.colorAccent.r as int,
-                  _theme.colorAccent.g as int,
-                  _theme.colorAccent.b as int),
-              Color.fromARGB(_theme.gradientOpacity, _theme.color.r as int,
-                  _theme.color.g as int, _theme.color.b as int),
-            ]),
-        borderRadius: BorderRadius.all(Radius.circular(_theme.gap)),
-      ),
+    return BaseDisplay(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         textDirection: incoming ? TextDirection.ltr : TextDirection.rtl,
@@ -76,7 +62,5 @@ class Message extends StatelessWidget {
         ],
       ),
     );
-
-    return ret;
   }
 }
