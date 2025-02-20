@@ -1,3 +1,5 @@
+import 'package:client/capitalize.dart';
+import 'package:client/components/base_display.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/player.dart';
@@ -54,8 +56,6 @@ class _EventsPanelState extends ListPanelState<EventsPanel> {
   void onEvent(e, o) {
     _logger.d("onEvent");
 
-    _logger.d(e.eventData);
-
     onEvents(e, o);
   }
 
@@ -67,16 +67,29 @@ class _EventsPanelState extends ListPanelState<EventsPanel> {
   Widget buildResults() {
     _logger.d("buildResults");
 
-    List<Widget> widgets = <Widget>[];
-    for (var event in _provider.events) {
-      widgets.add(Event(data: event));
-      widgets.add(SizedBox(
-        height: _theme.gap,
-      ));
+    if (_provider.events.isEmpty) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.width / 5,
+          child: BaseDisplay(
+            child: Center(
+              child: Text(
+                Dictionary.get("NO_EVENTS").capitalize(),
+                style: _theme.textLargeBold,
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
-    return ListView(
-      children: [...widgets],
+    return ListView.separated(
+      itemCount: _provider.events.length,
+      itemBuilder: (context, index) => Event(data: _provider.events[index]),
+      separatorBuilder: (context, index) => SizedBox(
+        height: _theme.gap,
+      ),
     );
   }
 
@@ -86,10 +99,8 @@ class _EventsPanelState extends ListPanelState<EventsPanel> {
 
     widget.callback(context);
 
-    _logger.d("Loaded: ${_provider.events.isNotEmpty}");
-
     return Panel(
-      loaded: _provider.events.isNotEmpty,
+      loaded: _provider.eventsLoaded,
       label: Dictionary.get("EVENTS"),
       child: buildResults(),
     );
