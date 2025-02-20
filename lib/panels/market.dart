@@ -1,7 +1,3 @@
-import 'package:client/components/cost_button.dart';
-import 'package:client/components/display_stat.dart';
-import 'package:client/components/underground_auction.dart';
-import 'package:client/settings.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -13,12 +9,16 @@ import 'package:client/connection.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/tab_bar.dart';
+import 'package:client/components/cost_button.dart';
+import 'package:client/components/display_stat.dart';
+import 'package:client/components/underground_auction.dart';
 import 'package:client/data/resource.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/library.dart';
 import 'package:client/providers/market.dart';
 import 'package:client/providers/player.dart';
 import 'package:client/providers/theme.dart';
+import 'package:client/settings.dart';
 import 'package:client/states/list_panel.dart';
 
 class MarketPanel extends StatefulWidget {
@@ -110,15 +110,15 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
   }
 
   void onTab(String tab) {
-    _logger.i("onTab: $tab");
+    _logger.e("onTab: $tab");
     setState(() {
       _activeTab = tab.toLowerCase();
 
-      _logger.i("Active: $_activeTab");
+      _logger.e("Active: $_activeTab");
       switch (_activeTab) {
         case "resource":
           _tabController.index = 0;
-        case "black market":
+        case "bazaar":
           _tabController.index = 1;
         case "mercenary":
           _tabController.index = 2;
@@ -454,11 +454,16 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
           ),
         ],
       ),
-      header: RealmTabBar(tabs: [
-        Dictionary.get("RESOURCE").toUpperCase(),
-        Dictionary.get("UNDERGROUND_MARKET").toUpperCase(),
-        Dictionary.get("MERCENARY").toUpperCase(),
-      ], active: _activeTab, enabled: _provider.loaded, handler: onTab),
+      header: RealmTabBar(
+        tabs: [
+          Dictionary.get("RESOURCE").toUpperCase(),
+          Dictionary.get("BAZAAR").toUpperCase(),
+          Dictionary.get("MERCENARY").toUpperCase(),
+        ],
+        active: _activeTab,
+        enabled: _provider.loaded,
+        handler: onTab,
+      ),
       child: TabBarView(
         controller: _tabController,
         children: [
