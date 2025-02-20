@@ -44,6 +44,7 @@ class Dictionary {
     "NEAR": "near",
     "NEWS": "news",
     "NEW": "new",
+    "NO_EVENTS": "no events",
     "NOW": "now",
     "OF": "of",
     "POWER": "power",
