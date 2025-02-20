@@ -22,6 +22,7 @@ class PlayerProvider extends eventify.EventEmitter {
 
   List<EventData> events = <EventData>[];
   bool _eventsRetrieved = false;
+  bool get eventsLoaded => _eventsRetrieved;
 
   bool loaded = false;
 
