@@ -64,11 +64,11 @@ class ItemWithBorder extends StatelessWidget {
       img = AssetImage(image as String);
     }
 
-    return AspectRatio(
-      aspectRatio: 1,
-      child: SizedBox(
-        width: width,
-        height: height,
+    return SizedBox(
+      height: height,
+      width: width,
+      child: AspectRatio(
+        aspectRatio: 1,
         child: GestureDetector(
           onTap: handler != null ? () => handler!(item?.guid ?? "") : null,
           child: Stack(
