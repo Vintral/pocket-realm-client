@@ -13,6 +13,7 @@ class Panel extends StatelessWidget {
       this.form,
       this.header,
       this.rightChild,
+      this.capitalize = true,
       this.closable = false,
       this.loaded = true});
 
@@ -25,6 +26,7 @@ class Panel extends StatelessWidget {
   final Widget? form;
   final Widget? header;
   final bool loaded;
+  final bool capitalize;
   final bool closable;
   final void Function(BuildContext)? callback;
 
@@ -67,7 +69,8 @@ class Panel extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 7, 0, 5),
                     child: Text(
-                      label?.capitalize() ?? Dictionary.missing,
+                      (capitalize ? label?.capitalize() : label) ??
+                          Dictionary.missing,
                       style: _theme.textExtraLargeBold,
                     ),
                   ),
