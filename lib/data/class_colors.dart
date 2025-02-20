@@ -15,6 +15,7 @@ class ClassColors {
   late BlendMode blendMode;
   late Color shadowColor;
   late Color colorAccent;
+  late Color colorActiveTab;
   late Color colorDisabled;
   late Color activeBorderColor;
   late Color inactiveBorderColor;
@@ -46,6 +47,7 @@ class ClassColors {
               const Color.fromARGB(255, 22, 100, 168);
           colors.colorBackgroundGradiantDark =
               const Color.fromARGB(255, 12, 62, 106);
+          colors.colorActiveTab = const Color.fromARGB(255, 255, 255, 0);
         }
         break;
     }

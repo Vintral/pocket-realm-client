@@ -38,6 +38,7 @@ class ThemeProvider extends EventEmitter {
 
   Color color = const Color.fromARGB(200, 0, 0, 0);
   Color colorAccent = const Color.fromARGB(200, 0, 0, 0);
+  Color colorActiveTab = const Color.fromARGB(200, 0, 0, 0);
   Color colorBackground = const Color.fromARGB(200, 0, 0, 0);
   Color colorDisabled = const Color.fromARGB(200, 0, 0, 0);
   Color colorBackgroundGradiantDark = const Color.fromARGB(200, 0, 0, 0);
@@ -299,6 +300,7 @@ class ThemeProvider extends EventEmitter {
         classColors?.inactiveBorderColor ?? Colors.transparent;
     colorBackground = classColors?.colorBackground ?? Colors.transparent;
     colorText = classColors?.colorText ?? Colors.white;
+    colorActiveTab = classColors?.colorActiveTab ?? Colors.yellow;
     colorDisabled = classColors?.colorDisabled ?? Colors.transparent;
     colorBackgroundGradiantDark =
         classColors?.colorBackgroundGradiantDark ?? Colors.transparent;

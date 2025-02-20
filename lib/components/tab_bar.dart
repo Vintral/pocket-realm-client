@@ -24,14 +24,17 @@ class RealmTabBar extends StatelessWidget {
     return SizedBox(
       height: _theme.headerDrawerCap,
       child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: tabs
-              .map((tab) => RealmTab(
-                    label: tab,
-                    active: tab.toLowerCase() == active.toLowerCase(),
-                    handler: enabled ? handler : (s) {},
-                  ))
-              .toList()),
+        mainAxisSize: MainAxisSize.max,
+        children: tabs
+            .map(
+              (tab) => RealmTab(
+                label: tab,
+                active: tab.toLowerCase() == active.toLowerCase(),
+                handler: enabled ? handler : (s) {},
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }

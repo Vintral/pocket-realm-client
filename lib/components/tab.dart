@@ -1,5 +1,6 @@
 import 'package:client/providers/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class RealmTab extends StatelessWidget {
   RealmTab(
@@ -10,6 +11,7 @@ class RealmTab extends StatelessWidget {
       this.enabled = true});
 
   final ThemeProvider _theme = ThemeProvider();
+  final _logger = Logger();
 
   final void Function(String)? handler;
   final String label;
@@ -25,14 +27,7 @@ class RealmTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if( handler != null ) {
-    //   return GestureDetector(
-    //     //onTap: () => handler!( label ),
-    //     child: buildTab(),
-    //   );
-    // }
-
-    //return buildTab();
+    _logger.t("build");
 
     return Expanded(
       child: GestureDetector(
@@ -53,7 +48,10 @@ class RealmTab extends StatelessWidget {
           Center(
               child: Text(label,
                   style: enabled
-                      ? (active ? _theme.textLargeBold : _theme.textLarge)
+                      ? (active
+                          ? _theme.textLarge
+                              .copyWith(color: _theme.colorActiveTab)
+                          : _theme.textLarge)
                       : _theme.textLarge
                           .copyWith(color: _theme.colorDisabled))),
         ]),
