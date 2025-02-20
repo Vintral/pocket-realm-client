@@ -22,7 +22,7 @@ class ConversationPanel extends StatefulWidget {
 }
 
 class _ConversationPanelState extends ListPanelState<ConversationPanel> {
-  final Logger _logger = Logger(level: Level.debug);
+  final Logger _logger = Logger();
 
   final ThemeProvider _theme = ThemeProvider();
   final _provider = SocialProvider();
@@ -141,29 +141,33 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
           ],
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: _theme.gap, vertical: _theme.gap / 2),
+          padding: EdgeInsets.all(_theme.gap),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: _theme.gap,
             children: [
               Expanded(
                 child: Stack(
                   children: [
-                    Card(
-                      color: _theme.color,
-                      child: TextField(
-                        controller: _messageController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        maxLength: 250,
-                        scrollPadding: EdgeInsets.all(_theme.gap / 4),
-                        style: _theme.textMedium,
-                        decoration: InputDecoration(
-                          enabledBorder: border,
-                          focusedBorder: border,
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          counterText: "",
+                    Padding(
+                      padding: EdgeInsets.zero,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(_theme.gap / 2),
+                        color: _theme.color,
+                        child: TextField(
+                          controller: _messageController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          maxLength: 250,
+                          scrollPadding: EdgeInsets.all(_theme.gap / 4),
+                          style: _theme.textLarge,
+                          decoration: InputDecoration(
+                            enabledBorder: border,
+                            focusedBorder: border,
+                            fillColor: Colors.transparent,
+                            filled: true,
+                            counterText: "",
+                          ),
                         ),
                       ),
                     ),
@@ -171,18 +175,16 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
                 ),
               ),
               SizedBox(
-                width: _theme.gap,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: _theme.gap / 2),
-                child: SizedBox(
-                  width: _theme.width / 5,
+                width: _theme.width / 5,
+                child: AspectRatio(
+                  aspectRatio: 1.5,
                   child: BaseButton(
+                    borderRadius: BorderRadius.circular(_theme.gap * .75),
                     handler: onTap,
                     enabled: _messageController.text.isNotEmpty,
                     busy: _busy,
                     child: Text(Dictionary.get("SEND").toUpperCase(),
-                        style: _theme.textMediumBold),
+                        style: _theme.textLargeBold),
                   ),
                 ),
               ),
@@ -199,15 +201,15 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
 
     widget.callback(context);
 
-    // _logger
-    //     .d(_provider.conversationMap[_provider.conversation]?.username ?? "--");
+    _logger.w(_provider.conversation?.username);
 
     return Panel(
       loaded: _provider.conversations.isNotEmpty,
       closable: true,
       form: buildForm(),
+      capitalize: false,
       label:
-          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversationMap[_provider.conversation?.username]?.username ?? "--"}",
+          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversation?.username ?? "--"}",
       child: buildResults(),
     );
   }
