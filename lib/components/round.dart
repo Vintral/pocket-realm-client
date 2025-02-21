@@ -47,9 +47,6 @@ class _RoundState extends State<Round> {
 
     Future.microtask(() {
       if (_key.currentContext != null) {
-        _logger.w(
-            "========Height: ${(_key.currentContext!.findRenderObject() as RenderBox).size.toString()}");
-
         var max =
             (_key.currentContext!.findRenderObject() as RenderBox).size.height;
 
@@ -76,7 +73,11 @@ class _RoundState extends State<Round> {
           height: _max,
           child: Column(
             children: [
-              ...data.map((item) => Ranking.fromData(item as dynamic))
+              ...data.map((item) => Ranking.fromData(
+                    item as dynamic,
+                    compressed: true,
+                    background: false,
+                  ))
             ],
           ),
         ),
@@ -153,8 +154,11 @@ class _RoundState extends State<Round> {
                     child: Column(
                       key: _key,
                       children: [
-                        ...widget.data.ranks!
-                            .map((item) => Ranking.fromData(item as dynamic))
+                        ...widget.data.ranks!.map((item) => Ranking.fromData(
+                              item as dynamic,
+                              compressed: true,
+                              background: false,
+                            ))
                       ],
                     ))
                 : SizedBox(
@@ -264,19 +268,23 @@ class _RoundState extends State<Round> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
-                  width: size * (widget.data.finished ? 3.25 : 2.5),
-                  child: BaseButton(
-                    handler: () => handleTap(),
-                    busy: widget.busy,
-                    enabled: _player.round != widget.data.guid,
-                    child: Text(
-                        Dictionary.get((widget.data.finished
-                                ? (_open ? "HIDE_RANKS" : "SHOW_RANKS")
-                                : (_player.round == widget.data.guid
-                                    ? "CURRENT"
-                                    : "PLAY")))
-                            .toUpperCase(),
-                        style: _theme.textExtraLarge),
+                  width: size * (widget.data.finished ? 4.25 : 3.5),
+                  child: AspectRatio(
+                    aspectRatio: 2.5,
+                    child: BaseButton(
+                      borderRadius: BorderRadius.circular(_theme.gap * .75),
+                      handler: () => handleTap(),
+                      busy: widget.busy,
+                      enabled: _player.round != widget.data.guid,
+                      child: Text(
+                          Dictionary.get((widget.data.finished
+                                  ? (_open ? "HIDE_RANKS" : "SHOW_RANKS")
+                                  : (_player.round == widget.data.guid
+                                      ? "CURRENT"
+                                      : "PLAY")))
+                              .toUpperCase(),
+                          style: _theme.textExtraLarge),
+                    ),
                   ),
                 ),
               ],

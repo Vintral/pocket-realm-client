@@ -1,99 +1,103 @@
-import 'dart:math';
+import 'package:client/components/base_display.dart';
+import 'package:flutter/material.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:client/components/item_with_border.dart';
-import 'package:client/providers/theme.dart';
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+import 'package:client/components/item_with_border.dart';
+import 'package:client/providers/theme.dart';
+
 class Ranking extends StatelessWidget {
-  static Ranking fromData(dynamic data) {
+  static Ranking fromData(dynamic data,
+      {bool background = true, bool compressed = false}) {
     return Ranking(
-        data.place, data.username, data.avatar, data.power, data.land);
+        rank: data.rank,
+        username: data.username,
+        avatar: data.avatar,
+        score: data.score,
+        background: background,
+        compressed: compressed);
   }
 
-  final Logger _logger = Logger(level: Level.trace);
+  final Logger _logger = Logger();
 
   final _theme = ThemeProvider();
 
-  final int place = 0;
-  final String username = "";
-  final int avatar = 0;
-  final int power = 0;
-  final int land = 0;
+  final int rank;
+  final String username;
+  final int avatar;
+  final int score;
+  final bool background;
+  final bool compressed;
 
-  Ranking(place, username, avatar, power, land, {super.key}) {
-    place = place;
-    username = username;
-    avatar = avatar;
-    power = power;
-    land = land;
-
-    dump();
-  }
+  Ranking(
+      {super.key,
+      required this.rank,
+      required this.username,
+      required this.avatar,
+      required this.score,
+      required this.compressed,
+      required this.background});
 
   void dump() {
-    _logger.t("=================================");
-    _logger.t("Place: $place");
-    _logger.t("Username: $username");
-    _logger.t("Avatar: $avatar");
-    _logger.t("Power: $power");
-    _logger.t("Land: $land");
-    _logger.t("=================================");
+    _logger.t("""=================================
+Rank: $rank
+Username: $username
+Avatar: $avatar
+Score: $score
+Background: $background
+Compressed: $compressed
+=================================""");
   }
 
   @override
   Widget build(BuildContext context) {
-    _logger.w("build");
+    _logger.t("build");
 
-    var size = MediaQuery.of(context).size.width / 10;
+    dump();
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(stops: [
-          0,
-          .5,
-          1
-        ], colors: [
-          Colors.purple.withAlpha(100),
-          Colors.transparent,
-          Colors.purple.withAlpha(100)
-        ], transform: GradientRotation(pi / 4)),
-        borderRadius: BorderRadius.circular(_theme.gap / 2),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: size,
-            child: Center(
-              child: AutoSizeText(place.toString(),
-                  style: _theme.textExtraLargeBold),
-            ),
+    var size = MediaQuery.of(context).size.width / (compressed ? 15 : 8);
+
+    var content = Row(
+      children: [
+        SizedBox(
+          width: size,
+          child: Center(
+            child:
+                AutoSizeText(rank.toString(), style: _theme.textExtraLargeBold),
           ),
-          Padding(
-            padding: EdgeInsets.all(_theme.gap),
-            child: ItemWithBorder(
-              image: "assets/avatars/$avatar.png",
-              height: size,
-              backgroundColor: _theme.colorBackground,
-            ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(_theme.gap),
+          child: ItemWithBorder(
+            image: "assets/avatars/$avatar.png",
+            height: size,
+            backgroundColor: _theme.colorBackground,
           ),
-          Padding(
-            padding: EdgeInsets.all(_theme.gap),
-            child: Text(username, style: _theme.textLargeBold),
-          ),
-          Flexible(
-              fit: FlexFit.tight,
-              child: Padding(
-                  padding: EdgeInsets.only(right: _theme.gap),
-                  child: Text(
-                    power.toString(),
-                    style: _theme.textLargeBold
-                        .copyWith(color: Colors.yellow[700]),
-                    textAlign: TextAlign.right,
-                  ))),
-        ],
-      ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(_theme.gap),
+          child: Text(username, style: _theme.textLargeBold),
+        ),
+        Flexible(
+            fit: FlexFit.tight,
+            child: Padding(
+                padding: EdgeInsets.only(right: _theme.gap),
+                child: Text(
+                  score.toString(),
+                  style:
+                      _theme.textLargeBold.copyWith(color: Colors.yellow[700]),
+                  textAlign: TextAlign.right,
+                ))),
+      ],
     );
+
+    if (background) {
+      return BaseDisplay(
+        child: content,
+      );
+    }
+
+    return content;
   }
 }
