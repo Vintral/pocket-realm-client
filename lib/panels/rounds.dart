@@ -43,6 +43,7 @@ class _RoundsPanelState extends ListPanelState<RoundsPanel>
     _logger.t("initState");
 
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(onTabChanged);
 
     _onPlayRoundError =
         _connection.on("PLAY_ROUND_ERROR", null, onPlayRoundError);
@@ -63,7 +64,22 @@ class _RoundsPanelState extends ListPanelState<RoundsPanel>
     _onPlayRoundError.cancel();
     _onPlayRoundSuccess.cancel();
 
+    _tabController.removeListener(onTabChanged);
+
     super.dispose();
+  }
+
+  void onTabChanged() {
+    _logger.w("onTabChanged: ${_tabController.index}");
+
+    setState(() {
+      switch (_tabController.index) {
+        case 1:
+          _activeTab = Dictionary.get("FINISHED");
+        default:
+          _activeTab = Dictionary.get("ACTIVE");
+      }
+    });
   }
 
   void onPlayRoundError(e, o) {
