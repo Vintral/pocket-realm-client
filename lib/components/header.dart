@@ -26,9 +26,7 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> with TickerProviderStateMixin {
-  final Logger _logger = Logger(
-      printer:
-          PrettyPrinter(dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart));
+  final Logger _logger = Logger();
   final _player = PlayerProvider();
   final _library = LibraryProvider();
   final _theme = ThemeProvider();
@@ -60,7 +58,6 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     parent: _controllerRotation,
     curve: Curves.easeInOut,
   ))
-    ..addStatusListener((status) => _logger.d("Rotation: $status"))
     ..addListener(() => setState(() {}));
 
   late eventify.Listener _onPlayerUpdatedListener;
@@ -73,26 +70,18 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   late final CurvedAnimation _animationUpperDrawer = CurvedAnimation(
     parent: _controllerOffset,
     curve: Curves.linear,
-  )
-    ..addStatusListener((status) {
-      _logger.d("Upper: $status");
-      if (status == AnimationStatus.completed) {
-        if (_open) {
-          //openLowerDrawer();
-        }
-      }
-    })
-    ..addListener(() => setState(() {}));
+  );
 
   late final CurvedAnimation _animationLowerDrawer = CurvedAnimation(
     parent: _controllerLowerDrawerOffset,
     curve: Curves.linear,
   )
     ..addStatusListener((status) {
-      _logger.d("Lower: $status");
       if (status == AnimationStatus.completed) {
-        if (!_open) {
-          // closeUpperDrawer();
+        if (_open) {
+          moveDistance = _getSize(_keyWrap).height + _theme.gap * 2;
+        } else {
+          moveDistance = 0;
         }
       }
     })
@@ -136,14 +125,15 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   }
 
   void setLowerDrawerAnimation(double start, double finish) {
-    _logger.t("setLowerDrawerAnimation: $start -> $finish");
+    _logger.t("setLowerDrawerAnimation: $start -> $finish  | $_open");
+
+    _controllerLowerDrawerOffset.reset();
 
     _offsetLowerDrawerAnimation = Tween<double>(
       begin: start,
       end: finish,
     ).animate(_animationLowerDrawer);
 
-    _controllerLowerDrawerOffset.reset();
     _controllerLowerDrawerOffset.forward();
   }
 
@@ -174,24 +164,24 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   }
 
   void openUpperDrawer() {
-    _logger.f("openUpperDrawer");
+    _logger.d("openUpperDrawer");
     setOffsetAnimation(0, _theme.headerDrawerCap);
     openLowerDrawer();
     _controllerRotation.forward();
   }
 
   void closeUpperDrawer() {
-    _logger.f("closeUpperDrawer");
+    _logger.d("closeUpperDrawer");
     setOffsetAnimation(_theme.headerDrawerCap, 0);
   }
 
   void openLowerDrawer() {
-    _logger.f("openLowerDrawer");
+    _logger.d("openLowerDrawer: ${_getSize(_keyWrap).height}");
     setLowerDrawerAnimation(0, _getSize(_keyWrap).height + _theme.gap * 2);
   }
 
   void closeLowerDrawer() {
-    _logger.f("closeLowerDrawer");
+    _logger.d("closeLowerDrawer");
     closeUpperDrawer();
     setLowerDrawerAnimation(_getSize(_keyWrap).height + _theme.gap * 2, 0);
     _controllerRotation.reverse();
@@ -201,8 +191,6 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     _logger.i("onTap");
 
     _open = !_open;
-
-    //moveDistance = getOffsetForWrap();
     setState(() {
       if (!_open) {
         closeLowerDrawer();
@@ -215,14 +203,14 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   void onTab(String tab) {
     _logger.i("onTab: $tab");
     setState(() {
-      _activeTab = tab;
+      _activeTab = tab.toLowerCase();
     });
   }
 
   Widget buildResource(Resource resource) {
     var quantity = "--";
-    var targetItems = 8;
-    var size = (_theme.width - _theme.gap * 4) / targetItems;
+    var targetItems = 6;
+    var size = (_theme.width - _theme.gap * (targetItems + 1)) / targetItems;
 
     switch (resource.name) {
       case "gold":
@@ -240,8 +228,15 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
       case "stone":
         quantity = _player.stone.toString();
         break;
-      // case "mana": quantity = _player.mana.toString(); break;
-      // case "faith": quantity = _player.faith.toString(); break;
+      case "mana":
+        quantity = _player.mana.toString();
+        break;
+      case "faith":
+        quantity = _player.faith.toString();
+        break;
+      case "research":
+        quantity = _player.research.toString();
+        break;
       default:
         return Container();
     }
@@ -255,23 +250,19 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   }
 
   List<Widget> getDrawerContent() {
-    _logger.t("getDrawerContent");
+    _logger.t("getDrawerContent: $_activeTab");
 
     var size = _theme.width / 10;
 
     if (_activeTab == Dictionary.get("RESOURCES")) {
       return [
         ..._library.resources
-            .where(
-                (element) => element.name != "mana" && element.name != "faith")
+            // .where(
+            //     (element) => element.name != "mana" && element.name != "faith")
             .map((resource) => buildResource(resource)),
         ..._library.resources
-            .where(
-                (element) => element.name != "mana" && element.name != "faith")
-            .map((resource) => buildResource(resource)),
-        ..._library.resources
-            .where(
-                (element) => element.name != "mana" && element.name != "faith")
+            // .where(
+            //     (element) => element.name != "mana" && element.name != "faith")
             .map((resource) => buildResource(resource)),
       ];
     }
@@ -314,7 +305,6 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
 
   double getOffsetForWrap() {
     _logger.t("getOffsetForWrap");
-    //return _open ? _theme.headerDrawerCap : 0;
     return _open ? _getSize(_keyWrap).height + _theme.gap * 2 : 0;
   }
 
@@ -392,11 +382,13 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
         _theme.headerDrawerBackground = _getSize(_key).height;
       }
 
-      if (_open && _controllerOffset.status == AnimationStatus.completed) {
+      if (_open &&
+          _controllerLowerDrawerOffset.status == AnimationStatus.completed) {
         var distance = getOffsetForWrap();
         if (distance != moveDistance) {
+          _logger.e(
+              "Move to $distance from $moveDistance   ${_controllerLowerDrawerOffset.status}");
           setLowerDrawerAnimation(moveDistance, distance);
-          moveDistance = distance;
         }
       }
 
@@ -406,10 +398,6 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
         });
       }
     });
-
-    //_logger.e( "Offset: ${_offsetAnimation?.value ?? 0}" );
-
-    //_logger.w( "User Avatar: ${_player.avatar}" );
 
     return Offstage(
       offstage: !_shown,
