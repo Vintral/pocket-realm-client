@@ -57,6 +57,8 @@ class PlayerProvider extends eventify.EventEmitter {
   int tickMana = 0;
   int faith = 0;
   int tickFaith = 0;
+  int research = 0;
+  int tickReearch = 0;
   int buildPower = 0;
   int recruitPower = 0;
 
