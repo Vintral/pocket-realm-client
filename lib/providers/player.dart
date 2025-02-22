@@ -62,7 +62,7 @@ class PlayerProvider extends eventify.EventEmitter {
   int faith = 0;
   int tickFaith = 0;
   int research = 0;
-  int tickReearch = 0;
+  int tickResearch = 0;
   int buildPower = 0;
   int recruitPower = 0;
 
@@ -206,6 +206,10 @@ class PlayerProvider extends eventify.EventEmitter {
           mana = getIntVal(data[key]);
         case "tick_mana":
           tickMana = getIntVal(data[key]);
+        case "research":
+          research = getIntVal(data[key]);
+        case "tick_research":
+          tickResearch = getIntVal(data[key]);
         case "build_power":
           buildPower = getIntVal(data[key]);
         case "recruit_power":
