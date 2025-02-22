@@ -1,3 +1,4 @@
+import 'package:client/panels/avatar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -277,7 +278,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "explore",
+                      initialRoute: "avatar",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -332,6 +333,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "rankings":
                             builder =
                                 (context) => RankingsPanel(callback: onLoaded);
+                          case "avatar":
+                            builder =
+                                (context) => AvatarPanel(callback: onLoaded);
                           default:
                             builder = (context) => Panel(
                                 label: content,
