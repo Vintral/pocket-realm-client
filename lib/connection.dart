@@ -308,6 +308,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "CHANGE_AVATAR", "avatar": avatar});
   }
 
+  void retrieveResearch() {
+    _logger.i("retrieveResearch");
+    _send({"type": "GET_RESEARCH"});
+  }
+
   // void sendLogin( { String username, String password } ) {
   //   debug( "sendLogin" );
   //   _send( { 'command': 'login', 'username': username, 'password': password } );

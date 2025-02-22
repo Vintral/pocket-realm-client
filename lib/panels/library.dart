@@ -59,6 +59,7 @@ class _LibraryPanelState extends ListPanelState<LibraryPanel>
           ),
         ],
       ),
+      loaded: _player.researchLoaded,
       child: Center(
         child: Text(
           "Library Panel",

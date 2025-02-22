@@ -1,3 +1,4 @@
+import 'package:client/data/technology.dart';
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
@@ -29,6 +30,9 @@ class PlayerProvider extends eventify.EventEmitter {
   bool _busy = false;
   bool get busy => _busy;
   set busy(value) => _busy = value;
+
+  bool researchLoaded = false;
+  List<TechnologyData> researchAvailable = [];
 
   String avatar = "";
 
@@ -239,6 +243,11 @@ class PlayerProvider extends eventify.EventEmitter {
         ));
       }
     }
+  }
+
+  void retrieveResearch() {
+    _logger.d("retrieveResearch");
+    _connection.retrieveResearch();
   }
 
   void updateBuildings(dynamic buildingData) {
