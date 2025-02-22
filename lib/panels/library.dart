@@ -53,7 +53,7 @@ class _LibraryPanelState extends ListPanelState<LibraryPanel>
         children: [
           Text(_player.research.toString(), style: _theme.textLarge),
           Image.asset(
-            "assets/icons/research.png",
+            "assets/icons/gold.png",
             width: Settings.gap * 3,
             height: Settings.gap * 3,
           ),
