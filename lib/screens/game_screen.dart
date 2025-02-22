@@ -1,3 +1,5 @@
+import 'package:client/capitalize.dart';
+import 'package:client/dictionary.dart';
 import 'package:client/panels/avatar.dart';
 import 'package:client/panels/library.dart';
 import 'package:flutter/material.dart';
@@ -177,6 +179,10 @@ class _GameScreenState extends State<GameScreen> {
       offset: offset,
       alignment: Alignment.centerLeft,
       children: [
+        SlideMenuButton(
+          text: Dictionary.get("LIBRARY").capitalize(),
+          handler: onShowPanel,
+        ),
         SlideMenuButton(text: "Market", handler: onShowPanel),
         SlideMenuButton(text: "Temple", handler: onShowPanel),
         SlideMenuButton(text: "Job", handler: onShowPanel),
