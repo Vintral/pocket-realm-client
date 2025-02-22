@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
+
 import 'package:client/components/header.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/panel_page_route.dart';
@@ -25,9 +30,6 @@ import 'package:client/providers/notification.dart' as provider;
 import 'package:client/providers/player.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/settings.dart';
-import 'package:flutter/material.dart';
-import 'package:eventify/eventify.dart' as eventify;
-import 'package:logger/logger.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -256,11 +258,8 @@ class _GameScreenState extends State<GameScreen> {
         child: Stack(
           children: [
             Positioned.fill(
-              // child: Image.asset("assets/ui/app-background.png",
-              //     fit: BoxFit.cover),
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  // _theme.colorBackground,
                   _theme.colorBackground,
                   _theme.blendMode,
                 ),
@@ -278,7 +277,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "market",
+                      initialRoute: "explore",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
