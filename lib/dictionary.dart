@@ -12,6 +12,7 @@ class Dictionary {
     "ACTIVE": "active",
     "ATTACK": "attack",
     "AGO": "ago",
+    "AVATAR": "avatar",
     "BAZAAR": "bazaar",
     "BUILD": "build",
     "BUILDINGS": "buildings",
