@@ -1,12 +1,12 @@
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
+
 import 'package:client/connection.dart';
+import 'package:client/data/event.dart';
 import 'package:client/data/user_building.dart';
 import 'package:client/data/user_unit.dart';
 import 'package:client/providers/library.dart';
 import 'package:client/utilities.dart';
-import 'package:eventify/eventify.dart' as eventify;
-import 'package:logger/logger.dart';
-
-import '../data/event.dart';
 
 class PlayerProvider extends eventify.EventEmitter {
   static final PlayerProvider _instance = PlayerProvider._internal();
@@ -30,17 +30,7 @@ class PlayerProvider extends eventify.EventEmitter {
   bool get busy => _busy;
   set busy(value) => _busy = value;
 
-  int avatarOld = 0;
-  String _avatar = "f1";
-  String get avatar => _avatar;
-  set avatar(value) {
-    _logger.t("(set) avatar => $value");
-
-    if (value != _avatar) {
-      //_connection.changeAvatar();
-    }
-    _avatar = value;
-  }
+  String avatar = "";
 
   String username = "";
   String round = "";
@@ -161,7 +151,7 @@ class PlayerProvider extends eventify.EventEmitter {
         case "username":
           username = data[key];
         case "avatar":
-          avatarOld = getIntVal(data[key]);
+          avatar = data[key];
         case "class":
           characterClass = data[key];
         case "character_class":
@@ -279,7 +269,7 @@ class PlayerProvider extends eventify.EventEmitter {
   }
 
   void changeAvatar(String avatar) {
-    _connection.changeAvatar("avatar");
+    _connection.changeAvatar(avatar);
   }
 
   void dump() {
