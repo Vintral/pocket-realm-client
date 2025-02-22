@@ -27,14 +27,11 @@ class _AvatarPanelState extends ListPanelState<AvatarPanel>
   final _theme = ThemeProvider();
   final _player = PlayerProvider();
 
-  // late eventify.Listener _onMarketError;
+  late eventify.Listener _onPlayerUpdatedListener;
 
   late TabController _tabController;
 
   String _activeTab = Dictionary.get("FEMALE");
-
-  String _currentAvatarTab = "";
-  int _currentAvatarId = 0;
 
   @override
   void initState() {
@@ -45,17 +42,17 @@ class _AvatarPanelState extends ListPanelState<AvatarPanel>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(onTabChange);
 
-    switch (_player.avatar[0]) {
-      case "f":
-        _currentAvatarTab = Dictionary.get("FEMALE");
-      case "m":
-        _currentAvatarTab = Dictionary.get("MALE");
+    _activeTab = _player.avatar.substring(0, 1) == "f"
+        ? Dictionary.get("FEMALE")
+        : Dictionary.get("MALE");
+    switch (_activeTab) {
+      case "female":
+        _tabController.index = 0;
+      case "male":
+        _tabController.index = 1;
     }
 
-    _currentAvatarId = int.parse(_player.avatar.substring(1));
-
-    _currentAvatarId = 4;
-    _currentAvatarTab = "f";
+    _onPlayerUpdatedListener = _player.on("UPDATED", null, onPlayerUpdated);
   }
 
   @override
@@ -63,8 +60,14 @@ class _AvatarPanelState extends ListPanelState<AvatarPanel>
     _logger.t("dispose");
 
     _tabController.removeListener(onTabChange);
+    _onPlayerUpdatedListener.cancel();
 
     super.dispose();
+  }
+
+  void onPlayerUpdated(e, o) {
+    _logger.t("onPlayerUpdated");
+    setState(() {});
   }
 
   void onTabChange() {
@@ -101,13 +104,11 @@ class _AvatarPanelState extends ListPanelState<AvatarPanel>
   }
 
   Widget buildAvatar(String type, int index) {
-    var prefix = (type == "female" ? "f" : "m");
-
     return GestureDetector(
-      onTap: () => selectAvatar(prefix + index.toString()),
+      onTap: () => selectAvatar(type + index.toString()),
       child: ItemWithBorder(
-        image: "assets/avatars/$type/$index.png",
-        active: (prefix == _currentAvatarTab) && (index == _currentAvatarId),
+        image: "assets/avatars/$type$index.png",
+        active: "$type$index" == _player.avatar,
       ),
     );
   }
@@ -117,7 +118,7 @@ class _AvatarPanelState extends ListPanelState<AvatarPanel>
 
     List<Widget> avatars = [];
     for (int i = 1; i <= 26; i++) {
-      avatars.add(buildAvatar("female", i));
+      avatars.add(buildAvatar("f", i));
     }
 
     return GridView.extent(
@@ -133,7 +134,7 @@ class _AvatarPanelState extends ListPanelState<AvatarPanel>
 
     List<Widget> avatars = [];
     for (int i = 1; i <= 26; i++) {
-      avatars.add(buildAvatar("male", i));
+      avatars.add(buildAvatar("m", i));
     }
 
     return GridView.extent(
