@@ -78,6 +78,8 @@ flutter:
     - assets/units/
     - assets/ui/            
     - assets/avatars/
+    - assets/avatars/female/
+    - assets/avatars/male/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
