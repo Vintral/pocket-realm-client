@@ -30,7 +30,17 @@ class PlayerProvider extends eventify.EventEmitter {
   bool get busy => _busy;
   set busy(value) => _busy = value;
 
-  int avatar = 0;
+  int avatarOld = 0;
+  String _avatar = "f1";
+  String get avatar => _avatar;
+  set avatar(value) {
+    _logger.t("(set) avatar => $value");
+
+    if (value != _avatar) {
+      //_connection.changeAvatar();
+    }
+    _avatar = value;
+  }
 
   String username = "";
   String round = "";
@@ -76,6 +86,7 @@ class PlayerProvider extends eventify.EventEmitter {
     _connection.on("EVENT", null, onEvent);
     _connection.on("EVENTS", null, onEvents);
     _connection.on("PLAYER_UPDATE", null, onUpdated);
+    _connection.on("AVATAR_CHANGED", null, onUpdated);
 
     // Timer(
     //   const Duration(seconds: 3),
@@ -150,7 +161,7 @@ class PlayerProvider extends eventify.EventEmitter {
         case "username":
           username = data[key];
         case "avatar":
-          avatar = getIntVal(data[key]);
+          avatarOld = getIntVal(data[key]);
         case "class":
           characterClass = data[key];
         case "character_class":
@@ -265,6 +276,10 @@ class PlayerProvider extends eventify.EventEmitter {
     for (var event in events) {
       event.seen = true;
     }
+  }
+
+  void changeAvatar(String avatar) {
+    _connection.changeAvatar("avatar");
   }
 
   void dump() {
