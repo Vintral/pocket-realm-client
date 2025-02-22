@@ -30,6 +30,10 @@ class _LibraryPanelState extends ListPanelState<LibraryPanel>
   void initState() {
     super.initState();
 
+    if (!_player.researchLoaded) {
+      _player.retrieveResearch();
+    }
+
     _logger.t("initState");
   }
 
