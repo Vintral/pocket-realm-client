@@ -310,7 +310,7 @@ class Connection extends eventify.EventEmitter {
 
   void retrieveResearch() {
     _logger.i("retrieveResearch");
-    _send({"type": "GET_RESEARCH"});
+    _send({"type": "GET_TECHNOLOGIES"});
   }
 
   // void sendLogin( { String username, String password } ) {
