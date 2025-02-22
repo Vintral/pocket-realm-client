@@ -303,6 +303,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "BUY_MERCENARY", "quantity": quantity});
   }
 
+  void changeAvatar(String avatar) {
+    _logger.i("changeAvatar: $avatar");
+    _send({"type": "CHANGE_AVATAR", "avatar": avatar});
+  }
+
   // void sendLogin( { String username, String password } ) {
   //   debug( "sendLogin" );
   //   _send( { 'command': 'login', 'username': username, 'password': password } );
