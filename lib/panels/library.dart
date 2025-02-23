@@ -22,7 +22,7 @@ class LibraryPanel extends StatefulWidget {
 
 class _LibraryPanelState extends ListPanelState<LibraryPanel>
     with TickerProviderStateMixin {
-
+  final _logger = Logger();
   final _theme = ThemeProvider();
   final _player = PlayerProvider();
 
