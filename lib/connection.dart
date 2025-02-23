@@ -313,6 +313,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "GET_TECHNOLOGIES"});
   }
 
+  void purchaseResearch(String tech) {
+    _logger.i("purchaseResearch: $tech");
+    _send({"type": "PURCHASE_TECHNOLOGY", "technology": tech});
+  }
+
   // void sendLogin( { String username, String password } ) {
   //   debug( "sendLogin" );
   //   _send( { 'command': 'login', 'username': username, 'password': password } );

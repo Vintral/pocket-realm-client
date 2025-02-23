@@ -1,6 +1,7 @@
+import 'package:client/components/technology.dart';
 import 'package:flutter/material.dart';
 
-// import 'package:eventify/eventify.dart' as eventify;
+import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
 import 'package:client/components/panel.dart';
@@ -21,10 +22,13 @@ class LibraryPanel extends StatefulWidget {
 
 class _LibraryPanelState extends ListPanelState<LibraryPanel>
     with TickerProviderStateMixin {
-  final Logger _logger = Logger(level: Level.debug);
 
   final _theme = ThemeProvider();
   final _player = PlayerProvider();
+
+  late eventify.Listener _onTechnologiesRetrieved;
+
+  bool _busy = false;
 
   @override
   void initState() {
@@ -34,6 +38,9 @@ class _LibraryPanelState extends ListPanelState<LibraryPanel>
       _player.retrieveResearch();
     }
 
+    _onTechnologiesRetrieved =
+        _player.on("TECHNOLOGIES_RETRIEVED", null, onTechnologiesRetrieved);
+
     _logger.t("initState");
   }
 
@@ -41,7 +48,24 @@ class _LibraryPanelState extends ListPanelState<LibraryPanel>
   void dispose() {
     _logger.t("dispose");
 
+    _onTechnologiesRetrieved.cancel();
+
     super.dispose();
+  }
+
+  onTechnologiesRetrieved(ev, obj) {
+    _logger.d("onTechnologiesRetrieved");
+    setState(() {
+      _busy = false;
+    });
+  }
+
+  onResearch(String tech) {
+    _logger.i("onResearch $tech");
+    setState(() {
+      _busy = true;
+      _player.purchaseResearch(tech);
+    });
   }
 
   @override
@@ -64,12 +88,16 @@ class _LibraryPanelState extends ListPanelState<LibraryPanel>
         ],
       ),
       loaded: _player.researchLoaded,
-      child: Center(
-        child: Text(
-          "Library Panel",
-          style: _theme.textExtraLarge,
-        ),
-      ),
+      child: ListView.separated(
+          itemBuilder: (context, index) => Technology(
+                data: _player.researchAvailable[index],
+                handler: onResearch,
+                busy: _busy,
+              ),
+          separatorBuilder: (context, index) => SizedBox(
+                height: _theme.gap,
+              ),
+          itemCount: _player.researchAvailable.length),
     );
   }
 }

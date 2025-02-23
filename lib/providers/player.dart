@@ -16,7 +16,7 @@ class PlayerProvider extends eventify.EventEmitter {
     return _instance;
   }
 
-  final Logger _logger = Logger();
+  final Logger _logger = Logger(level: Level.debug);
   final Connection _connection = Connection();
 
   final LibraryProvider _library = LibraryProvider();
@@ -81,6 +81,7 @@ class PlayerProvider extends eventify.EventEmitter {
     _connection.on("EVENTS", null, onEvents);
     _connection.on("PLAYER_UPDATE", null, onUpdated);
     _connection.on("AVATAR_CHANGED", null, onUpdated);
+    _connection.on("GET_TECHNOLOGIES", null, onTechnologiesRetrieved);
 
     // Timer(
     //   const Duration(seconds: 3),
@@ -100,6 +101,26 @@ class PlayerProvider extends eventify.EventEmitter {
   void getEvents(int page) {
     _logger.i("getEvents");
     _connection.getEvents(page);
+  }
+
+  void onTechnologiesRetrieved(ev, obj) {
+    _logger.d("onTechnologiesRetrieved");
+
+    var data = ev.eventData as dynamic;
+
+    researchAvailable.clear();
+    var count = (data["technologies"] as List).length;
+    for (var i = 0; i < count; i++) {
+      researchAvailable.add(TechnologyData(data["technologies"][i]));
+    }
+
+    researchLoaded = true;
+    emit("TECHNOLOGIES_RETRIEVED");
+  }
+
+  purchaseResearch(String tech) {
+    _logger.i("purchaseResearch: $tech");
+    _connection.purchaseResearch(tech);
   }
 
   void onUpdated(ev, obj) {
