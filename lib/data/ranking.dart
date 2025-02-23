@@ -5,15 +5,13 @@ class RankingData {
 
   late int rank;
   late String username;
-  late int avatar;
+  late String avatar;
   late int score;
 
   RankingData(dynamic data) {
     rank = data["rank"] ?? 0;
     username = data["username"] ?? data["name"] ?? "";
-    avatar = data["avatar"] is int
-        ? data["avatar"]
-        : int.tryParse(data["avatar"] ?? "0");
+    avatar = data["avatar"];
     score = data["score"] is double
         ? (data["score"] as double).floor()
         : data["score"] as int;

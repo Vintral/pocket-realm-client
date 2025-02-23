@@ -25,7 +25,7 @@ class Ranking extends StatelessWidget {
 
   final int rank;
   final String username;
-  final int avatar;
+  final String avatar;
   final int score;
   final bool background;
   final bool compressed;
