@@ -22,18 +22,19 @@ class ShoutboxPanel extends StatefulWidget {
 }
 
 class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
-  final Logger _logger = Logger(level: Level.debug);
+  final Logger _logger = Logger();
 
-  final ThemeProvider _theme = ThemeProvider();
+  final _theme = ThemeProvider();
   final _notification = NotificationProvider();
   final _provider = SocialProvider();
+
   late eventify.Listener _onShoutsListener;
   late eventify.Listener _onShoutSuccessListener;
   late eventify.Listener _onShoutErrorListener;
+
   final _shoutController = TextEditingController();
 
-  bool showButton = true;
-  bool _enabled = true;
+  bool _busy = false;
 
   @override
   void initState() {
@@ -45,6 +46,8 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
     _onShoutSuccessListener =
         _provider.on("SHOUT_SUCCESS", null, onShoutSuccess);
     _onShoutErrorListener = _provider.on("SHOUT_ERROR", null, onShoutError);
+
+    _shoutController.addListener(onShoutChanged);
 
     _provider.getShouts();
     _provider.subscribe();
@@ -63,6 +66,11 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
     super.dispose();
   }
 
+  void onShoutChanged() {
+    _logger.d("onShoutChanged");
+    setState(() {});
+  }
+
   void onShouts(e, o) {
     _logger.d("onShouts");
     setState(() {});
@@ -73,7 +81,7 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
 
     setState(() {
       _shoutController.text = "";
-      _enabled = true;
+      _busy = false;
     });
   }
 
@@ -82,42 +90,23 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
 
     _notification.notifyError(Dictionary.get("shout-0"));
     setState(() {
-      _enabled = true;
+      _busy = false;
     });
   }
 
-  Widget buildResults() {
-    List<Widget> widgets = <Widget>[];
-    //for( int i = 0; i < _provider.shouts.length; i++ ) {
-    for (var shout in _provider.shouts) {
-      widgets.add(Shout(
-        avatar: shout.avatar,
-        username: shout.username,
-        time: shout.time,
-        message: shout.shout,
-        characterClass: shout.characterClass,
-      ));
-      widgets.add(SizedBox(
-        height: _theme.gap,
-      ));
-    }
-
-    return ListView(
-      children: [...widgets],
-    );
-  }
-
   void onTap() {
-    _logger.f("onTap: ${_shoutController.text}");
+    _logger.i("onTap: ${_shoutController.text}");
 
+    // _shoutController.
+    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
     _provider.sendShout(_shoutController.text);
     setState(() {
-      _enabled = false;
+      _busy = true;
     });
   }
 
   Widget buildForm() {
-    _logger.t("buildForm");
+    _logger.t("buildForm: ${_shoutController.text.isNotEmpty}");
 
     var border = OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(_theme.gap)),
@@ -142,29 +131,33 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
           ],
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: _theme.gap, vertical: _theme.gap / 2),
+          padding: EdgeInsets.all(_theme.gap),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: _theme.gap,
             children: [
               Expanded(
                 child: Stack(
                   children: [
-                    Card(
-                      color: _theme.color,
-                      child: TextField(
-                        controller: _shoutController,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        maxLength: 250,
-                        scrollPadding: EdgeInsets.all(_theme.gap / 4),
-                        style: _theme.textMedium,
-                        decoration: InputDecoration(
-                          enabledBorder: border,
-                          focusedBorder: border,
-                          fillColor: Colors.transparent,
-                          filled: true,
-                          counterText: "",
+                    Padding(
+                      padding: EdgeInsets.zero,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(_theme.gap / 2),
+                        color: _theme.color,
+                        child: TextField(
+                          controller: _shoutController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          maxLength: 250,
+                          scrollPadding: EdgeInsets.all(_theme.gap / 4),
+                          style: _theme.textLarge,
+                          decoration: InputDecoration(
+                            enabledBorder: border,
+                            focusedBorder: border,
+                            fillColor: Colors.transparent,
+                            filled: true,
+                            counterText: "",
+                          ),
                         ),
                       ),
                     ),
@@ -172,17 +165,16 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
                 ),
               ),
               SizedBox(
-                width: _theme.gap,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: _theme.gap / 2),
-                child: SizedBox(
-                  width: _theme.width / 5,
+                width: _theme.width / 5,
+                child: AspectRatio(
+                  aspectRatio: 1.5,
                   child: BaseButton(
+                    borderRadius: BorderRadius.circular(_theme.gap * .75),
                     handler: onTap,
-                    enabled: _enabled,
-                    child: Text(Dictionary.get("SHOUT"),
-                        style: _theme.textExtraLargeBold),
+                    enabled: _shoutController.text.isNotEmpty,
+                    busy: _busy,
+                    child: Text(Dictionary.get("SHOUT").toUpperCase(),
+                        style: _theme.textLargeBold),
                   ),
                 ),
               ),
@@ -199,13 +191,15 @@ class _ShoutboxPanelState extends ListPanelState<ShoutboxPanel> {
 
     widget.callback(context);
 
-    _logger.d("Loaded: ${_provider.shouts.isNotEmpty}");
-
     return Panel(
       loaded: _provider.shouts.isNotEmpty,
       form: buildForm(),
       label: Dictionary.get("SHOUTBOX"),
-      child: buildResults(),
+      child: ListView.separated(
+        itemBuilder: (context, index) => Shout(_provider.shouts[index]),
+        separatorBuilder: (context, index) => SizedBox(height: _theme.gap),
+        itemCount: _provider.shouts.length,
+      ),
     );
   }
 }
