@@ -1,40 +1,37 @@
-import 'package:client/components/list_item.dart';
 import 'package:flutter/material.dart';
 
+import 'package:logger/logger.dart';
+
+import 'package:client/components/base_display.dart';
 import 'package:client/components/item_with_border.dart';
+import 'package:client/data/shout.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/utilities.dart';
 
 class Shout extends StatelessWidget {
   Shout(
-      {super.key,
-      required this.avatar,
-      required this.username,
-      required this.time,
-      required this.message,
-      required this.characterClass});
+    this.data, {
+    super.key,
+  });
 
   final _theme = ThemeProvider();
+  final _logger = Logger();
 
-  final String avatar;
-  final String username;
-  final String characterClass;
-  final DateTime time;
-  final String message;
+  final ShoutData data;
 
   @override
   Widget build(BuildContext context) {
+    _logger.t("build");
+
     var size = MediaQuery.of(context).size.width / 6;
+    var colors = _theme.classColorsMap[data.characterClass];
 
-    var colors = _theme.classColorsMap[characterClass];
-
-    return ListItem(
-      classColors: colors,
+    return BaseDisplay(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ItemWithBorder(
-            image: "assets/avatars/$avatar.png",
+            image: "assets/avatars/${data.avatar}.png",
             height: size,
             backgroundColor: colors?.color,
           ),
@@ -48,14 +45,14 @@ class Shout extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(username, style: _theme.textLargeBold),
-                      Text(timeSince(time),
+                      Text(data.username, style: _theme.textLargeBold),
+                      Text(timeSince(data.time),
                           style: _theme.textMedium
                               .copyWith(fontStyle: FontStyle.italic)),
                     ],
                   ),
                   SizedBox(height: _theme.gap / 2),
-                  Text(message, style: _theme.textMedium),
+                  Text(data.shout, style: _theme.textMedium),
                 ],
               ),
             ),
