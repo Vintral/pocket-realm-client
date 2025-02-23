@@ -1,4 +1,7 @@
+import 'package:client/capitalize.dart';
+import 'package:client/dictionary.dart';
 import 'package:client/panels/avatar.dart';
+import 'package:client/panels/library.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -176,6 +179,10 @@ class _GameScreenState extends State<GameScreen> {
       offset: offset,
       alignment: Alignment.centerLeft,
       children: [
+        SlideMenuButton(
+          text: Dictionary.get("LIBRARY").capitalize(),
+          handler: onShowPanel,
+        ),
         SlideMenuButton(text: "Market", handler: onShowPanel),
         SlideMenuButton(text: "Temple", handler: onShowPanel),
         SlideMenuButton(text: "Job", handler: onShowPanel),
@@ -278,7 +285,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "avatar",
+                      initialRoute: "library",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -336,6 +343,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "avatar":
                             builder =
                                 (context) => AvatarPanel(callback: onLoaded);
+                          case "library":
+                            builder =
+                                (context) => LibraryPanel(callback: onLoaded);
                           default:
                             builder = (context) => Panel(
                                 label: content,

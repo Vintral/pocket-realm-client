@@ -1,3 +1,4 @@
+import 'package:client/data/technology.dart';
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
@@ -15,7 +16,7 @@ class PlayerProvider extends eventify.EventEmitter {
     return _instance;
   }
 
-  final Logger _logger = Logger();
+  final Logger _logger = Logger(level: Level.debug);
   final Connection _connection = Connection();
 
   final LibraryProvider _library = LibraryProvider();
@@ -29,6 +30,9 @@ class PlayerProvider extends eventify.EventEmitter {
   bool _busy = false;
   bool get busy => _busy;
   set busy(value) => _busy = value;
+
+  bool researchLoaded = false;
+  List<TechnologyData> researchAvailable = [];
 
   String avatar = "";
 
@@ -58,7 +62,7 @@ class PlayerProvider extends eventify.EventEmitter {
   int faith = 0;
   int tickFaith = 0;
   int research = 0;
-  int tickReearch = 0;
+  int tickResearch = 0;
   int buildPower = 0;
   int recruitPower = 0;
 
@@ -77,6 +81,7 @@ class PlayerProvider extends eventify.EventEmitter {
     _connection.on("EVENTS", null, onEvents);
     _connection.on("PLAYER_UPDATE", null, onUpdated);
     _connection.on("AVATAR_CHANGED", null, onUpdated);
+    _connection.on("GET_TECHNOLOGIES", null, onTechnologiesRetrieved);
 
     // Timer(
     //   const Duration(seconds: 3),
@@ -96,6 +101,26 @@ class PlayerProvider extends eventify.EventEmitter {
   void getEvents(int page) {
     _logger.i("getEvents");
     _connection.getEvents(page);
+  }
+
+  void onTechnologiesRetrieved(ev, obj) {
+    _logger.d("onTechnologiesRetrieved");
+
+    var data = ev.eventData as dynamic;
+
+    researchAvailable.clear();
+    var count = (data["technologies"] as List).length;
+    for (var i = 0; i < count; i++) {
+      researchAvailable.add(TechnologyData(data["technologies"][i]));
+    }
+
+    researchLoaded = true;
+    emit("TECHNOLOGIES_RETRIEVED");
+  }
+
+  purchaseResearch(String tech) {
+    _logger.i("purchaseResearch: $tech");
+    _connection.purchaseResearch(tech);
   }
 
   void onUpdated(ev, obj) {
@@ -202,6 +227,10 @@ class PlayerProvider extends eventify.EventEmitter {
           mana = getIntVal(data[key]);
         case "tick_mana":
           tickMana = getIntVal(data[key]);
+        case "research":
+          research = getIntVal(data[key]);
+        case "tick_research":
+          tickResearch = getIntVal(data[key]);
         case "build_power":
           buildPower = getIntVal(data[key]);
         case "recruit_power":
@@ -239,6 +268,11 @@ class PlayerProvider extends eventify.EventEmitter {
         ));
       }
     }
+  }
+
+  void retrieveResearch() {
+    _logger.d("retrieveResearch");
+    _connection.retrieveResearch();
   }
 
   void updateBuildings(dynamic buildingData) {

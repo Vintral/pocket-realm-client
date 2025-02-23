@@ -38,6 +38,7 @@ class Dictionary {
     "ITEMS": "items",
     "IN": "in",
     "LAND": "land",
+    "LIBRARY": "library",
     "MALE": "male",
     "MARKET": "market",
     "MAX": "max",
