@@ -70,9 +70,6 @@ class Connection extends eventify.EventEmitter {
           case "ERROR":
           case "ERROR_ROUND":
             _logger.w("Received Error");
-            // if( data[ "data" ] ) {
-            //   data[ "data" ] = base64.decode( data[ "data" ] );
-            // }
             _logger.w(data);
             _logger.w(data["data"]["message"]);
 
@@ -123,46 +120,6 @@ class Connection extends eventify.EventEmitter {
       _channel.sink.close();
     }
   }
-
-  // Future<void> connect() async {
-  //   _channel = await IOWebSocketChannel.connect( _url );
-
-  //   if( _created ) return;
-  //   _created = true;
-
-  //   _connected = true;
-
-  //   _channel.stream.listen( ( message ) {
-  //     //_channel.sink.add( "received!" );
-  //     print( 'Message: ' + message.toString() );
-  //     var data = json.decode( message );
-
-  //     if( data[ "type" ] != null )
-  //       emit( data[ "type" ], null, data[ "data" ] );
-
-  //     /*switch( data[ 'type' ] ) {
-  //       case 'LOGIN_SUCCESS': emit( 'LOGIN_SUCCESS', null, data[ 'user' ] ); break;
-  //       case 'LOGIN_ERROR': emit( 'LOGIN_ERROR', null, data[ 'error' ] ); break;
-  //       case 'MESSAGE': emit( 'MESSAGE', null, { 'message':data[ 'message' ], 'user':data[ 'user' ], 'avatar':data[ 'avatar' ], 'chat':data[ 'chat' ] } ); break;
-  //       case 'MESSAGE_SENT': emit( 'MESSAGE_SENT' ); break;
-  //       case 'MESSAGE_ERROR': emit( 'MESSAGE_ERROR' ); break;
-  //       case 'CONTACTS': emit( 'CONTACTS', null, data[ 'contacts' ] ); break;
-  //       case 'CHATS': emit( 'CHATS', null, data[ 'chats' ] ); break;
-  //       case 'CHAT': emit( 'CHAT', null, data[ 'data' ] ); break;
-  //       case 'CHAT_ID': emit( 'CHAT_ID', null, data[ 'chat' ] ); break;
-  //       case 'DIRECTORY': emit( 'DIRECTORY', null, data ); break;
-  //       case 'CONTACT_ADDED': emit( 'CONTACT_ADDED', null, data[ "data" ] ); break;
-  //       case 'ERROR_ADDING_CONTACT': emit( 'ERROR_ADDING_CONTACT', null ); break;
-  //       case 'CONTACT_REMOVED': emit( 'CONTACT_REMOVED', null, data[ 'contact' ] ); break;
-  //       case 'ERROR_REMOVING_CONTACT': emit( 'ERROR_REMOVING_CONTACT', null ); break;
-  //     }*/
-  //   }, onError: ( err ) {
-  //     debug( 'Error: ' + err.toString() );
-  //   }, onDone: () async {
-  //     debug( 'CLOSED' );
-  //     _connected = false;
-  //   } );
-  // }
 
   void _send(Object data) {
     _channel.sink.add(json.encode(data));
