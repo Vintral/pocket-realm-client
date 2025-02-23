@@ -16,7 +16,7 @@ class PlayerProvider extends eventify.EventEmitter {
     return _instance;
   }
 
-  final Logger _logger = Logger(level: Level.debug);
+  final Logger _logger = Logger();
   final Connection _connection = Connection();
 
   final LibraryProvider _library = LibraryProvider();
