@@ -12,8 +12,8 @@ class BaseDisplay extends StatelessWidget {
     return Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(colors: [
-            _theme.colorBackgroundGradiantLight,
-            _theme.colorBackgroundGradiantDark
+            _theme.colorBackgroundGradiantLight.withAlpha(220),
+            _theme.colorBackgroundGradiantDark.withAlpha(220),
           ]),
         ),
         child: child);
