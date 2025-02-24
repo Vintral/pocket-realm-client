@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:client/data/search_result.dart';
 import 'package:eventify/eventify.dart';
 import 'package:logger/logger.dart';
 
@@ -26,13 +27,16 @@ class SocialProvider extends EventEmitter {
   final List<ShoutData> _shouts = <ShoutData>[];
   List<ShoutData> get shouts => _shouts;
 
+  String searchNeedle = "";
+  final List<SearchResultData> _searchResults = <SearchResultData>[];
+  List<SearchResultData> get searchResults => _searchResults;
+
   final Map<String, ConversationData> _conversationMap = HashMap();
   Map<String, ConversationData> get conversationMap => _conversationMap;
 
   final List<ConversationData> _conversations = <ConversationData>[];
   List<ConversationData> get conversations => _conversations;
 
-  // String conversation = "";
   String conversationAvatar = "";
 
   ConversationData? currentConversation;
@@ -44,20 +48,6 @@ class SocialProvider extends EventEmitter {
         _conversations.where((curr) => curr.username == value).first;
     _conversation?.dump();
   }
-
-  // List<Widget> notifications( BuildContext context ) {
-  //   var size = MediaQuery.of( context ).size.width / 5;
-
-  //   return _notifications.map(
-  //     ( notification ) => AnimatedPositioned(
-  //       duration: Duration( microseconds: 250 ),
-  //       child: Container(
-  //         color: Colors.blue,
-  //         child: SizedBox( height: 50, ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   SocialProvider._internal() {
     _logger.d("Created");
@@ -71,11 +61,37 @@ class SocialProvider extends EventEmitter {
     _connection.on("MESSAGE", null, onMessage);
     _connection.on("MESSAGE_SENT", null, onMessageSent);
     _connection.on("MESSAGE_ERROR", null, onMessageError);
+
+    _connection.on("SEARCH_RESULTS", null, onSearchResults);
+  }
+
+  void searchUsers(String needle) {
+    _logger.i("searchUsers: $needle");
+
+    _busy = true;
+    searchNeedle = needle;
+    _connection.searchUsers(needle);
+  }
+
+  void onSearchResults(e, o) {
+    _logger.d("onSearchResults");
+
+    _searchResults.clear();
+
+    if ((e.eventData as dynamic)["results"] != null) {
+      _searchResults.addAll(
+          ((e.eventData as dynamic)["results"] as List<dynamic>)
+              .map((data) => SearchResultData(data)));
+
+      _logger.w("Num Results: ${_searchResults.length}");
+    }
+
+    _busy = false;
+    emit("SEARCH_RESULTS");
   }
 
   void onConversations(e, o) {
-    _logger.w("onConversations");
-    _logger.w(e.eventData);
+    _logger.d("onConversations");
 
     _conversations.addAll(
         ((e.eventData as dynamic)["conversations"] as List<dynamic>)
