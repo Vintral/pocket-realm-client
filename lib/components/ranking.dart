@@ -15,6 +15,7 @@ class Ranking extends StatelessWidget {
         username: data.username,
         avatar: data.avatar,
         score: data.score,
+        classType: data.classType,
         background: background,
         compressed: compressed);
   }
@@ -27,6 +28,7 @@ class Ranking extends StatelessWidget {
   final String username;
   final String avatar;
   final int score;
+  final String classType;
   final bool background;
   final bool compressed;
 
@@ -36,19 +38,9 @@ class Ranking extends StatelessWidget {
       required this.username,
       required this.avatar,
       required this.score,
+      required this.classType,
       required this.compressed,
       required this.background});
-
-  void dump() {
-    _logger.t("""=================================
-Rank: $rank
-Username: $username
-Avatar: $avatar
-Score: $score
-Background: $background
-Compressed: $compressed
-=================================""");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +64,7 @@ Compressed: $compressed
           child: ItemWithBorder(
             image: "assets/avatars/$avatar.png",
             height: size,
-            backgroundColor: _theme.colorBackground,
+            backgroundColors: _theme.getClassBackgroundColors(classType),
           ),
         ),
         Padding(
@@ -94,10 +86,23 @@ Compressed: $compressed
 
     if (background) {
       return BaseDisplay(
+        colors: _theme.getClassBackgroundColors(classType),
         child: content,
       );
     }
 
     return content;
+  }
+
+  void dump() {
+    _logger.t("""=================================
+Rank: $rank
+Username: $username
+Avatar: $avatar
+Score: $score
+Class: $classType
+Background: $background
+Compressed: $compressed
+=================================""");
   }
 }

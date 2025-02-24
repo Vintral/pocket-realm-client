@@ -33,7 +33,8 @@ class Shout extends StatelessWidget {
           ItemWithBorder(
             image: "assets/avatars/${data.avatar}.png",
             height: size,
-            backgroundColor: colors?.color,
+            backgroundColors:
+                _theme.getClassBackgroundColors(data.characterClass),
           ),
           SizedBox(width: _theme.gap),
           Expanded(

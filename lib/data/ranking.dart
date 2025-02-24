@@ -7,6 +7,7 @@ class RankingData {
   late String username;
   late String avatar;
   late int score;
+  late String classType;
 
   RankingData(dynamic data) {
     rank = data["rank"] ?? 0;
@@ -15,6 +16,7 @@ class RankingData {
     score = data["score"] is double
         ? (data["score"] as double).floor()
         : data["score"] as int;
+    classType = data["class"] ?? "";
 
     dump();
   }
@@ -23,6 +25,7 @@ class RankingData {
     _logger.t("""=================================
 Rank: $rank
 Username: $username
+Class: $classType
 Avatar: $avatar
 Score: $score
 =================================""");

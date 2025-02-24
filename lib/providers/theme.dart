@@ -58,6 +58,8 @@ class ThemeProvider extends EventEmitter {
   final Map<String, ClassColors> _classColorsMap = HashMap();
   Map<String, ClassColors> get classColorsMap => _classColorsMap;
 
+  final Map<String, List<Color>> _backgroundColors = HashMap();
+
   static const baseFontSize = 10.0;
 
   late TextStyle textBase;
@@ -118,12 +120,53 @@ class ThemeProvider extends EventEmitter {
     _classColorsMap[""] =
         ClassColors(base: const Color.fromARGB(255, 75, 75, 75));
 
+    createBackgroundColors();
+
     boxShadow = BoxShadow(
       color: shadowColor.withAlpha(200),
       blurRadius: Settings.gap * 3,
       spreadRadius: -Settings.gap * 2,
       blurStyle: BlurStyle.outer,
     );
+  }
+
+  getClassBackgroundColors(String classType) {
+    _logger.t("getClassBackgroundColors: $classType");
+
+    return _backgroundColors[classType] ?? _backgroundColors[""];
+  }
+
+  createBackgroundColors() {
+    _logger.d("createBackgroundColors");
+
+    _backgroundColors[""] = [
+      const Color.fromARGB(255, 164, 164, 164),
+      const Color.fromARGB(255, 59, 59, 59),
+    ];
+    _backgroundColors["merchant"] = [
+      const Color.fromARGB(255, 217, 195, 0),
+      const Color.fromARGB(255, 109, 98, 0),
+    ];
+    _backgroundColors["mage"] = [
+      const Color.fromARGB(255, 26, 116, 190),
+      const Color.fromARGB(255, 14, 63, 103),
+    ];
+    _backgroundColors["thief"] = [
+      const Color.fromARGB(255, 192, 115, 0),
+      const Color.fromARGB(255, 101, 61, 0),
+    ];
+    _backgroundColors["priest"] = [
+      const Color.fromARGB(255, 255, 255, 255),
+      const Color.fromARGB(255, 178, 178, 178),
+    ];
+    _backgroundColors["warlord"] = [
+      const Color.fromARGB(255, 197, 54, 44),
+      const Color.fromARGB(255, 94, 26, 21),
+    ];
+    // _backgroundColors[""] = [
+    //   const Color.fromARGB(255, 59, 59, 59),
+    //   const Color.fromARGB(255, 164, 164, 164)
+    // ];
   }
 
   setTextStyles(Color color) {
