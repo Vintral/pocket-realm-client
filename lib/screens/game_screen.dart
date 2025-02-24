@@ -2,6 +2,7 @@ import 'package:client/capitalize.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/panels/avatar.dart';
 import 'package:client/panels/library.dart';
+import 'package:client/panels/search.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -285,7 +286,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "library",
+                      initialRoute: "search",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -346,6 +347,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "library":
                             builder =
                                 (context) => LibraryPanel(callback: onLoaded);
+                          case "search":
+                            builder =
+                                (context) => SearchPanel(callback: onLoaded);
                           default:
                             builder = (context) => Panel(
                                 label: content,

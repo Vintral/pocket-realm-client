@@ -1,10 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
 import 'package:client/components/base_display.dart';
 import 'package:client/data/realm_object.dart';
 import 'package:client/providers/theme.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class ItemWithBorder extends StatelessWidget {
   ItemWithBorder(
@@ -12,7 +13,7 @@ class ItemWithBorder extends StatelessWidget {
       this.item,
       this.image,
       this.color,
-      this.backgroundColor,
+      this.backgroundColors,
       this.handler,
       this.width,
       this.height,
@@ -31,7 +32,7 @@ class ItemWithBorder extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? color;
-  final Color? backgroundColor;
+  final List<Color>? backgroundColors;
   final EdgeInsetsGeometry? padding;
   final String? quantity;
   final bool reflect;
@@ -75,6 +76,7 @@ class ItemWithBorder extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: BaseDisplay(
+                  colors: backgroundColors,
                   child: Padding(
                     padding: padding ?? EdgeInsets.zero,
                     child: img != null ? buildImage(img) : const Placeholder(),
