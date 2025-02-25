@@ -1,6 +1,7 @@
 import 'package:client/capitalize.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/panels/avatar.dart';
+import 'package:client/panels/contacts.dart';
 import 'package:client/panels/library.dart';
 import 'package:client/panels/search.dart';
 import 'package:flutter/material.dart';
@@ -286,7 +287,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "search",
+                      initialRoute: "contacts",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -350,6 +351,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "search":
                             builder =
                                 (context) => SearchPanel(callback: onLoaded);
+                          case "contacts":
+                            builder =
+                                (context) => ContactsPanel(callback: onLoaded);
                           default:
                             builder = (context) => Panel(
                                 label: content,
