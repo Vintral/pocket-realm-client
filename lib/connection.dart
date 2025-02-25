@@ -280,6 +280,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "SEARCH_USERS", "search": search});
   }
 
+  void getContacts() {
+    _logger.i("getContacts");
+    _send({"type": "GET_CONTACTS"});
+  }
+
   // void sendLogin( { String username, String password } ) {
   //   debug( "sendLogin" );
   //   _send( { 'command': 'login', 'username': username, 'password': password } );

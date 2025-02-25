@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:client/data/contact.dart';
 import 'package:client/data/search_result.dart';
 import 'package:eventify/eventify.dart';
 import 'package:logger/logger.dart';
@@ -26,6 +27,10 @@ class SocialProvider extends EventEmitter {
 
   final List<ShoutData> _shouts = <ShoutData>[];
   List<ShoutData> get shouts => _shouts;
+
+  List<ContactData> friends = <ContactData>[];
+  List<ContactData> enemies = <ContactData>[];
+  bool contactsLoaded = false;
 
   String searchNeedle = "";
   final List<SearchResultData> _searchResults = <SearchResultData>[];
@@ -63,6 +68,32 @@ class SocialProvider extends EventEmitter {
     _connection.on("MESSAGE_ERROR", null, onMessageError);
 
     _connection.on("SEARCH_RESULTS", null, onSearchResults);
+
+    _connection.on("GET_CONTACTS", null, onContacts);
+  }
+
+  void onContacts(e, o) {
+    _logger.t("onContacts");
+
+    var data = e.eventData as dynamic;
+    _logger.w(data);
+
+    if (data["friends"] != null) {
+      _logger.w("Parse Friends");
+      friends.clear();
+      friends.addAll((data["friends"] as List<dynamic>)
+          .map((friend) => ContactData(friend)));
+    }
+
+    if (data["enemies"] != null) {
+      _logger.w("Parse Enemies");
+      enemies.clear();
+      enemies.addAll((data["enemies"] as List<dynamic>)
+          .map((enemy) => ContactData(enemy)));
+    }
+
+    contactsLoaded = true;
+    emit("CONTACTS_LOADED");
   }
 
   void searchUsers(String needle) {
@@ -200,5 +231,10 @@ class SocialProvider extends EventEmitter {
   void getShouts() {
     _shouts.clear();
     _connection.getShouts();
+  }
+
+  void getContacts() {
+    _logger.d("getContacts");
+    _connection.getContacts();
   }
 }
