@@ -1,6 +1,9 @@
+import 'package:client/components/contact.dart';
+import 'package:client/data/contact.dart';
+import 'package:client/providers/social.dart';
 import 'package:flutter/material.dart';
 
-// import 'package:eventify/eventify.dart' as eventify;
+import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
 import 'package:client/components/panel.dart';
@@ -20,11 +23,12 @@ class ContactsPanel extends StatefulWidget {
 
 class _ContactsPanelState extends ListPanelState<ContactsPanel>
     with TickerProviderStateMixin {
-  final Logger _logger = Logger(level: Level.debug);
+  final _logger = Logger(level: Level.debug);
+  final _provider = SocialProvider();
 
   final _theme = ThemeProvider();
 
-  // late eventify.Listener _onPlayerUpdatedListener;
+  late eventify.Listener _onContactsRetrieved;
 
   late TabController _tabController;
 
@@ -38,6 +42,12 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
 
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(onTabChange);
+
+    _onContactsRetrieved =
+        _provider.on("CONTACTS_LOADED", null, onContactsLoaded);
+    if (!_provider.contactsLoaded) {
+      _provider.getContacts();
+    }
   }
 
   @override
@@ -45,24 +55,27 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
     _logger.t("dispose");
 
     _tabController.removeListener(onTabChange);
+    _tabController.dispose();
+
+    _onContactsRetrieved.cancel();
 
     super.dispose();
   }
 
-  void onPlayerUpdated(e, o) {
-    _logger.t("onPlayerUpdated");
+  void onContactsLoaded(e, o) {
+    _logger.t("onContactsLoaded");
     setState(() {});
   }
 
   void onTabChange() {
-    _logger.d("onTabChange");
+    _logger.d("onTabChange: ${_tabController.index}");
 
     setState(() {
       switch (_tabController.index) {
         case 1:
-          _activeTab = Dictionary.get("FRIENDS");
-        default:
           _activeTab = Dictionary.get("ENEMIES");
+        default:
+          _activeTab = Dictionary.get("FRIENDS");
       }
     });
   }
@@ -82,14 +95,26 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
     });
   }
 
+  Widget buildContactList(List<ContactData> data) {
+    _logger.f("buildContactList: ${data.length}");
+
+    return ListView.separated(
+        itemBuilder: (context, index) => Contact(data[index]),
+        separatorBuilder: (context, index) => SizedBox(
+              height: _theme.gap,
+            ),
+        itemCount: data.length);
+  }
+
   @override
   Widget build(BuildContext context) {
-    _logger.t("build");
+    _logger.w("build");
 
     widget.callback(context);
 
     return Panel(
-      label: Dictionary.get("AVATAR"),
+      label: Dictionary.get("CONTACTS"),
+      loaded: _provider.contactsLoaded,
       header: RealmTabBar(
         tabs: [
           Dictionary.get("FRIENDS").toUpperCase(),
@@ -101,8 +126,8 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
       child: TabBarView(
         controller: _tabController,
         children: [
-          // buildFemaleGrid(),
-          // buildMaleGrid(),
+          buildContactList(_provider.friends),
+          buildContactList(_provider.enemies),
         ],
       ),
     );

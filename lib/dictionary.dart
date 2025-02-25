@@ -18,6 +18,7 @@ class Dictionary {
     "BUILDINGS": "buildings",
     "BUY": "buy",
     "CHAT-WITH": "chat with",
+    "CONTACTS": "contacts",
     "CURRENT": "current",
     "DAY": "day",
     "DAYS": "days",
