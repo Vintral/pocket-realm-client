@@ -76,6 +76,8 @@ class ThemeProvider extends EventEmitter {
 
   late BoxShadow boxShadow;
 
+  List<BoxShadow> boxShadows = [];
+
   late RadialGradient gradient;
 
   // late TextStyle styleMissing;
@@ -128,6 +130,18 @@ class ThemeProvider extends EventEmitter {
       spreadRadius: -Settings.gap * 2,
       blurStyle: BlurStyle.outer,
     );
+
+    boxShadows = [
+      BoxShadow(
+        color: shadowColor,
+      ),
+      BoxShadow(
+        color: color.withAlpha(100),
+        spreadRadius: -5,
+        blurRadius: 15,
+        blurStyle: BlurStyle.inner,
+      ),
+    ];
   }
 
   getClassBackgroundColors(String classType) {
