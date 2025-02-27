@@ -32,7 +32,11 @@ class Contact extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: _theme.gap,
         children: [
-          Avatar(data.avatar, "", size),
+          Avatar(
+            avatar: data.avatar,
+            size: size,
+            username: data.username,
+          ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(_theme.gap),

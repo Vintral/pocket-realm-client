@@ -1,3 +1,4 @@
+import 'package:client/components/avatar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart';
@@ -30,11 +31,11 @@ class Shout extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ItemWithBorder(
-            image: "assets/avatars/${data.avatar}.png",
-            height: size,
-            backgroundColors:
-                _theme.getClassBackgroundColors(data.characterClass),
+          Avatar(
+            avatar: data.avatar,
+            size: size,
+            username: data.username,
+            classType: data.characterClass,
           ),
           SizedBox(width: _theme.gap),
           Expanded(
