@@ -59,7 +59,7 @@ class Connection extends eventify.EventEmitter {
       } else {
         _logger.d("IS NOT STRING");
       }
-      _logger.d(data);
+      _logger.w(data);
 
       if (data["type"] != null) {
         _logger.t("Type: ${data["type"]}");
@@ -283,6 +283,11 @@ class Connection extends eventify.EventEmitter {
   void getContacts() {
     _logger.i("getContacts");
     _send({"type": "GET_CONTACTS"});
+  }
+
+  void getProfile(String user) {
+    _logger.i("getProfile: $user");
+    _send({"type": "GET_PROFILE", "username": user});
   }
 
   // void sendLogin( { String username, String password } ) {
