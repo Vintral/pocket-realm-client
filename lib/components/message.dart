@@ -1,3 +1,4 @@
+import 'package:client/components/avatar.dart';
 import 'package:client/components/base_display.dart';
 import 'package:client/providers/player.dart';
 import 'package:client/providers/social.dart';
@@ -21,10 +22,12 @@ class Message extends StatelessWidget {
   final MessageData data;
 
   Widget buildImage(double size, bool incoming) {
-    return ItemWithBorder(
-        image:
-            "assets/avatars/${!incoming ? _provider.conversationAvatar : _player.avatar}.png",
-        height: size,
+    return Avatar(
+        avatar: !incoming ? _provider.conversationAvatar : _player.avatar,
+        size: size,
+        username: !incoming
+            ? _provider.conversation?.username ?? ""
+            : _player.username,
         reflect: incoming);
   }
 

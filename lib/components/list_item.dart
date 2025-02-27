@@ -23,9 +23,10 @@ class ListItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(_theme.gap)),
-          color: _theme.colorBackground.withAlpha(100),
-          boxShadow: _theme.boxShadows),
+        borderRadius: BorderRadius.all(Radius.circular(_theme.gap)),
+        color: _theme.colorBackground.withAlpha(100),
+        boxShadow: _theme.boxShadows,
+      ),
       child: child,
     );
   }

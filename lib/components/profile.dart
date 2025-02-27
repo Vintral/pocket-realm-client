@@ -1,4 +1,10 @@
+import 'dart:async';
 import 'dart:ui' as ui;
+
+import 'package:flutter/material.dart';
+
+import 'package:eventify/eventify.dart' as eventify;
+import 'package:logger/logger.dart';
 
 import 'package:client/components/avatar.dart';
 import 'package:client/components/base_button.dart';
@@ -7,10 +13,6 @@ import 'package:client/components/tab_bar.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/profile.dart';
 import 'package:client/providers/theme.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-
-import 'package:eventify/eventify.dart' as eventify;
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -58,9 +60,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       switch (_tabController.index) {
         case 1:
-          _activeTab = Dictionary.get("COMBAT");
-        default:
           _activeTab = Dictionary.get("SOCIAL");
+        default:
+          _activeTab = Dictionary.get("COMBAT");
       }
     });
   }
@@ -92,10 +94,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   void onTab(String tab) {
     _logger.e("onTab: $tab");
+
     setState(() {
       _activeTab = tab.toLowerCase();
-
-      _logger.e("Active: $_activeTab");
       switch (_activeTab) {
         case "combat":
           _tabController.index = 0;
@@ -172,8 +173,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    _logger.w("build: $_activeTab");
 
+    var size = MediaQuery.of(context).size;
     var avatarSize = size.height / 5;
 
     return GestureDetector(
