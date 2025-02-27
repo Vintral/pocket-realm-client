@@ -13,6 +13,7 @@ class BaseDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        boxShadow: _theme.boxShadows,
         gradient: RadialGradient(
           colors: colors ??
               [
