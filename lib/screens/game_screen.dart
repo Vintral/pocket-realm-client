@@ -5,6 +5,7 @@ import 'package:client/panels/avatar.dart';
 import 'package:client/panels/contacts.dart';
 import 'package:client/panels/library.dart';
 import 'package:client/panels/search.dart';
+import 'package:client/providers/modal.dart';
 import 'package:client/providers/profile.dart';
 import 'package:flutter/material.dart';
 
@@ -50,7 +51,9 @@ class _GameScreenState extends State<GameScreen> {
   final Logger _logger = Logger();
   final ThemeProvider _theme = ThemeProvider();
   final Connection _connection = Connection();
+
   final _profile = ProfileProvider();
+  final _modals = ModalProvider();
 
   final List<String> _buttonTypes = <String>[
     "user",
@@ -71,6 +74,7 @@ class _GameScreenState extends State<GameScreen> {
   late eventify.Listener _onLibraryLoadedListener;
   late eventify.Listener _onShowProfileListener;
   late eventify.Listener _onHideProfileListener;
+  late eventify.Listener _onModalsUpdatedListener;
   late eventify.Listener _onLibraryLoadingListener;
   final provider.NotificationProvider _notification =
       provider.NotificationProvider();
@@ -99,6 +103,9 @@ class _GameScreenState extends State<GameScreen> {
     _onShowProfileListener = _profile.on("SHOW_PROFILE", null, onShowProfile);
     _onHideProfileListener = _profile.on("HIDE_PROFILE", null, onHideProfile);
 
+    _onModalsUpdatedListener =
+        _modals.on("UPDATED", null, (e, o) => setState(() {}));
+
     _logger.d("HEADER BACKGROUND HEIGHT: ${_theme.headerDrawerBackground}");
   }
 
@@ -115,6 +122,8 @@ class _GameScreenState extends State<GameScreen> {
 
     _onShowProfileListener.cancel();
     _onHideProfileListener.cancel();
+
+    _onModalsUpdatedListener.cancel();
 
     super.dispose();
   }
@@ -416,7 +425,8 @@ class _GameScreenState extends State<GameScreen> {
                 children: _buttons,
               ),
             ),
-            _showProfile ? Profile() : SizedBox.shrink(),
+            // _showProfile ? Profile() : SizedBox.shrink(),
+            ..._modals.build(),
           ],
         ),
       ),
