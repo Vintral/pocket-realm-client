@@ -178,191 +178,169 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     var size = MediaQuery.of(context).size;
     var avatarSize = size.height / 5;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => _profile.hideProfile(),
-      child: BackdropFilter(
-        filter: ui.ImageFilter.blur(
-          sigmaX: 5,
-          sigmaY: 5,
-        ),
-        child: Center(
-          child: !_profile.loaded
-              ? Container(
-                  decoration: BoxDecoration(
-                    boxShadow: _theme.boxShadows,
-                  ),
-                  child: BaseDisplay(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: _theme.gap * 2, horizontal: _theme.gap * 5),
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.errorContainer,
-                        strokeWidth: MediaQuery.of(context).size.width / 200,
+    return !_profile.loaded
+        ? Container(
+            decoration: BoxDecoration(
+              boxShadow: _theme.boxShadows,
+            ),
+            child: BaseDisplay(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: _theme.gap * 2, horizontal: _theme.gap * 5),
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  strokeWidth: MediaQuery.of(context).size.width / 200,
+                ),
+              ),
+            ),
+          )
+        : Container(
+            constraints: BoxConstraints(
+              maxWidth: size.width * .75,
+              minHeight: size.height * .5,
+              maxHeight: size.height * .8,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    SizedBox(
+                      height: 40,
+                      child: ColorFiltered(
+                        colorFilter:
+                            ColorFilter.mode(_theme.color, BlendMode.modulate),
+                        child: const Image(
+                          image: AssetImage("assets/ui/panel-header.png"),
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              : GestureDetector(
-                  onTap: () {
-                    _logger.w("ON TAP");
-                  },
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: size.width * .75,
-                      minHeight: size.height * .5,
-                      maxHeight: size.height * .8,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Stack(
-                          children: [
-                            SizedBox(
-                              height: 40,
-                              child: ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                    _theme.color, BlendMode.modulate),
-                                child: const Image(
-                                  image:
-                                      AssetImage("assets/ui/panel-header.png"),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(_theme.gap),
-                                    child: Text(
-                                      _profile.username,
-                                      style: _theme.textLargeBold,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 32,
-                                  child: GestureDetector(
-                                    onTap: () => _profile.hideProfile(),
-                                    child: ColorFiltered(
-                                      colorFilter: ColorFilter.mode(
-                                        _theme.colorAccent,
-                                        _theme.blendMode,
-                                      ),
-                                      child: Image.asset(
-                                        "assets/ui/close.png",
-                                        fit: BoxFit.fitHeight,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        BaseDisplay(
+                        Flexible(
                           child: Padding(
                             padding: EdgeInsets.all(_theme.gap),
-                            child: Column(
-                              spacing: _theme.gap,
+                            child: Text(
+                              _profile.username,
+                              style: _theme.textLargeBold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 32,
+                          child: GestureDetector(
+                            onTap: () => _profile.hideProfile(),
+                            child: ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                _theme.colorAccent,
+                                _theme.blendMode,
+                              ),
+                              child: Image.asset(
+                                "assets/ui/close.png",
+                                fit: BoxFit.fitHeight,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                BaseDisplay(
+                  child: Padding(
+                    padding: EdgeInsets.all(_theme.gap),
+                    child: Column(
+                      spacing: _theme.gap,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: _theme.gap,
+                          children: [
+                            Avatar(
+                              avatar: _profile.avatar,
+                              size: avatarSize,
+                              username: "name",
+                              disableTap: true,
+                            ),
+                            Column(
                               children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  spacing: _theme.gap,
-                                  children: [
-                                    Avatar(
-                                      avatar: _profile.avatar,
-                                      size: avatarSize,
-                                      username: "name",
-                                      disableTap: true,
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          Dictionary.get("RESOURCES")
-                                              .toUpperCase(),
-                                          style: _theme.textLargeBold,
-                                        ),
-                                        Divider(
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          "???",
-                                          style: _theme.textLargeBold,
-                                        ),
-                                        SizedBox(
-                                          height: _theme.gap,
-                                        ),
-                                        Text(
-                                          Dictionary.get("UNITS").toUpperCase(),
-                                          style: _theme.textLargeBold,
-                                        ),
-                                        Divider(
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          "???",
-                                          style: _theme.textLargeBold,
-                                        ),
-                                        SizedBox(
-                                          height: _theme.gap,
-                                        ),
-                                        Text(
-                                          Dictionary.get("BUILDINGS")
-                                              .toUpperCase(),
-                                          style: _theme.textLargeBold,
-                                        ),
-                                        Divider(
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          "???",
-                                          style: _theme.textLargeBold,
-                                        ),
-                                        SizedBox(
-                                          height: _theme.gap,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                Text(
+                                  Dictionary.get("RESOURCES").toUpperCase(),
+                                  style: _theme.textLargeBold,
                                 ),
-                                RealmTabBar(
-                                  tabs: [
-                                    Dictionary.get("COMBAT").toUpperCase(),
-                                    Dictionary.get("SOCIAL").toUpperCase(),
-                                  ],
-                                  active: _activeTab,
-                                  handler: onTab,
+                                Divider(
+                                  color: Colors.yellow,
                                 ),
-                                Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: MediaQuery.of(context).size.width,
-                                    maxHeight:
-                                        (MediaQuery.of(context).size.height /
-                                                20 *
-                                                2) +
-                                            _theme.gap,
-                                  ),
-                                  child: TabBarView(
-                                    controller: _tabController,
-                                    children: [
-                                      getCombatButtons(),
-                                      getSocialButtons(),
-                                    ],
-                                  ),
+                                Text(
+                                  "???",
+                                  style: _theme.textLargeBold,
+                                ),
+                                SizedBox(
+                                  height: _theme.gap,
+                                ),
+                                Text(
+                                  Dictionary.get("UNITS").toUpperCase(),
+                                  style: _theme.textLargeBold,
+                                ),
+                                Divider(
+                                  color: Colors.yellow,
+                                ),
+                                Text(
+                                  "???",
+                                  style: _theme.textLargeBold,
+                                ),
+                                SizedBox(
+                                  height: _theme.gap,
+                                ),
+                                Text(
+                                  Dictionary.get("BUILDINGS").toUpperCase(),
+                                  style: _theme.textLargeBold,
+                                ),
+                                Divider(
+                                  color: Colors.yellow,
+                                ),
+                                Text(
+                                  "???",
+                                  style: _theme.textLargeBold,
+                                ),
+                                SizedBox(
+                                  height: _theme.gap,
                                 ),
                               ],
                             ),
+                          ],
+                        ),
+                        RealmTabBar(
+                          tabs: [
+                            Dictionary.get("COMBAT").toUpperCase(),
+                            Dictionary.get("SOCIAL").toUpperCase(),
+                          ],
+                          active: _activeTab,
+                          handler: onTab,
+                        ),
+                        Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width,
+                            maxHeight:
+                                (MediaQuery.of(context).size.height / 20 * 2) +
+                                    _theme.gap,
+                          ),
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              getCombatButtons(),
+                              getSocialButtons(),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-        ),
-      ),
-    );
+              ],
+            ),
+          );
   }
 }
