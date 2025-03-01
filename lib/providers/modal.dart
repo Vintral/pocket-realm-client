@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart';
@@ -21,7 +23,9 @@ class ModalProvider extends EventEmitter {
 
   void addModal(Widget modal) {
     _logger.d("addModal");
+
     _modals.add(modal);
+    emit("UPDATED");
   }
 
   void popModal() {
@@ -29,10 +33,32 @@ class ModalProvider extends EventEmitter {
 
     if (_modals.isNotEmpty) {
       _modals.removeLast();
+      emit("UPDATED");
     }
   }
 
-  void render() {
-    _logger.t("render");
+  Widget buildModal(Widget modal) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => popModal(),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(
+          sigmaX: 5,
+          sigmaY: 5,
+        ),
+        child: Center(
+          child: GestureDetector(
+            onTap: () => {},
+            child: modal,
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> build() {
+    _logger.t("build");
+
+    return _modals.map((modal) => buildModal(modal)).toList();
   }
 }
