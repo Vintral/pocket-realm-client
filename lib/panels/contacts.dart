@@ -42,7 +42,7 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
 
     _logger.t("initState");
 
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(onTabChange);
 
     _onContactsRetrieved =
