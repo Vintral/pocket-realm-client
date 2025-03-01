@@ -1,3 +1,5 @@
+import 'package:client/capitalize.dart';
+import 'package:client/components/base_display.dart';
 import 'package:client/components/contact.dart';
 import 'package:client/data/contact.dart';
 import 'package:client/providers/social.dart';
@@ -74,6 +76,8 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
       switch (_tabController.index) {
         case 1:
           _activeTab = Dictionary.get("ENEMIES");
+        case 2:
+          _activeTab = Dictionary.get("BLOCKED");
         default:
           _activeTab = Dictionary.get("FRIENDS");
       }
@@ -91,12 +95,31 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
           _tabController.index = 0;
         case "enemies":
           _tabController.index = 1;
+        case "blocked":
+          _tabController.index = 2;
       }
     });
   }
 
-  Widget buildContactList(List<ContactData> data) {
+  Widget buildContactList(List<ContactData> data, String none) {
     _logger.f("buildContactList: ${data.length}");
+
+    if (data.isEmpty) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.width / 5,
+          child: BaseDisplay(
+            child: Center(
+              child: Text(
+                none.capitalize(),
+                style: _theme.textLargeBold,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return ListView.separated(
         itemBuilder: (context, index) => Contact(data[index]),
@@ -119,6 +142,7 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
         tabs: [
           Dictionary.get("FRIENDS").toUpperCase(),
           Dictionary.get("ENEMIES").toUpperCase(),
+          Dictionary.get("BLOCKED").toUpperCase(),
         ],
         active: _activeTab,
         handler: onTab,
@@ -126,8 +150,9 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
       child: TabBarView(
         controller: _tabController,
         children: [
-          buildContactList(_provider.friends),
-          buildContactList(_provider.enemies),
+          buildContactList(_provider.friends, Dictionary.get("NO_FRIENDS")),
+          buildContactList(_provider.enemies, Dictionary.get("NO_ENEMIES")),
+          buildContactList(_provider.blocked, Dictionary.get("NO_BLOCKED"))
         ],
       ),
     );
