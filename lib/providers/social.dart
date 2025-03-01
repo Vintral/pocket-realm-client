@@ -30,6 +30,7 @@ class SocialProvider extends EventEmitter {
 
   List<ContactData> friends = <ContactData>[];
   List<ContactData> enemies = <ContactData>[];
+  List<ContactData> blocked = <ContactData>[];
   bool contactsLoaded = false;
 
   String searchNeedle = "";
@@ -90,6 +91,13 @@ class SocialProvider extends EventEmitter {
       enemies.clear();
       enemies.addAll((data["enemies"] as List<dynamic>)
           .map((enemy) => ContactData(enemy)));
+    }
+
+    if (data["blocked"] != null) {
+      _logger.w("Parse Blocked");
+      blocked.clear();
+      blocked.addAll((data["blocked"] as List<dynamic>)
+          .map((blocked) => ContactData(blocked)));
     }
 
     contactsLoaded = true;
