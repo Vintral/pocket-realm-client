@@ -1,4 +1,6 @@
+import 'package:client/capitalize.dart';
 import 'package:client/components/base_display.dart';
+import 'package:client/dictionary.dart';
 import 'package:client/providers/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +16,7 @@ class Loading extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height / 10,
-        maxWidth: MediaQuery.of(context).size.width / 2.5,
+        maxWidth: MediaQuery.of(context).size.width / 2,
       ),
       child: BaseDisplay(
         child: Center(
@@ -28,7 +30,8 @@ class Loading extends StatelessWidget {
               spacing: _theme.gap,
               children: [
                 text.isNotEmpty
-                    ? Text(text, style: _theme.textLargeBold)
+                    ? Text(Dictionary.getLoading(text).capitalize(),
+                        style: _theme.textLargeBold)
                     : SizedBox.shrink(),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 40,

@@ -110,4 +110,17 @@ class Dictionary {
   static String get(String key) {
     return strings[key] ?? "$missing($key)";
   }
+
+  static Map<String, String> stringsLoading = {
+    "ADD_ENEMY": "adding enemy",
+    "ADD_FRIEND": "adding friend",
+    "BLOCK_USER": "block user",
+    "REMOVE_ENEMY": "removing enemy",
+    "REMOVE_FRIEND": "removing friend",
+    "UNBLOCK_USER": "unblocking user",
+  };
+
+  static String getLoading(String key) {
+    return strings[key] ?? "$missing($key)";
+  }
 }
