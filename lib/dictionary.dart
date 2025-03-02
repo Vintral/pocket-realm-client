@@ -11,7 +11,9 @@ class Dictionary {
   static Map<String, String> strings = {
     "ACTIVE": "active",
     "ADD_ENEMY": "add enemy",
+    "REMOVE_ENEMY": "remove enemy",
     "ADD_FRIEND": "add friend",
+    "REMOVE_FRIEND": "remove friend",
     "ATTACK": "attack",
     "AGO": "ago",
     "AVATAR": "avatar",
@@ -92,6 +94,7 @@ class Dictionary {
     "SOON": "soon",
     "STARTS": "starts",
     "TOP": "top",
+    "UNBLOCK_USER": "unblock user",
     "UNITS": "units",
     "WEEK": "week",
     "WEEKS": "weeks",
