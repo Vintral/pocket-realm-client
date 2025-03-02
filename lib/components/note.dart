@@ -1,11 +1,22 @@
-import 'package:client/components/base_button.dart';
-import 'package:client/components/base_display.dart';
-import 'package:client/providers/theme.dart';
+import 'package:client/providers/profile.dart';
 import 'package:flutter/material.dart';
+
 import 'package:logger/logger.dart';
 
+import 'package:client/capitalize.dart';
+import 'package:client/components/base_button.dart';
+import 'package:client/components/base_display.dart';
+import 'package:client/components/title_bar.dart';
+import 'package:client/dictionary.dart';
+import 'package:client/providers/modal.dart';
+import 'package:client/providers/social.dart';
+import 'package:client/providers/theme.dart';
+import 'package:client/utilities.dart';
+
 class Note extends StatefulWidget {
-  const Note({super.key});
+  const Note({super.key, required this.category});
+
+  final String category;
 
   @override
   State<Note> createState() => _NoteState();
@@ -14,8 +25,12 @@ class Note extends StatefulWidget {
 class _NoteState extends State<Note> {
   final _logger = Logger();
   final _theme = ThemeProvider();
+  final _modals = ModalProvider();
+  final _provider = SocialProvider();
+  final _profile = ProfileProvider();
   final _controller = TextEditingController();
 
+  final FocusNode _focus = FocusNode();
   String note = "";
 
   @override
@@ -23,6 +38,8 @@ class _NoteState extends State<Note> {
     super.initState();
 
     _controller.addListener(onNoteChanged);
+
+    _focus.requestFocus();
   }
 
   @override
@@ -30,43 +47,79 @@ class _NoteState extends State<Note> {
     _controller.removeListener(onNoteChanged);
     _controller.dispose();
 
+    _focus.dispose();
+
     super.dispose();
   }
 
   onNoteChanged() {
     _logger.w("onNoteChanged: ${_controller.text}");
+    setState(() {});
   }
 
   onSubmit() {
     _logger.w("onSubmit");
-  }
 
-  onCancel() {
-    _logger.w("onCancel");
+    _provider.note = _controller.text;
+    _provider.submitContact(category, _profile.guid);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseDisplay(
-      child: Padding(
-          padding: EdgeInsets.all(_theme.gap),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _controller,
-              ),
-              Row(
+    return Container(
+      color: Colors.yellow,
+      constraints: BoxConstraints(
+        minHeight: 0,
+        maxHeight: MediaQuery.of(context).size.width * .85,
+        maxWidth: MediaQuery.of(context).size.width * .85,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TitleBar(
+            text: "TITLE",
+            child: getCloseButton(
+              context,
+              handler: () => _modals.popModal(),
+            ),
+          ),
+          BaseDisplay(
+            child: Padding(
+              padding: EdgeInsets.all(_theme.gap),
+              child: Row(
+                spacing: _theme.gap,
                 children: [
-                  BaseButton(
-                    handler: onCancel,
+                  Expanded(
+                    child: Material(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: Dictionary.get("OPTIONAL").capitalize(),
+                          contentPadding: EdgeInsets.all(_theme.gap),
+                        ),
+                        focusNode: _focus,
+                        controller: _controller,
+                      ),
+                    ),
                   ),
-                  BaseButton(
-                    handler: onSubmit,
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 20,
+                    width: 100,
+                    child: BaseButton(
+                      handler: onSubmit,
+                      borderRadius: BorderRadius.circular(_theme.gap / 2),
+                      child: Text(
+                          Dictionary.get(
+                            _controller.text.isEmpty ? "SKIP" : "OKAY",
+                          ).toUpperCase(),
+                          style: _theme.textLargeBold),
+                    ),
                   ),
                 ],
               ),
-            ],
-          )),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
