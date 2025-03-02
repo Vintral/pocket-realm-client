@@ -30,7 +30,11 @@ class Loading extends StatelessWidget {
                 text.isNotEmpty
                     ? Text(text, style: _theme.textLargeBold)
                     : SizedBox.shrink(),
-                CircularProgressIndicator(),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 40,
+                  width: MediaQuery.of(context).size.height / 40,
+                  child: CircularProgressIndicator(),
+                ),
               ],
             ),
           ),
