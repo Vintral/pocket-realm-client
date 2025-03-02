@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:client/components/modals/loading.dart';
 import 'package:client/components/note.dart';
 import 'package:client/providers/modal.dart';
 import 'package:flutter/material.dart';
