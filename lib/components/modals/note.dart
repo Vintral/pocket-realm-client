@@ -8,14 +8,12 @@ import 'package:client/components/base_display.dart';
 import 'package:client/components/title_bar.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/modal.dart';
-import 'package:client/providers/social.dart';
+import 'package:client/providers/profile.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/utilities.dart';
 
 class Note extends StatefulWidget {
-  const Note({super.key, required this.category});
-
-  final String category;
+  const Note({super.key});
 
   @override
   State<Note> createState() => _NoteState();
@@ -25,7 +23,7 @@ class _NoteState extends State<Note> {
   final _logger = Logger();
   final _theme = ThemeProvider();
   final _modals = ModalProvider();
-  final _provider = SocialProvider();
+  final _profile = ProfileProvider();
   final _controller = TextEditingController();
 
   final FocusNode _focus = FocusNode();
@@ -57,6 +55,19 @@ class _NoteState extends State<Note> {
 
   onSubmit() {
     _logger.w("onSubmit");
+
+    _profile.contactNote = _controller.text;
+    switch (_profile.contactCategory) {
+      case "friend":
+        _profile.addFriend();
+      case "enemy":
+        _profile.addEnemy();
+      case "blocked":
+        _profile.blockUser();
+    }
+
+    _logger.f("REMOVE MODAL");
+    _modals.removeModal(Note);
   }
 
   @override
