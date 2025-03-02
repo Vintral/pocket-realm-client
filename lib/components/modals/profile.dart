@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:client/components/modals/loading.dart';
-import 'package:client/components/note.dart';
+import 'package:client/components/modals/note.dart';
 import 'package:client/providers/modal.dart';
 import 'package:flutter/material.dart';
 
@@ -124,9 +124,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   onFriend() {
     _logger.i("onFriend");
-
-    _profile.category = "friend";
-    _modal.addModal(Note());
   }
 
   onEnemy() {

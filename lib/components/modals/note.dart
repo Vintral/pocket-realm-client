@@ -1,4 +1,3 @@
-import 'package:client/providers/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart';
@@ -27,7 +26,6 @@ class _NoteState extends State<Note> {
   final _theme = ThemeProvider();
   final _modals = ModalProvider();
   final _provider = SocialProvider();
-  final _profile = ProfileProvider();
   final _controller = TextEditingController();
 
   final FocusNode _focus = FocusNode();
@@ -59,9 +57,6 @@ class _NoteState extends State<Note> {
 
   onSubmit() {
     _logger.w("onSubmit");
-
-    _provider.note = _controller.text;
-    _provider.submitContact(category, _profile.guid);
   }
 
   @override
