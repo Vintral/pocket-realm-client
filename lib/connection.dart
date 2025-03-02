@@ -290,6 +290,21 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "GET_PROFILE", "username": user});
   }
 
+  void addContact(String category, String guid, String note) {
+    _logger.i("addContact: $category $guid");
+    _send({
+      "type": "ADD_CONTACT",
+      "contact": guid,
+      "category": category,
+      "note": note
+    });
+  }
+
+  void removeContact(String category, String guid) {
+    _logger.i("removeContact: $category $guid");
+    _send({"type": "REMOVE_CONTACT", "contact": guid, "category": category});
+  }
+
   // void sendLogin( { String username, String password } ) {
   //   debug( "sendLogin" );
   //   _send( { 'command': 'login', 'username': username, 'password': password } );
