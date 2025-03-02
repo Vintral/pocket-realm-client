@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:client/components/note.dart';
+import 'package:client/providers/modal.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -25,6 +27,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   final _theme = ThemeProvider();
   final _logger = Logger(level: Level.debug);
   final _profile = ProfileProvider();
+  final _modal = ModalProvider();
 
   late eventify.Listener _onProfileLoadedListener;
   late TabController _tabController;
@@ -120,6 +123,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   onFriend() {
     _logger.i("onFriend");
+
+    _modal.addModal(Note());
   }
 
   onEnemy() {
