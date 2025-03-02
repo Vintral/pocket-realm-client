@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:client/components/modals/profile.dart';
 import 'package:client/connection.dart';
+import 'package:client/providers/modal.dart';
 import 'package:eventify/eventify.dart';
 import 'package:client/components/notification.dart' as realm;
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ class ProfileProvider extends EventEmitter {
     return _instance;
   }
 
+  final _modals = ModalProvider();
   final Logger _logger = Logger(level: Level.debug);
   final Connection _connection = Connection();
 
@@ -70,6 +73,6 @@ class ProfileProvider extends EventEmitter {
       _connection.getProfile(user);
     }
 
-    emit("SHOW_PROFILE");
+    _modals.addModal(Profile());
   }
 }

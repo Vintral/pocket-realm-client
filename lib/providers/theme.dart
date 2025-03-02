@@ -123,6 +123,11 @@ class ThemeProvider extends EventEmitter {
         ClassColors(base: const Color.fromARGB(255, 75, 75, 75));
 
     createBackgroundColors();
+    setShadows();
+  }
+
+  setShadows() {
+    _logger.t("setShadows");
 
     boxShadow = BoxShadow(
       color: shadowColor.withAlpha(200),
@@ -376,6 +381,8 @@ class ThemeProvider extends EventEmitter {
 
     var theme = ThemeData();
     var baseSize = theme.textTheme.bodyMedium?.fontSize ?? 12;
+
+    setShadows();
 
     return ThemeData(
       primaryColor: classColors?.color ?? Colors.transparent,

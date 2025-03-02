@@ -1,3 +1,4 @@
+import 'package:client/capitalize.dart';
 import 'package:client/components/cost_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/connection.dart';
@@ -218,7 +219,9 @@ class _RecruitDetailsPanelState extends State<RecruitDetailsPanel> {
   @override
   Widget build(BuildContext context) {
     return Panel(
-      label: Dictionary.get("RECRUIT"),
+      label:
+          "${Dictionary.get("RECRUIT").capitalize()} ${_provider.unit?.name.capitalize() ?? ""}",
+      capitalize: false,
       closable: true,
       child: SizedBox(
         width: MediaQuery.of(context).size.width,

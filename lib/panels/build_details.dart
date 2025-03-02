@@ -1,3 +1,4 @@
+import 'package:client/capitalize.dart';
 import 'package:client/components/cost_button.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/connection.dart';
@@ -232,8 +233,12 @@ class _BuildDetailsPanelState extends State<BuildDetailsPanel> {
 
   @override
   Widget build(BuildContext context) {
+    _logger.e(_provider.building);
+
     return Panel(
-      label: Dictionary.get("BUILD"),
+      label:
+          "${Dictionary.get("BUILD").capitalize()} ${_provider.building?.name.capitalize() ?? ""}",
+      capitalize: false,
       closable: true,
       child: SizedBox(
         width: MediaQuery.of(context).size.width,

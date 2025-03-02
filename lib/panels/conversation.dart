@@ -1,3 +1,4 @@
+import 'package:client/components/message.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -5,7 +6,6 @@ import 'package:logger/logger.dart';
 
 import 'package:client/capitalize.dart';
 import 'package:client/components/base_button.dart';
-import 'package:client/components/message.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/social.dart';
