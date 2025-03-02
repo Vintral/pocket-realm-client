@@ -37,6 +37,22 @@ class ModalProvider extends EventEmitter {
     }
   }
 
+  void removeModal(Type type) {
+    _logger.e("removeModal: $type");
+
+    _logger.e("Modals Length: ${_modals.length} ");
+    for (var i = 0; i < _modals.length; i++) {
+      if (_modals[i].runtimeType == type) {
+        _logger.w("FOUND MODAL BY TYPE");
+        _modals.removeAt(i);
+        break;
+      }
+    }
+
+    _logger.e("DONE REMOVAL: ${_modals.length}");
+    emit("UPDATED");
+  }
+
   Widget buildModal(Widget modal) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
