@@ -22,6 +22,9 @@ class ProfileProvider extends EventEmitter {
   String avatar = "";
   String guid = "";
 
+  String contactCategory = "";
+  String contactNote = "";
+
   ProfileProvider._internal() {
     _logger.d("Created");
 
