@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:client/components/profile.dart';
+import 'package:client/components/modals/profile.dart';
 import 'package:client/connection.dart';
 import 'package:client/providers/modal.dart';
 import 'package:eventify/eventify.dart';

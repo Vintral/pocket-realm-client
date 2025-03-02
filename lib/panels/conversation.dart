@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 
 import 'package:client/capitalize.dart';
 import 'package:client/components/base_button.dart';
-import 'package:client/components/message.dart';
+import 'package:client/components/modals/message.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/social.dart';

@@ -124,6 +124,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   onFriend() {
     _logger.i("onFriend");
 
+    _profile.category = "friend";
     _modal.addModal(Note());
   }
 

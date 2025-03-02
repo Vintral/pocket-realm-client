@@ -1,5 +1,5 @@
 import 'package:client/capitalize.dart';
-import 'package:client/components/profile.dart';
+import 'package:client/components/modals/profile.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/panels/avatar.dart';
 import 'package:client/panels/contacts.dart';
