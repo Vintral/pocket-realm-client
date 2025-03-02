@@ -25,6 +25,10 @@ class ProfileProvider extends EventEmitter {
   String avatar = "";
   String guid = "";
 
+  bool friend = false;
+  bool enemy = false;
+  bool blocked = false;
+
   String contactCategory = "";
   String contactNote = "";
 
@@ -50,6 +54,10 @@ class ProfileProvider extends EventEmitter {
         username = data["username"] ?? "";
         avatar = data["avatar"] ?? "";
         guid = data["guid"] ?? "";
+
+        friend = data["friend"] ?? false;
+        enemy = data["enemy"] ?? false;
+        blocked = data["blocked"] ?? false;
 
         loaded = true;
         emit("PROFILE_LOADED");
