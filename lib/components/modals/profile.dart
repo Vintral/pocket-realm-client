@@ -124,14 +124,35 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   onFriend() {
     _logger.i("onFriend");
+
+    _profile.contactCategory = "friend";
+    if (!_profile.friend) {
+      _modal.addModal(Note());
+    } else {
+      _profile.removeFriend();
+    }
   }
 
   onEnemy() {
     _logger.i("onEnemy");
+
+    _profile.contactCategory = "enemy";
+    if (!_profile.enemy) {
+      _modal.addModal(Note());
+    } else {
+      _profile.removeEnemy();
+    }
   }
 
   onBlock() {
     _logger.i("onBlock");
+
+    _profile.contactCategory = "blocked";
+    if (!_profile.blocked) {
+      _modal.addModal(Note());
+    } else {
+      _profile.unblockUser();
+    }
   }
 
   onMessage() {
@@ -166,9 +187,12 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
         spacing: _theme.gap,
         runSpacing: _theme.gap,
         children: [
-          buildButton("ADD_FRIEND", width, onFriend),
-          buildButton("ADD_ENEMY", width, onEnemy),
-          buildButton("BLOCK_USER", width, onBlock),
+          buildButton(_profile.friend ? "REMOVE_FRIEND" : "ADD_FRIEND", width,
+              onFriend),
+          buildButton(
+              _profile.enemy ? "REMOVE_ENEMY" : "ADD_ENEMY", width, onEnemy),
+          buildButton(
+              _profile.blocked ? "UNBLOCK_USER" : "BLOCK_USER", width, onBlock),
           buildButton("SEND_MESSAGE", width, onMessage),
         ],
       );
