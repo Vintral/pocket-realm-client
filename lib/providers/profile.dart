@@ -1,14 +1,10 @@
-import 'dart:async';
-
-import 'package:pocket_realm/components/modals/loading.dart';
-import 'package:pocket_realm/components/modals/profile.dart';
-import 'package:pocket_realm/connection.dart';
-import 'package:pocket_realm/dictionary.dart';
-import 'package:pocket_realm/providers/modal.dart';
 import 'package:eventify/eventify.dart';
-import 'package:pocket_realm/components/notification.dart' as realm;
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+
+import 'package:client/connection.dart';
+import 'package:client/components/modals/loading.dart';
+import 'package:client/components/modals/profile.dart';
+import 'package:client/providers/modal.dart';
 
 class ProfileProvider extends EventEmitter {
   static final ProfileProvider _instance = ProfileProvider._internal();
