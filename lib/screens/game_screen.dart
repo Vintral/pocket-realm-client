@@ -1,9 +1,12 @@
 import 'package:client/capitalize.dart';
+import 'package:client/components/modals/profile.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/panels/avatar.dart';
 import 'package:client/panels/contacts.dart';
 import 'package:client/panels/library.dart';
 import 'package:client/panels/search.dart';
+import 'package:client/providers/modal.dart';
+import 'package:client/providers/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -49,6 +52,9 @@ class _GameScreenState extends State<GameScreen> {
   final ThemeProvider _theme = ThemeProvider();
   final Connection _connection = Connection();
 
+  final _profile = ProfileProvider();
+  final _modals = ModalProvider();
+
   final List<String> _buttonTypes = <String>[
     "user",
     "action",
@@ -61,10 +67,14 @@ class _GameScreenState extends State<GameScreen> {
   late BuildContext _navigationContext;
   String active = "";
   String panel = "";
+  bool _showProfile = false;
 
   late eventify.Listener _onDisconnectedListener;
   late eventify.Listener _onNotificationListener;
   late eventify.Listener _onLibraryLoadedListener;
+  late eventify.Listener _onShowProfileListener;
+  late eventify.Listener _onHideProfileListener;
+  late eventify.Listener _onModalsUpdatedListener;
   late eventify.Listener _onLibraryLoadingListener;
   final provider.NotificationProvider _notification =
       provider.NotificationProvider();
@@ -90,12 +100,18 @@ class _GameScreenState extends State<GameScreen> {
     _onLibraryLoadingListener = _library.on("LOADING", null, onLibraryLoading);
     _library.load(_player.round);
 
+    _onShowProfileListener = _profile.on("SHOW_PROFILE", null, onShowProfile);
+    _onHideProfileListener = _profile.on("HIDE_PROFILE", null, onHideProfile);
+
+    _onModalsUpdatedListener =
+        _modals.on("UPDATED", null, (e, o) => setState(() {}));
+
     _logger.d("HEADER BACKGROUND HEIGHT: ${_theme.headerDrawerBackground}");
   }
 
   @override
   void dispose() {
-    _logger.t("dispose");
+    _logger.e("dispose");
 
     _onNotificationListener.cancel();
     _player.clear();
@@ -103,6 +119,11 @@ class _GameScreenState extends State<GameScreen> {
     _onLibraryLoadedListener.cancel();
     _onLibraryLoadingListener.cancel();
     _onDisconnectedListener.cancel();
+
+    _onShowProfileListener.cancel();
+    _onHideProfileListener.cancel();
+
+    _onModalsUpdatedListener.cancel();
 
     super.dispose();
   }
@@ -142,6 +163,22 @@ class _GameScreenState extends State<GameScreen> {
 
     setState(() {
       active = "";
+    });
+  }
+
+  void onShowProfile(e, o) {
+    _logger.d("onShowProfile");
+
+    setState(() {
+      _showProfile = true;
+    });
+  }
+
+  void onHideProfile(e, o) {
+    _logger.d("onHideProfile");
+
+    setState(() {
+      _showProfile = false;
     });
   }
 
@@ -388,6 +425,8 @@ class _GameScreenState extends State<GameScreen> {
                 children: _buttons,
               ),
             ),
+            // _showProfile ? Profile() : SizedBox.shrink(),
+            ..._modals.build(),
           ],
         ),
       ),

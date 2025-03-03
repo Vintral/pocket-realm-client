@@ -10,15 +10,21 @@ class Dictionary {
 
   static Map<String, String> strings = {
     "ACTIVE": "active",
+    "ADD_ENEMY": "add enemy",
+    "REMOVE_ENEMY": "remove enemy",
+    "ADD_FRIEND": "add friend",
+    "REMOVE_FRIEND": "remove friend",
     "ATTACK": "attack",
     "AGO": "ago",
     "AVATAR": "avatar",
     "BAZAAR": "bazaar",
     "BLOCKED": "blocked",
+    "BLOCK_USER": "block user",
     "BUILD": "build",
     "BUILDINGS": "buildings",
     "BUY": "buy",
     "CHAT-WITH": "chat with",
+    "COMBAT": "combat",
     "CONTACTS": "contacts",
     "CURRENT": "current",
     "DAY": "day",
@@ -58,32 +64,41 @@ class Dictionary {
     "NO_BLOCKED": "no blocked users",
     "NO_ENEMIES": "no enemies",
     "NO_FRIENDS": "no friends",
+    "NOTE": "note",
     "NOW": "now",
     "OF": "of",
+    "OKAY": "okay",
+    "OPTIONAL": "optional",
+    "PILLAGE": "pillage",
     "POWER": "power",
     "PLAY": "play",
     "PLAYERS": "players",
     "QUANTITY": "quantity",
-    "RESOURCE": "resource",
-    "REFRESHES_IN": "refreshes in",
-    "SEARCH": "search",
-    "SEARCH_USERS": "search users",
-    "SELL": "sell",
-    "SHOUT": "shout",
-    "SHOUTBOX": "shoutbox",
-    "SHOW_RANKS": "show ranks",
-    "SMUGGLERS": "smugglers",
+    "RAID": "raid",
     "RANKINGS": "rankings",
     "RECENTLY": "recently",
     "RECRUIT": "recruit",
+    "REFRESHES_IN": "refreshes in",
     "REPLIED": "you replied",
+    "RESOURCE": "resource",
     "RESOURCES": "resources",
     "ROUNDS": "rounds",
     "RULES": "rules",
+    "SEARCH": "search",
+    "SEARCH_USERS": "search users",
+    "SELL": "sell",
+    "SEND_MESSAGE": "send message",
+    "SHOUT": "shout",
+    "SHOUTBOX": "shoutbox",
+    "SHOW_RANKS": "show ranks",
+    "SKIP": "skip",
+    "SMUGGLERS": "smugglers",
     "SEND": "send",
+    "SOCIAL": "social",
     "SOON": "soon",
     "STARTS": "starts",
     "TOP": "top",
+    "UNBLOCK_USER": "unblock user",
     "UNITS": "units",
     "WEEK": "week",
     "WEEKS": "weeks",
@@ -97,6 +112,19 @@ class Dictionary {
   };
 
   static String get(String key) {
+    return strings[key] ?? "$missing($key)";
+  }
+
+  static Map<String, String> stringsLoading = {
+    "ADD_ENEMY": "adding enemy",
+    "ADD_FRIEND": "adding friend",
+    "BLOCK_USER": "block user",
+    "REMOVE_ENEMY": "removing enemy",
+    "REMOVE_FRIEND": "removing friend",
+    "UNBLOCK_USER": "unblocking user",
+  };
+
+  static String getLoading(String key) {
     return strings[key] ?? "$missing($key)";
   }
 }

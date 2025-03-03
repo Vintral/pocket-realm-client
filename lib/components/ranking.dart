@@ -1,3 +1,4 @@
+import 'package:client/components/avatar.dart';
 import 'package:client/components/base_display.dart';
 import 'package:flutter/material.dart';
 
@@ -61,10 +62,11 @@ class Ranking extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.all(_theme.gap),
-          child: ItemWithBorder(
-            image: "assets/avatars/$avatar.png",
-            height: size,
-            backgroundColors: _theme.getClassBackgroundColors(classType),
+          child: Avatar(
+            avatar: avatar,
+            size: size,
+            username: username,
+            classType: classType,
           ),
         ),
         Padding(

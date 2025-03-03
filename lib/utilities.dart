@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:client/dictionary.dart';
+import 'package:client/providers/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 Logger _logger = Logger(level: Level.off);
+var _theme = ThemeProvider();
 
 int getIntVal(dynamic val) {
   if (val is int) return val;
@@ -15,6 +17,42 @@ int getIntVal(dynamic val) {
 
 String capitalizeFirst(String str) {
   return str.substring(0, 1).toUpperCase() + str.substring(1);
+}
+
+Widget getCloseButton(BuildContext context, {Function()? handler}) {
+  return SizedBox(
+    height: MediaQuery.of(context).size.height / 20,
+    child: GestureDetector(
+      onTap: handler ?? () => Navigator.of(context).pop(),
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(
+          _theme.colorAccent,
+          _theme.blendMode,
+        ),
+        child: Image.asset(
+          "assets/ui/close.png",
+          fit: BoxFit.fitHeight,
+        ),
+      ),
+    ),
+  );
+
+  return SizedBox(
+    height: 32,
+    child: GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(
+          _theme.colorAccent,
+          _theme.blendMode,
+        ),
+        child: Image.asset(
+          "assets/ui/close.png",
+          fit: BoxFit.fitHeight,
+        ),
+      ),
+    ),
+  );
 }
 
 String timeSince(DateTime val, {bool suffixFlag = true}) {

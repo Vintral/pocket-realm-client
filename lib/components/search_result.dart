@@ -30,7 +30,12 @@ class SearchResult extends StatelessWidget {
         spacing: _theme.gap,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Avatar(data.avatar, data.classType, size),
+          Avatar(
+            avatar: data.avatar,
+            classType: data.classType,
+            size: size,
+            username: data.username,
+          ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(_theme.gap),

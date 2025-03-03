@@ -25,6 +25,9 @@ class SocialProvider extends EventEmitter {
   bool get busy => _busy;
   set busy(value) => _busy = value;
 
+  String note = "";
+  String category = "";
+
   final List<ShoutData> _shouts = <ShoutData>[];
   List<ShoutData> get shouts => _shouts;
 
@@ -234,6 +237,10 @@ class SocialProvider extends EventEmitter {
     if (_conversation != null) {
       _connection.getMessages(conversation: _conversation!.guid);
     }
+  }
+
+  void submitContact(String category, String guid) {
+    _logger.i("submitContact: $category $guid");
   }
 
   void getShouts() {

@@ -76,6 +76,8 @@ class ThemeProvider extends EventEmitter {
 
   late BoxShadow boxShadow;
 
+  List<BoxShadow> boxShadows = [];
+
   late RadialGradient gradient;
 
   // late TextStyle styleMissing;
@@ -121,6 +123,11 @@ class ThemeProvider extends EventEmitter {
         ClassColors(base: const Color.fromARGB(255, 75, 75, 75));
 
     createBackgroundColors();
+    setShadows();
+  }
+
+  setShadows() {
+    _logger.t("setShadows");
 
     boxShadow = BoxShadow(
       color: shadowColor.withAlpha(200),
@@ -128,6 +135,18 @@ class ThemeProvider extends EventEmitter {
       spreadRadius: -Settings.gap * 2,
       blurStyle: BlurStyle.outer,
     );
+
+    boxShadows = [
+      BoxShadow(
+        color: shadowColor,
+      ),
+      BoxShadow(
+        color: color.withAlpha(100),
+        spreadRadius: -5,
+        blurRadius: 15,
+        blurStyle: BlurStyle.inner,
+      ),
+    ];
   }
 
   getClassBackgroundColors(String classType) {
@@ -362,6 +381,8 @@ class ThemeProvider extends EventEmitter {
 
     var theme = ThemeData();
     var baseSize = theme.textTheme.bodyMedium?.fontSize ?? 12;
+
+    setShadows();
 
     return ThemeData(
       primaryColor: classColors?.color ?? Colors.transparent,

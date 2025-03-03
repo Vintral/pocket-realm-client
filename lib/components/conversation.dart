@@ -1,4 +1,5 @@
 import 'package:client/capitalize.dart';
+import 'package:client/components/avatar.dart';
 import 'package:client/components/base_display.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/data/conversation.dart';
@@ -34,9 +35,10 @@ class Conversation extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ItemWithBorder(
-              image: "assets/avatars/${data.avatar}.png",
-              height: size,
+            Avatar(
+              username: data.username,
+              avatar: data.avatar,
+              size: size,
             ),
             SizedBox(width: _theme.gap),
             Expanded(
