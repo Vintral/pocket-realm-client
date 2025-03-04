@@ -59,7 +59,7 @@ class Connection extends eventify.EventEmitter {
       } else {
         _logger.d("IS NOT STRING");
       }
-      _logger.w(data);
+      _logger.d(data);
 
       if (data["type"] != null) {
         _logger.t("Type: ${data["type"]}");

@@ -14,7 +14,7 @@ class ProfileProvider extends EventEmitter {
   }
 
   final _modals = ModalProvider();
-  final Logger _logger = Logger(level: Level.debug);
+  final Logger _logger = Logger();
   final Connection _connection = Connection();
 
   bool busy = false;

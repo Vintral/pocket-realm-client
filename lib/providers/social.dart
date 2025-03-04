@@ -80,24 +80,18 @@ class SocialProvider extends EventEmitter {
     _logger.t("onContacts");
 
     var data = e.eventData as dynamic;
-    _logger.w(data);
 
     if (data["friends"] != null) {
-      _logger.w("Parse Friends");
       friends.clear();
       friends.addAll((data["friends"] as List<dynamic>)
           .map((friend) => ContactData(friend)));
     }
-
     if (data["enemies"] != null) {
-      _logger.w("Parse Enemies");
       enemies.clear();
       enemies.addAll((data["enemies"] as List<dynamic>)
           .map((enemy) => ContactData(enemy)));
     }
-
     if (data["blocked"] != null) {
-      _logger.w("Parse Blocked");
       blocked.clear();
       blocked.addAll((data["blocked"] as List<dynamic>)
           .map((blocked) => ContactData(blocked)));

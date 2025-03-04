@@ -1,16 +1,16 @@
-import 'package:client/capitalize.dart';
-import 'package:client/components/base_display.dart';
-import 'package:client/components/contact.dart';
-import 'package:client/data/contact.dart';
-import 'package:client/providers/social.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
+import 'package:client/capitalize.dart';
+import 'package:client/components/base_display.dart';
+import 'package:client/components/contact.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/tab_bar.dart';
+import 'package:client/data/contact.dart';
 import 'package:client/dictionary.dart';
+import 'package:client/providers/social.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/states/list_panel.dart';
 
@@ -25,7 +25,7 @@ class ContactsPanel extends StatefulWidget {
 
 class _ContactsPanelState extends ListPanelState<ContactsPanel>
     with TickerProviderStateMixin {
-  final _logger = Logger(level: Level.debug);
+  final _logger = Logger();
   final _provider = SocialProvider();
 
   final _theme = ThemeProvider();
@@ -85,7 +85,8 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
   }
 
   void onTab(String tab) {
-    _logger.e("onTab: $tab");
+    _logger.d("onTab: $tab");
+
     setState(() {
       _activeTab = tab.toLowerCase();
 
@@ -102,7 +103,7 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
   }
 
   Widget buildContactList(List<ContactData> data, String none) {
-    _logger.f("buildContactList: ${data.length}");
+    _logger.t("buildContactList: ${data.length}");
 
     if (data.isEmpty) {
       return Align(
@@ -131,7 +132,7 @@ class _ContactsPanelState extends ListPanelState<ContactsPanel>
 
   @override
   Widget build(BuildContext context) {
-    _logger.w("build");
+    _logger.t("build");
 
     widget.callback(context);
 
