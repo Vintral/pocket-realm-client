@@ -75,7 +75,6 @@ class ProfileProvider extends EventEmitter {
 
     if (e.eventData != null) {
       var data = e.eventData as dynamic;
-      _logger.w(data);
 
       if (data["success"] == true) {
         username = data["username"] ?? "";
