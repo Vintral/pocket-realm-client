@@ -7,6 +7,7 @@ import 'package:client/panels/library.dart';
 import 'package:client/panels/search.dart';
 import 'package:client/providers/modal.dart';
 import 'package:client/providers/profile.dart';
+import 'package:client/providers/social.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -76,9 +77,11 @@ class _GameScreenState extends State<GameScreen> {
   late eventify.Listener _onHideProfileListener;
   late eventify.Listener _onModalsUpdatedListener;
   late eventify.Listener _onLibraryLoadingListener;
+  late eventify.Listener _onShowConversationListener;
   final provider.NotificationProvider _notification =
       provider.NotificationProvider();
   final PlayerProvider _player = PlayerProvider();
+  final _social = SocialProvider();
   final LibraryProvider _library = LibraryProvider();
 
   @override
@@ -103,6 +106,9 @@ class _GameScreenState extends State<GameScreen> {
     _onShowProfileListener = _profile.on("SHOW_PROFILE", null, onShowProfile);
     _onHideProfileListener = _profile.on("HIDE_PROFILE", null, onHideProfile);
 
+    _onShowConversationListener =
+        _social.on("GO_CONVERSATION", null, onGoConversation);
+
     _onModalsUpdatedListener =
         _modals.on("UPDATED", null, (e, o) => setState(() {}));
 
@@ -124,6 +130,8 @@ class _GameScreenState extends State<GameScreen> {
     _onHideProfileListener.cancel();
 
     _onModalsUpdatedListener.cancel();
+
+    _onShowConversationListener.cancel();
 
     super.dispose();
   }
@@ -164,6 +172,11 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       active = "";
     });
+  }
+
+  onGoConversation(e, o) {
+    _logger.f("onGoConversation");
+    Navigator.pushNamed(_navigationContext, "conversation");
   }
 
   void onShowProfile(e, o) {
