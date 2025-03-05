@@ -64,6 +64,7 @@ class Dictionary {
     "NO_BLOCKED": "no blocked users",
     "NO_ENEMIES": "no enemies",
     "NO_FRIENDS": "no friends",
+    "NO_MESSAGES": "no messages",
     "NOTE": "note",
     "NOW": "now",
     "OF": "of",
@@ -119,12 +120,14 @@ class Dictionary {
     "ADD_ENEMY": "adding enemy",
     "ADD_FRIEND": "adding friend",
     "BLOCK_USER": "block user",
+    "GET_MESSAGES": "getting messages",
     "REMOVE_ENEMY": "removing enemy",
     "REMOVE_FRIEND": "removing friend",
+    "SENDING_MESSAGE": "sending message",
     "UNBLOCK_USER": "unblocking user",
   };
 
   static String getLoading(String key) {
-    return strings[key] ?? "$missing($key)";
+    return stringsLoading[key] ?? "$missing($key)";
   }
 }
