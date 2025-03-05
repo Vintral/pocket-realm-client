@@ -1,20 +1,19 @@
-import 'package:client/components/avatar.dart';
-import 'package:client/components/base_display.dart';
-import 'package:client/providers/player.dart';
-import 'package:client/providers/social.dart';
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart';
 
-import 'package:client/components/item_with_border.dart';
+import 'package:client/components/avatar.dart';
+import 'package:client/components/base_display.dart';
 import 'package:client/data/message.dart';
+import 'package:client/providers/player.dart';
+import 'package:client/providers/social.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/utilities.dart';
 
 class Message extends StatelessWidget {
   Message({super.key, required this.data});
 
-  final _logger = Logger(level: Level.off);
+  final _logger = Logger();
   final _theme = ThemeProvider();
   final _player = PlayerProvider();
   final _provider = SocialProvider();
@@ -25,17 +24,13 @@ class Message extends StatelessWidget {
     return Avatar(
         avatar: !incoming ? _provider.conversationAvatar : _player.avatar,
         size: size,
-        username: !incoming
-            ? _provider.conversation?.username ?? ""
-            : _player.username,
+        username: !incoming ? _provider.conversationUser : _player.username,
         reflect: incoming);
   }
 
   @override
   Widget build(BuildContext context) {
     _logger.t("build");
-    //_logger.d( data. );
-    _logger.w("Date: ${data.time.toString()}");
 
     var size = _theme.width / 5;
     var incoming = data.username != _player.username;

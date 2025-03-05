@@ -1,14 +1,15 @@
+import 'package:flutter/material.dart';
+
+import 'package:logger/logger.dart';
+
 import 'package:client/capitalize.dart';
 import 'package:client/components/avatar.dart';
 import 'package:client/components/base_display.dart';
-import 'package:client/components/item_with_border.dart';
 import 'package:client/data/conversation.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/social.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/utilities.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class Conversation extends StatelessWidget {
   Conversation({super.key, required this.data, required this.handler});
@@ -29,7 +30,7 @@ class Conversation extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         _provider.conversationAvatar = data.avatar;
-        handler(data.guid);
+        handler(data.username);
       },
       child: BaseDisplay(
         child: Row(
