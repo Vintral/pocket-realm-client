@@ -52,7 +52,7 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
 
   @override
   void dispose() {
-    _logger.f("dispose");
+    _logger.t("dispose");
 
     _onMessagesListener.cancel();
     _onMesssageSentListener.cancel();

@@ -61,7 +61,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   }
 
   void onTabChanged() {
-    _logger.w("onTabChanged: ${_tabController.index}");
+    _logger.t("onTabChanged: ${_tabController.index}");
 
     setState(() {
       switch (_tabController.index) {
