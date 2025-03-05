@@ -195,9 +195,9 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "GET_CONVERSATIONS"});
   }
 
-  void getMessages({required String conversation}) {
-    _logger.i("getMessages: $conversation");
-    _send({"type": "GET_MESSAGES", "conversation": conversation});
+  void getMessages(String conversationWith) {
+    _logger.i("getMessages: $conversationWith");
+    _send({"type": "GET_MESSAGES", "conversation": conversationWith});
   }
 
   void getEvents(int page) {
