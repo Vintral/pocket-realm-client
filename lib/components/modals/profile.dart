@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:client/components/modals/loading.dart';
 import 'package:client/components/modals/note.dart';
 import 'package:client/providers/modal.dart';
+import 'package:client/providers/social.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -26,9 +27,10 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   final _theme = ThemeProvider();
-  final _logger = Logger(level: Level.debug);
+  final _logger = Logger();
   final _profile = ProfileProvider();
   final _modal = ModalProvider();
+  final _social = SocialProvider();
 
   late eventify.Listener _onProfileLoadedListener;
   late TabController _tabController;
@@ -157,6 +159,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   onMessage() {
     _logger.i("onMessage");
+
+    _social.conversationAvatar = _profile.avatar;
+    _social.conversationUser = _profile.username;
+    _social.conversationGuid = _profile.guid;
+
+    _modal.removeModal(Profile);
+    _social.showConversation();
   }
 
   Widget getCombatButtons() {
@@ -201,7 +210,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _logger.w("build: $_activeTab");
+    _logger.t("build: $_activeTab");
 
     var size = MediaQuery.of(context).size;
     var avatarSize = size.height / 5;
