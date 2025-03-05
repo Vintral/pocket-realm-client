@@ -52,35 +52,18 @@ class _MessagesPanelState extends ListPanelState<MessagesPanel> {
     setState(() {});
   }
 
-  Widget buildResults() {
-    _logger.d("buildResults");
-
-    List<Widget> widgets = <Widget>[];
-    for (var conversation in _provider.conversations) {
-      widgets.add(Conversation(data: conversation, handler: onTap));
-      widgets.add(SizedBox(
-        height: _theme.gap,
-      ));
-    }
-
-    return ListView(
-      children: [...widgets],
-    );
-  }
-
   void onTap(String conversation) {
     _logger.d("onTap: $conversation");
 
-    //_provider.conversation = conversation;
-    _provider.conversation = _provider.conversationMap[conversation]?.username;
+    _provider.conversationMap[conversation]?.dump();
+
+    _provider.conversationAvatar =
+        _provider.conversationMap[conversation]!.avatar;
+    _provider.conversationUser =
+        _provider.conversationMap[conversation]!.username;
+    _provider.conversationGuid = _provider.conversationMap[conversation]!.guid;
 
     Navigator.pushNamed(context, "conversation");
-    // _logger.f( "onTap: ${_shoutController.text}" );
-
-    // _provider.sendShout( _shoutController.text );
-    // setState(() {
-    //   _enabled = false;
-    // });
   }
 
   @override
@@ -94,7 +77,11 @@ class _MessagesPanelState extends ListPanelState<MessagesPanel> {
     return Panel(
       loaded: _provider.conversations.isNotEmpty,
       label: Dictionary.get("MESSAGES"),
-      child: buildResults(),
+      child: ListView.separated(
+          itemBuilder: (context, index) => Conversation(
+              data: _provider.conversations[index], handler: onTap),
+          separatorBuilder: (context, index) => SizedBox(height: _theme.gap),
+          itemCount: _provider.conversations.length),
     );
   }
 }

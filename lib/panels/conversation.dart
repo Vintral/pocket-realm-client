@@ -1,4 +1,3 @@
-import 'package:client/components/message.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -6,6 +5,8 @@ import 'package:logger/logger.dart';
 
 import 'package:client/capitalize.dart';
 import 'package:client/components/base_button.dart';
+import 'package:client/components/base_display.dart';
+import 'package:client/components/message.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/dictionary.dart';
 import 'package:client/providers/social.dart';
@@ -29,7 +30,6 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
   final _messageController = TextEditingController();
   late eventify.Listener _onMessagesListener;
   late eventify.Listener _onMesssageSentListener;
-  late eventify.Listener _onMesssageErrorListener;
 
   bool _busy = false;
 
@@ -40,22 +40,22 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
     _logger.t("initState");
 
     _onMessagesListener = _provider.on("MESSAGES", null, onMessages);
-    _onMesssageSentListener = _provider.on("MESSAGE_SENT", null, onMessageSent);
-    _onMesssageErrorListener =
-        _provider.on("MESSAGE_ERROR", null, onMessageError);
+    _onMesssageSentListener = _provider.on("SEND_MESSAGE", null, onMessageSent);
 
     _messageController.addListener(onMessageChanged);
 
-    _provider.getMessages();
+    if (_provider.conversationUser != _provider.retrievedConversationUser) {
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _provider.getMessages());
+    }
   }
 
   @override
   void dispose() {
-    _logger.t("dispose");
+    _logger.f("dispose");
 
     _onMessagesListener.cancel();
     _onMesssageSentListener.cancel();
-    _onMesssageErrorListener.cancel();
 
     super.dispose();
   }
@@ -71,52 +71,57 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
   }
 
   void onMessageSent(e, o) {
-    _logger.d("onMessageSent");
+    _logger.f("onMessageSent");
 
-    _messageController.text = "";
-    _busy = false;
-    _provider.getMessages();
-  }
-
-  void onMessageError(e, o) {
-    _logger.d("onMessageError");
-
-    setState(() {
+    if (e.eventData["success"]) {
+      _messageController.text = "";
       _busy = false;
-    });
+      _provider.getMessages();
+    } else {
+      _logger.f("ERROR SENDING MESSAGE");
+    }
   }
 
   void onTap() {
     _logger.w("onTap: ${_messageController.text}");
 
+    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
     _provider.sendMessage(_messageController.text);
     setState(() {
       _busy = true;
     });
   }
 
-  Widget buildResults() {
-    _logger.d("buildResults");
+  Widget buildContent() {
+    _logger.t("buildContent");
 
-    List<Widget> widgets = <Widget>[];
-    for (var message in _provider.conversation?.messages ?? []) {
-      widgets.add(Message(
-        data: message,
-      ));
-      widgets.add(SizedBox(
-        height: _theme.gap,
-      ));
+    if (_provider.conversationMessages.isEmpty) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.width / 5,
+          child: BaseDisplay(
+            child: Center(
+              child: Text(
+                Dictionary.get("NO_MESSAGES").capitalize(),
+                style: _theme.textLargeBold,
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
-    return ListView(
-      children: [...widgets],
+    return ListView.separated(
+      itemBuilder: (context, index) =>
+          Message(data: _provider.conversationMessages[index]),
+      separatorBuilder: (context, index) => SizedBox(height: _theme.gap),
+      itemCount: _provider.conversationMessages.length,
     );
   }
 
   Widget buildForm() {
     _logger.t("buildForm");
-
-    _logger.w("Empty?: ${_messageController.text.isNotEmpty ? "NO" : "YES"}");
 
     var border = OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(_theme.gap)),
@@ -201,16 +206,14 @@ class _ConversationPanelState extends ListPanelState<ConversationPanel> {
 
     widget.callback(context);
 
-    _logger.w(_provider.conversation?.username);
-
     return Panel(
-      loaded: _provider.conversations.isNotEmpty,
+      // loaded: _provider.conversations.isNotEmpty,
       closable: true,
       form: buildForm(),
       capitalize: false,
       label:
-          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversation?.username ?? "--"}",
-      child: buildResults(),
+          "${Dictionary.get("CHAT-WITH").capitalize()} ${_provider.conversationUser}",
+      child: buildContent(),
     );
   }
 }
