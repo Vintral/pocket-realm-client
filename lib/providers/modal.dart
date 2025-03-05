@@ -12,7 +12,7 @@ class ModalProvider extends EventEmitter {
     return _instance;
   }
 
-  final Logger _logger = Logger(level: Logger.level);
+  final Logger _logger = Logger();
 
   final List<Widget> _modals = <Widget>[];
   bool get haveModals => _modals.isNotEmpty;
@@ -38,18 +38,15 @@ class ModalProvider extends EventEmitter {
   }
 
   void removeModal(Type type) {
-    _logger.e("removeModal: $type");
+    _logger.t("removeModal: $type");
 
-    _logger.e("Modals Length: ${_modals.length} ");
     for (var i = 0; i < _modals.length; i++) {
       if (_modals[i].runtimeType == type) {
-        _logger.w("FOUND MODAL BY TYPE");
         _modals.removeAt(i);
         break;
       }
     }
 
-    _logger.e("DONE REMOVAL: ${_modals.length}");
     emit("UPDATED");
   }
 
