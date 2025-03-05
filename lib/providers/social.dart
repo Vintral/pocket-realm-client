@@ -1,14 +1,16 @@
 import 'dart:collection';
 
-import 'package:client/data/contact.dart';
-import 'package:client/data/search_result.dart';
 import 'package:eventify/eventify.dart';
 import 'package:logger/logger.dart';
 
+import 'package:client/components/modals/loading.dart';
 import 'package:client/connection.dart';
+import 'package:client/data/contact.dart';
 import 'package:client/data/conversation.dart';
 import 'package:client/data/message.dart';
+import 'package:client/data/search_result.dart';
 import 'package:client/data/shout.dart';
+import 'package:client/providers/modal.dart';
 import 'package:client/settings.dart';
 
 class SocialProvider extends EventEmitter {
@@ -20,6 +22,7 @@ class SocialProvider extends EventEmitter {
 
   final Logger _logger = Logger();
   final Connection _connection = Connection();
+  final _modals = ModalProvider();
 
   bool _busy = false;
   bool get busy => _busy;
@@ -46,17 +49,34 @@ class SocialProvider extends EventEmitter {
   final List<ConversationData> _conversations = <ConversationData>[];
   List<ConversationData> get conversations => _conversations;
 
+  String _conversationUser = "";
+  String get conversationUser => _conversationUser;
+  set conversationUser(String value) {
+    if (value != _conversationUser) {
+      messagesRetrieved = false;
+      messages.clear();
+    }
+
+    _conversationUser = value;
+  }
+
   String conversationAvatar = "";
+  String conversationGuid = "";
+  List<MessageData> conversationMessages = <MessageData>[];
+
+  String retrievedConversationUser = "";
+  bool messagesRetrieved = false;
+  List<MessageData> messages = [];
 
   ConversationData? currentConversation;
 
-  ConversationData? _conversation;
-  ConversationData? get conversation => _conversation;
-  set conversation(value) {
-    _conversation =
-        _conversations.where((curr) => curr.username == value).first;
-    _conversation?.dump();
-  }
+  // ConversationData? _conversation;
+  // ConversationData? get conversation => _conversation;
+  // set conversation(value) {
+  //   _conversation =
+  //       _conversations.where((curr) => curr.username == value).first;
+  //   _conversation?.dump();
+  // }
 
   SocialProvider._internal() {
     _logger.d("Created");
@@ -68,8 +88,7 @@ class SocialProvider extends EventEmitter {
     _connection.on("CONVERSATIONS", null, onConversations);
     _connection.on("MESSAGES", null, onMessages);
     _connection.on("MESSAGE", null, onMessage);
-    _connection.on("MESSAGE_SENT", null, onMessageSent);
-    _connection.on("MESSAGE_ERROR", null, onMessageError);
+    _connection.on("SEND_MESSAGE", null, onMessageSent);
 
     _connection.on("SEARCH_RESULTS", null, onSearchResults);
 
@@ -109,6 +128,11 @@ class SocialProvider extends EventEmitter {
     _connection.searchUsers(needle);
   }
 
+  void showConversation() {
+    _logger.i("showConversation");
+    emit("GO_CONVERSATION");
+  }
+
   void onSearchResults(e, o) {
     _logger.d("onSearchResults");
 
@@ -133,7 +157,7 @@ class SocialProvider extends EventEmitter {
         ((e.eventData as dynamic)["conversations"] as List<dynamic>)
             .map<ConversationData>((data) {
       var conversation = ConversationData(data);
-      _conversationMap[conversation.guid] = conversation;
+      _conversationMap[conversation.username] = conversation;
       return conversation;
     }));
     emit("CONVERSATIONS");
@@ -150,11 +174,11 @@ class SocialProvider extends EventEmitter {
     _logger.d("onMessages");
 
     var data = e.eventData;
-    if (data["conversation"] != _conversation?.guid) {
-      return;
-    }
 
-    _conversation?.messages = (data["messages"] as List<dynamic>)
+    messagesRetrieved = true;
+    _modals.removeModal(Loading);
+
+    conversationMessages = (data["messages"] as List<dynamic>)
         .map<MessageData>((data) => MessageData(data))
         .toList();
     emit("MESSAGES");
@@ -182,13 +206,10 @@ class SocialProvider extends EventEmitter {
   }
 
   void onMessageSent(e, o) {
-    _logger.d("onMessageSent");
-    emit("MESSAGE_SENT");
-  }
+    _logger.f("onMessageSent");
 
-  void onMessageError(e, o) {
-    _logger.d("onMessageError");
-    emit("MESSAGE_ERROR");
+    _modals.removeModal(Loading);
+    emit("SEND_MESSAGE", this, e.eventData);
   }
 
   void subscribe() {
@@ -216,8 +237,10 @@ class SocialProvider extends EventEmitter {
   }
 
   void sendMessage(String message) {
-    _logger.i("sendMessage: $message to ${_conversation?.username}");
-    _connection.sendMessage(message, _conversation?.username ?? "");
+    _logger.i("sendMessage: $message to $_conversationUser");
+
+    _modals.addModal(Loading(text: "SENDING_MESSAGE"));
+    _connection.sendMessage(message, conversationGuid);
   }
 
   void getConversations() {
@@ -226,11 +249,13 @@ class SocialProvider extends EventEmitter {
   }
 
   void getMessages() {
-    _logger.d("getMessages");
+    _logger.t("getMessages");
 
-    if (_conversation != null) {
-      _connection.getMessages(conversation: _conversation!.guid);
-    }
+    _modals.addModal(Loading(
+      text: "GET_MESSAGES",
+    ));
+
+    _connection.getMessages(conversationGuid);
   }
 
   void submitContact(String category, String guid) {
