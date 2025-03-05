@@ -178,9 +178,14 @@ class SocialProvider extends EventEmitter {
     messagesRetrieved = true;
     _modals.removeModal(Loading);
 
-    conversationMessages = (data["messages"] as List<dynamic>)
-        .map<MessageData>((data) => MessageData(data))
-        .toList();
+    if (data["messages"] != null) {
+      conversationMessages = (data["messages"] as List<dynamic>)
+          .map<MessageData>((data) => MessageData(data))
+          .toList();
+    } else {
+      conversationMessages = [];
+    }
+
     emit("MESSAGES");
   }
 
