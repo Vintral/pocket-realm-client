@@ -33,7 +33,9 @@ class ConversationData {
   }
 
   void dump() {
-    _logger.t("""====================================
+    _logger.t("""
+====================================
+GUID: $guid
 Username: $username
 Avatar: $avatar
 Reply: $reply
