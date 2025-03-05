@@ -162,7 +162,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void onShowPanel(String newPanel) {
-    _logger.i("onShowPanel: $newPanel");
+    _logger.d("onShowPanel: $newPanel || $panel");
 
     if (panel != newPanel) {
       panel = newPanel;
@@ -175,8 +175,8 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   onGoConversation(e, o) {
-    _logger.f("onGoConversation");
-    Navigator.pushNamed(_navigationContext, "conversation");
+    _logger.t("onGoConversation");
+    onShowPanel("conversation");
   }
 
   void onShowProfile(e, o) {
