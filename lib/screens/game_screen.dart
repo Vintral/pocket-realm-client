@@ -1,18 +1,9 @@
-import 'package:client/capitalize.dart';
-import 'package:client/components/modals/profile.dart';
-import 'package:client/dictionary.dart';
-import 'package:client/panels/avatar.dart';
-import 'package:client/panels/contacts.dart';
-import 'package:client/panels/library.dart';
-import 'package:client/panels/search.dart';
-import 'package:client/providers/modal.dart';
-import 'package:client/providers/profile.dart';
-import 'package:client/providers/social.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
 import 'package:logger/logger.dart';
 
+import 'package:client/capitalize.dart';
 import 'package:client/components/header.dart';
 import 'package:client/components/panel.dart';
 import 'package:client/components/panel_page_route.dart';
@@ -20,12 +11,16 @@ import 'package:client/components/realm_menu_button.dart';
 import 'package:client/components/slide_menu.dart';
 import 'package:client/components/slide_menu_button.dart';
 import 'package:client/connection.dart';
+import 'package:client/dictionary.dart';
+import 'package:client/panels/avatar.dart';
 import 'package:client/panels/build.dart';
 import 'package:client/panels/build_details.dart';
+import 'package:client/panels/contacts.dart';
 import 'package:client/panels/conversation.dart';
 import 'package:client/panels/events.dart';
 import 'package:client/panels/explore.dart';
 import 'package:client/panels/gather.dart';
+import 'package:client/panels/library.dart';
 import 'package:client/panels/market.dart';
 import 'package:client/panels/messages.dart';
 import 'package:client/panels/news.dart';
@@ -34,10 +29,15 @@ import 'package:client/panels/recruit_details.dart';
 import 'package:client/panels/recruit.dart';
 import 'package:client/panels/rounds.dart';
 import 'package:client/panels/rules.dart';
+import 'package:client/panels/search.dart';
 import 'package:client/panels/shoutbox.dart';
+import 'package:client/panels/support.dart';
 import 'package:client/providers/library.dart';
+import 'package:client/providers/modal.dart';
 import 'package:client/providers/notification.dart' as provider;
 import 'package:client/providers/player.dart';
+import 'package:client/providers/profile.dart';
+import 'package:client/providers/social.dart';
 import 'package:client/providers/theme.dart';
 import 'package:client/settings.dart';
 
@@ -265,7 +265,7 @@ class _GameScreenState extends State<GameScreen> {
         SlideMenuButton(text: "News", handler: onShowPanel),
         SlideMenuButton(text: "Rules", handler: onShowPanel),
         SlideMenuButton(text: "Settings", handler: onShowPanel),
-        SlideMenuButton(text: "Contact", handler: onShowPanel),
+        SlideMenuButton(text: "Support", handler: onShowPanel),
       ],
     );
   }
@@ -337,7 +337,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "contacts",
+                      initialRoute: "rankings",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -404,6 +404,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "contacts":
                             builder =
                                 (context) => ContactsPanel(callback: onLoaded);
+                          case "support":
+                            builder =
+                                (context) => SupportPanel(callback: onLoaded);
                           default:
                             builder = (context) => Panel(
                                 label: content,

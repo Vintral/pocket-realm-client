@@ -25,6 +25,7 @@ class Dictionary {
     "BUY": "buy",
     "CHAT-WITH": "chat with",
     "COMBAT": "combat",
+    "CONTACT_SUPPORT": "contact support",
     "CONTACTS": "contacts",
     "CURRENT": "current",
     "DAY": "day",

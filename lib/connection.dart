@@ -59,7 +59,7 @@ class Connection extends eventify.EventEmitter {
       } else {
         _logger.d("IS NOT STRING");
       }
-      _logger.d(data);
+      _logger.w(data);
 
       if (data["type"] != null) {
         _logger.t("Type: ${data["type"]}");
@@ -180,6 +180,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "MESSAGE", "message": message, "to": to});
   }
 
+  void sendSupportMessage(String message) {
+    _logger.i("sendSupportMessage: $message");
+    _send({"type": "MESSAGE_SUPPORT", "message": message});
+  }
+
   void sendSubscribeShouts() {
     _logger.i("sendSubscribeShouts");
     _send({"type": "SUBSCRIBE_SHOUTS"});
@@ -198,6 +203,11 @@ class Connection extends eventify.EventEmitter {
   void getMessages(String conversationWith) {
     _logger.i("getMessages: $conversationWith");
     _send({"type": "GET_MESSAGES", "conversation": conversationWith});
+  }
+
+  void getSupportMessages() {
+    _logger.i("getSupportMessages");
+    _send({"type": "GET_SUPPORT_MESSAGES"});
   }
 
   void getEvents(int page) {

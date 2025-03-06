@@ -89,6 +89,7 @@ class SocialProvider extends EventEmitter {
     _connection.on("MESSAGES", null, onMessages);
     _connection.on("MESSAGE", null, onMessage);
     _connection.on("SEND_MESSAGE", null, onMessageSent);
+    _connection.on("SEND_SUPPORT_MESSAGE", null, onSupportMessageSend);
 
     _connection.on("SEARCH_RESULTS", null, onSearchResults);
 
@@ -217,6 +218,13 @@ class SocialProvider extends EventEmitter {
     emit("SEND_MESSAGE", this, e.eventData);
   }
 
+  void onSupportMessageSend(e, o) {
+    _logger.f("onSupportMessageSend");
+
+    _modals.removeModal(Loading);
+    emit("SEND_SUPPORT_MESSAGE", this, e.eventData);
+  }
+
   void subscribe() {
     _logger.d("subscribe");
     _connection.sendSubscribeShouts();
@@ -261,6 +269,23 @@ class SocialProvider extends EventEmitter {
     ));
 
     _connection.getMessages(conversationGuid);
+  }
+
+  sendSupportMessage(String message) {
+    _logger.w("sendSupportMessage");
+
+    _modals.addModal(Loading(text: "SENDING_MESSAGE"));
+    _connection.sendSupportMessage(message);
+  }
+
+  void getSupportMessages() {
+    _logger.f("getSupportMessages");
+
+    _modals.addModal(Loading(
+      text: "GET_MESSAGES",
+    ));
+
+    _connection.getSupportMessages();
   }
 
   void submitContact(String category, String guid) {
