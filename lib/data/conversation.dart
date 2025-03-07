@@ -21,10 +21,8 @@ class ConversationData {
     username = data["username"] ?? "";
     avatar = data["avatar"] ?? "";
 
-    reply = data["last_message"]["reply"];
-    message = data["last_message"]["text"];
-
-    lastRead = DateTime.parse("2024-05-02T10:23:06.75-07:00");
+    reply = data["replied"];
+    message = data["message"];
 
     lastRead = DateTime.parse(data["last_read"] ?? "");
     updated = DateTime.parse(data["updated"] ?? "");
