@@ -111,7 +111,11 @@ class MarketProvider extends EventEmitter {
     _logger.t("onUndergroundMarket");
 
     var data = ev.eventData as dynamic;
-    _auctions = data["auctions"];
+    _auctions.clear();
+
+    if (data["auctions"] != null) {
+      _auctions = data["auctions"];
+    }
 
     _logger.t(_auctions);
 

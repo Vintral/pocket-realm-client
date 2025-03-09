@@ -1,3 +1,4 @@
+import 'package:client/capitalize.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -331,6 +332,23 @@ class _MarketPanelState extends ListPanelState<MarketPanel>
 
   Widget buildUndergroundMarket() {
     _logger.t("buildUndergroundMarket");
+
+    if (_provider.auctions.isEmpty) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.width / 5,
+          child: BaseDisplay(
+            child: Center(
+              child: Text(
+                Dictionary.get("NO_AUCTIONS").capitalize(),
+                style: _theme.textLargeBold,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return ListView.separated(
       itemCount: _provider.auctions.length,

@@ -60,6 +60,7 @@ class Dictionary {
     "NEAR": "near",
     "NEWS": "news",
     "NEW": "new",
+    "NO_AUCTIONS": "no auctions",
     "NO_EVENTS": "no events",
     "NO_USERS": "no users",
     "NO_BLOCKED": "no blocked users",
