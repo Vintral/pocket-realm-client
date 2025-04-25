@@ -260,6 +260,11 @@ class Connection extends eventify.EventEmitter {
     _send({"type": "SELL_RESOURCE", "quantity": quantity, "item": resource});
   }
 
+  void getPantheons() {
+    _logger.i("getPantheons");
+    _send({"type": "GET_PANTHEONS"});
+  }
+
   void buyAuction(String auction) {
     _logger.i("buyAuction: $auction");
     _send({"type": "BUY_AUCTION", "auction": auction});
@@ -298,6 +303,16 @@ class Connection extends eventify.EventEmitter {
   void getProfile(String user) {
     _logger.i("getProfile: $user");
     _send({"type": "GET_PROFILE", "username": user});
+  }
+
+  void sendRenounceDevotion() {
+    _logger.i("sendRenounceDevotion");
+    _send({"type": "RENOUNCE_DEVOTION"});
+  }
+
+  void sendRaiseDevotion(String pantheon) {
+    _logger.i("sendRaiseDevotion: $pantheon");
+    _send({"type": "RAISE_DEVOTION", "pantheon": pantheon});
   }
 
   void addContact(String category, String guid, String note) {

@@ -1,3 +1,4 @@
+import 'package:client/panels/temple.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eventify/eventify.dart' as eventify;
@@ -337,7 +338,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "rankings",
+                      initialRoute: "temple",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -407,6 +408,9 @@ class _GameScreenState extends State<GameScreen> {
                           case "support":
                             builder =
                                 (context) => SupportPanel(callback: onLoaded);
+                          case "temple":
+                            builder =
+                                (context) => TemplePanel(callback: onLoaded);
                           default:
                             builder = (context) => Panel(
                                 label: content,

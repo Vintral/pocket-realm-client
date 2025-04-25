@@ -47,7 +47,8 @@ class Avatar extends StatelessWidget {
     var child = ItemWithBorder(
       width: size,
       height: size,
-      image: "assets/avatars/$avatar.png",
+      image:
+          avatar.isNotEmpty ? "assets/avatars/$avatar.png" : "assets/none.png",
       backgroundColors: _theme.getClassBackgroundColors(classType),
       reflect: reflect,
     );

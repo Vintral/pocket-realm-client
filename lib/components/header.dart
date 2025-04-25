@@ -438,7 +438,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                               height:
                                   math.max(_theme.headerHeight - _theme.gap, 0),
                               child: Image.asset(
-                                  "assets/avatars/${_player.avatar}.png",
+                                  "assets/${_player.avatar.isNotEmpty ? "avatars/${_player.avatar}" : "none"}.png",
                                   fit: BoxFit.fill),
                             ),
                           ),

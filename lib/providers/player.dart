@@ -65,6 +65,7 @@ class PlayerProvider extends eventify.EventEmitter {
   int tickResearch = 0;
   int buildPower = 0;
   int recruitPower = 0;
+  DateTime? lostFaith;
 
   List<UserUnit> units = <UserUnit>[];
   List<UserBuilding> buildings = <UserBuilding>[];
@@ -235,6 +236,8 @@ class PlayerProvider extends eventify.EventEmitter {
           buildPower = getIntVal(data[key]);
         case "recruit_power":
           recruitPower = getIntVal(data[key]);
+        case "lost_faith":
+          if (data[key] != null) lostFaith = DateTime.tryParse(data[key]);
         case "round":
           updateUser(data[key]);
         case "units":

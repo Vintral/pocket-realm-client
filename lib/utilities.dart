@@ -59,6 +59,17 @@ String timeSince(DateTime val, {bool suffixFlag = true}) {
   var diff = DateTime.now().difference(val);
   _logger.t("timeSince: $diff");
 
+  return timeDuration(diff, suffixFlag);
+}
+
+String timeUntil(DateTime val, {bool suffixFlag = true}) {
+  var diff = val.difference(DateTime.now());
+  _logger.t("timeUntil: $diff");
+
+  return timeDuration(diff, suffixFlag);
+}
+
+String timeDuration(Duration diff, bool suffixFlag) {
   var suffix = suffixFlag ? Dictionary.get("AGO") : "";
 
   if (diff.inDays > 0) {
