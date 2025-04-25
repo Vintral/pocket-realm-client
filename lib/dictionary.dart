@@ -51,6 +51,7 @@ class Dictionary {
     "HOURS": "hours",
     "ITEMS": "items",
     "IN": "in",
+    "INN": "inn",
     "LAND": "land",
     "LIBRARY": "library",
     "MALE": "male",
