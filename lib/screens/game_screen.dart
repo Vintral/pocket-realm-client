@@ -1,3 +1,4 @@
+import 'package:client/panels/inn.dart';
 import 'package:client/panels/temple.dart';
 import 'package:flutter/material.dart';
 
@@ -236,6 +237,10 @@ class _GameScreenState extends State<GameScreen> {
           text: Dictionary.get("LIBRARY").capitalize(),
           handler: onShowPanel,
         ),
+        SlideMenuButton(
+          text: Dictionary.get("INN").capitalize(),
+          handler: onShowPanel,
+        ),
         SlideMenuButton(text: "Market", handler: onShowPanel),
         SlideMenuButton(text: "Temple", handler: onShowPanel),
         SlideMenuButton(text: "Job", handler: onShowPanel),
@@ -338,7 +343,7 @@ class _GameScreenState extends State<GameScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: size.width / 5),
                     child: Navigator(
-                      initialRoute: "temple",
+                      initialRoute: "inn",
                       onGenerateRoute: (RouteSettings settings) {
                         _logger.t("onGenerateRoute: ${settings.name}");
 
@@ -411,6 +416,8 @@ class _GameScreenState extends State<GameScreen> {
                           case "temple":
                             builder =
                                 (context) => TemplePanel(callback: onLoaded);
+                          case "inn":
+                            builder = (context) => InnPanel(callback: onLoaded);
                           default:
                             builder = (context) => Panel(
                                 label: content,
