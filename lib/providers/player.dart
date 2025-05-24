@@ -65,6 +65,8 @@ class PlayerProvider extends eventify.EventEmitter {
   int tickResearch = 0;
   int buildPower = 0;
   int recruitPower = 0;
+  int totalSpies = 0;
+  int freeSpies = 0;
   DateTime? lostFaith;
 
   List<UserUnit> units = <UserUnit>[];
@@ -244,6 +246,10 @@ class PlayerProvider extends eventify.EventEmitter {
           updateUnits(data[key]);
         case "buildings":
           updateBuildings(data[key]);
+        case "spies":
+          totalSpies = getIntVal(data[key]);
+        case "free_spies":
+          freeSpies = getIntVal(data[key]);
         case "items":
           _logger.w("NYI - Processing Items");
         default:
