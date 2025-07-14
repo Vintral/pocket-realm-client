@@ -46,10 +46,11 @@ class _TemplePanelState extends ListPanelState<TemplePanel>
 
     _onBusyChangedListener = _provider.on("BUSY_CHANGED", null, onBusyChanged);
     _onLoadedListener = _provider.on("LOADED", null, onLoaded);
+
+    createTabController();
+
     if (!_provider.loaded) {
       _provider.load();
-    } else {
-      createTabController();
     }
 
     _logger.t("initState");
