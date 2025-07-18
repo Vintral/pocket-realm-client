@@ -376,7 +376,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     _logger.t("build");
 
     var targetItems =
-        math.max(4, (MediaQuery.of(context).size.width / 125).ceil());
+        math.max(4, (MediaQuery.of(context).size.width / 80).ceil());
     drawerIconSize =
         (_theme.width - _theme.gapHorizontal * (targetItems + 1)) / targetItems;
 
