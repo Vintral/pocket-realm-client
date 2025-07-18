@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:client/components/header.dart';
 import 'package:client/connection.dart';
@@ -58,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     _context = context;
 
-    return const Stack(children: [
+    return Stack(children: [
       Center(
         child: Text(
           "Splash Screen",
@@ -80,8 +81,11 @@ class _SplashScreenState extends State<SplashScreen> {
       _theme.width = size.width;
       _theme.height = size.height;
 
-      _theme.headerHeight = size.width / 4;
-      _theme.headerDrawerCap = _theme.headerHeight / 2.5;
+      _theme.gapHorizontal = size.width / 75;
+      _theme.gapVertical = size.height / 100;
+
+      _theme.headerHeight = size.height / 8;
+      _theme.headerDrawerCap = _theme.headerHeight / 2;
     }
   }
 

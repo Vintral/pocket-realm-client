@@ -4,6 +4,7 @@ import 'package:client/components/header_stat.dart';
 import 'package:client/components/item_with_border.dart';
 import 'package:client/components/tab_bar.dart';
 import 'package:client/data/building.dart';
+import 'package:client/data/realm_object.dart';
 import 'package:client/data/resource.dart';
 import 'package:client/data/unit.dart';
 import 'package:client/dictionary.dart';
@@ -66,6 +67,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   String _activeTab = Dictionary.get("RESOURCES");
 
   double moveDistance = 0;
+  double drawerIconSize = 0;
 
   late final CurvedAnimation _animationUpperDrawer = CurvedAnimation(
     parent: _controllerOffset,
@@ -141,9 +143,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     return Expanded(
       child: Stack(
         children: [
-          Positioned(
-            top: 0,
-            bottom: 0,
+          Positioned.fill(
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
                 _theme.color,
@@ -156,7 +156,11 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
             ),
           ),
           Align(
-            child: child,
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: _theme.gapHorizontal * 2),
+              child: child,
+            ),
           ),
         ],
       ),
@@ -207,10 +211,17 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
     });
   }
 
+  Widget buildItem(RealmObject item, String quantity) {
+    return ItemWithBorder(
+      width: drawerIconSize,
+      height: drawerIconSize,
+      item: item,
+      quantity: quantity,
+    );
+  }
+
   Widget buildResource(Resource resource) {
     var quantity = "--";
-    var targetItems = 6;
-    var size = (_theme.width - _theme.gap * (targetItems + 1)) / targetItems;
 
     switch (resource.name) {
       case "gold":
@@ -241,18 +252,11 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
         return Container();
     }
 
-    return ItemWithBorder(
-      width: size,
-      height: size,
-      item: resource,
-      quantity: quantity,
-    );
+    return buildItem(resource, quantity);
   }
 
   List<Widget> getDrawerContent() {
     _logger.t("getDrawerContent: $_activeTab");
-
-    var size = _theme.width / 10;
 
     if (_activeTab == Dictionary.get("RESOURCES")) {
       return [
@@ -272,11 +276,9 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
           .where((u) =>
               (u.quantity >= 1) || (u.quantity > 0 && u.unit!.supportPartial))
           .map((u) {
-        return ItemWithBorder(
-          width: size,
-          height: size,
-          item: u.unit as Unit,
-          quantity: u.quantity < 0
+        return buildItem(
+          u.unit as Unit,
+          u.quantity < 0
               ? "${(u.quantity * 100).floor()}%"
               : u.quantity.floor().toString(),
         );
@@ -289,11 +291,9 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
               (b.quantity >= 1) ||
               (b.quantity > 0 && b.building!.supportPartial))
           .map((b) {
-        return ItemWithBorder(
-          width: size,
-          height: size,
-          item: b.building as Building,
-          quantity: b.quantity < 0
+        return buildItem(
+          b.building as Building,
+          b.quantity < 0
               ? "${(b.quantity * 100).floor()}%"
               : b.quantity.floor().toString(),
         );
@@ -325,16 +325,16 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                 fit: BoxFit.cover),
           ),
           Positioned(
-            bottom: _theme.gap,
-            left: _theme.gap,
-            right: _theme.gap,
+            bottom: _theme.gapVertical,
+            left: _theme.gapHorizontal,
+            right: _theme.gapHorizontal,
             child: Wrap(
               key: _keyWrap,
               crossAxisAlignment: WrapCrossAlignment.start,
               runAlignment: WrapAlignment.start,
               alignment: WrapAlignment.start,
-              spacing: _theme.gap,
-              runSpacing: _theme.gap,
+              spacing: _theme.gapHorizontal,
+              runSpacing: _theme.gapVertical,
               children: getDrawerContent(),
             ),
           ),
@@ -375,6 +375,11 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     _logger.t("build");
 
+    var targetItems =
+        math.max(4, (MediaQuery.of(context).size.width / 80).ceil());
+    drawerIconSize =
+        (_theme.width - _theme.gapHorizontal * (targetItems + 1)) / targetItems;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.neverShow) return;
 
@@ -386,7 +391,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
           _controllerLowerDrawerOffset.status == AnimationStatus.completed) {
         var distance = getOffsetForWrap();
         if (distance != moveDistance) {
-          _logger.e(
+          _logger.t(
               "Move to $distance from $moveDistance   ${_controllerLowerDrawerOffset.status}");
           setLowerDrawerAnimation(moveDistance, distance);
         }
@@ -398,6 +403,8 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
         });
       }
     });
+
+    _theme.width = MediaQuery.of(context).size.width;
 
     return Offstage(
       offstage: !_shown,
@@ -484,35 +491,44 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: SizedBox(
-                      height: _theme.headerDrawerCap,
-                      width: _theme.width,
-                      child: Stack(children: [
-                        ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            _theme.color,
-                            _theme.blendMode,
-                          ),
-                          child: Image.asset(
-                            "assets/ui/panel-header.png",
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                        Center(
-                          child: Transform.rotate(
-                            angle: _rotateAnimation.value,
-                            child: ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                _theme.color,
-                                _theme.blendMode,
+                  Container(
+                    color: Colors.yellow,
+                    child: GestureDetector(
+                      onTap: onTap,
+                      child: SizedBox(
+                        height: _theme.headerDrawerCap,
+                        width: _theme.width,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  _theme.color,
+                                  _theme.blendMode,
+                                ),
+                                child: Image.asset(
+                                  "assets/ui/panel-header.png",
+                                  fit: BoxFit.fill,
+                                ),
                               ),
-                              child: Image.asset("assets/ui/drawer-arrow.png"),
                             ),
-                          ),
+                            Center(
+                              child: Transform.rotate(
+                                angle: _rotateAnimation.value,
+                                child: ColorFiltered(
+                                  colorFilter: ColorFilter.mode(
+                                    _theme.color,
+                                    // _theme.blendMode,
+                                    BlendMode.modulate,
+                                  ),
+                                  child:
+                                      Image.asset("assets/ui/drawer-arrow.png"),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ]),
+                      ),
                     ),
                   ),
                 ],

@@ -44,6 +44,57 @@ class Panel extends StatelessWidget {
     ));
   }
 
+  Widget buildTitleBar(BuildContext context) {
+    return Container(
+      color: Colors.yellow,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(_theme.color, BlendMode.modulate),
+              child: const Image(
+                image: AssetImage("assets/ui/panel-header.png"),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: _theme.gapHorizontal * 2,
+              vertical: _theme.gapVertical,
+            ),
+            child: Text(
+              (capitalize ? label?.capitalize() : label) ?? Dictionary.missing,
+              style: _theme.textExtraLargeBold,
+            ),
+          ),
+          //   rightChild != null
+          //       ? rightChild as Widget
+          //       : closable
+          //           ? SizedBox(
+          //               height: 32,
+          //               child: GestureDetector(
+          //                 onTap: () => Navigator.of(context).pop(),
+          //                 child: ColorFiltered(
+          //                   colorFilter: ColorFilter.mode(
+          //                     _theme.colorAccent,
+          //                     _theme.blendMode,
+          //                   ),
+          //                   child: Image.asset(
+          //                     "assets/ui/close.png",
+          //                     fit: BoxFit.fitHeight,
+          //                   ),
+          //                 ),
+          //               ),
+          //             )
+          //           : Container(),
+          // ],
+          // ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (callback != null) {
@@ -54,48 +105,9 @@ class Panel extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Stack(children: [
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(_theme.color, BlendMode.modulate),
-              child: const Image(
-                image: AssetImage("assets/ui/panel-header.png"),
-              ),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 7, 0, 5),
-                    child: Text(
-                      (capitalize ? label?.capitalize() : label) ??
-                          Dictionary.missing,
-                      style: _theme.textExtraLargeBold,
-                    ),
-                  ),
-                  rightChild != null
-                      ? rightChild as Widget
-                      : closable
-                          ? SizedBox(
-                              height: 32,
-                              child: GestureDetector(
-                                onTap: () => Navigator.of(context).pop(),
-                                child: ColorFiltered(
-                                  colorFilter: ColorFilter.mode(
-                                    _theme.colorAccent,
-                                    _theme.blendMode,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/ui/close.png",
-                                    fit: BoxFit.fitHeight,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Container(),
-                ]),
-          ]),
+          buildTitleBar(context),
           if (header != null) ...[
             header as Widget,
           ],
