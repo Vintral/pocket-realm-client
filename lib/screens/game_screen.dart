@@ -313,11 +313,15 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     return SafeArea(
-      bottom: false,
+      top: true,
+      bottom: true,
       child: Theme(
         data: _theme.activeTheme,
         child: Stack(
           children: [
+            Center(
+              child: Text("Testing"),
+            ),
             Positioned.fill(
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
@@ -331,12 +335,13 @@ class _GameScreenState extends State<GameScreen> {
             Column(
               children: <Widget>[
                 const Header(),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: _theme.gapVertical,
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: size.width / 5),
+                    padding: EdgeInsets.only(
+                        bottom: _theme.footerHeight + _theme.gapVertical),
                     child: Navigator(
                       initialRoute: "temple",
                       onGenerateRoute: (RouteSettings settings) {
@@ -445,7 +450,6 @@ class _GameScreenState extends State<GameScreen> {
                 children: _buttons,
               ),
             ),
-            // _showProfile ? Profile() : SizedBox.shrink(),
             ..._modals.build(),
           ],
         ),

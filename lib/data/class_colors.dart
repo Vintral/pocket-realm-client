@@ -40,8 +40,10 @@ class ClassColors {
       case "mage":
         {
           colors.colorText = Colors.white70;
-          colors.blendMode = BlendMode.color;
-          colors.color = const Color.fromARGB(255, 30, 136, 229);
+          // colors.blendMode = BlendMode.color;
+          colors.blendMode = BlendMode.modulate;
+          // colors.color = const Color.fromARGB(255, 30, 136, 229);
+          colors.color = const Color.fromARGB(255, 0, 135, 253);
           colors.colorBackground = const Color.fromARGB(255, 10, 51, 113);
           colors.colorBackgroundGradiantLight =
               const Color.fromARGB(255, 22, 100, 168);

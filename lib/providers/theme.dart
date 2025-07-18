@@ -27,10 +27,14 @@ class ThemeProvider extends EventEmitter {
   Color disabledColor = Colors.grey;
 
   double gap = 10.0;
+  double gapHorizontal = 10.0;
+  double gapVertical = 10.0;
 
   double headerHeight = 0.0;
   double headerDrawerBackground = 0.0;
   double headerDrawerCap = 0.0;
+
+  double footerHeight = 0.0;
 
   double quantityPadding = 2.0;
 
